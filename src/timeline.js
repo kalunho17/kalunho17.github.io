@@ -10,7 +10,7 @@ function timeline(domElement) {
 
     // chart geometry
     var margin = {top: 20, right: 20, bottom: 20, left: 20},
-        outerWidth = window.innerWidth*0.95;
+        outerWidth = window.innerWidth*0.84;
         outerHeight = 300,
         width = outerWidth - margin.left - margin.right,
         height = outerHeight - margin.top - margin.bottom;
