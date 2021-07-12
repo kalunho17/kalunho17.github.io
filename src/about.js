@@ -23,7 +23,7 @@ function read_data (){
 		["2012-08-01","2013-01-31","Exchange", "Exchange Semester<br>National Chengchi University<br>Taipei, Taiwan", "Navy"],
 		["2016-08-01","2017-01-31","Exchange", "Exchange Semester<br>University of Ottawa<br>Ottawa, Canada", "Navy"],
 		["2010-07-01","2010-08-20","Internship", "Student Internship (1.5 Month)<br>Freudenberg FV Service SE & Co. KG<br>Weinheim, Germany", "Gray"],
-		["2011-06-27","2011-08-15","Internship", "Student Internship (1.5 Month)<br>Freudenberg Vilene Intern. Ltd.<br>Hong Kong", "Gray"],
+		["2011-06-27","2011-08-15","Internship", "Student Internship (1.5 Month)<br>Freudenberg Vilene Intl. Ltd.<br>Hong Kong", "Gray"],
 		["2011-09-01","2012-07-31","Teaching", "Tutor in 'Praktische Informatik'<br>Chair of Computer Science IV<br>University of Mannheim", "CornflowerBlue"],
 		["2014-02-02","2016-01-31","Teaching", "Tutor in 'Programmierkurs in C'<br>Chair of Computer Science IV<br>University of Mannheim", "CornflowerBlue"],
 		["2013-09-01","2014-01-31","Internship", "IT Consultant (Full-Time)<br>Freudenberg Vilene Nonwovens Co. Ltd<br>Taoyuan, Taiwan", "Gray"],
