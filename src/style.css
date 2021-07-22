@@ -303,6 +303,8 @@ footer #right-footer {
 footer #social-media-footer a .fa-facebook,
 footer #social-media-footer a .fa-instagram,
 footer #social-media-footer a .fa-youtube,
+footer #social-media-footer a .fa-linkedin,
+footer #social-media-footer a .fa-patreon,
 footer #social-media-footer a .fa-github {
   color: white;
   transition: 0.4s;
@@ -335,6 +337,14 @@ footer #social-media-footer ul li:hover a .fa-instagram {
 
 footer #social-media-footer ul li:hover a .fa-github {
   color: #bbb;
+}
+
+footer #social-media-footer ul li:hover a .fa-linkedin {
+  color: #0E76A8;
+}
+
+footer #social-media-footer ul li:hover a .fa-patreon {
+  color: #E64413;
 }
 
 /* Blog List page */
