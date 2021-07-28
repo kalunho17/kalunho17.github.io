@@ -56,112 +56,136 @@
          </ul>
       </nav>
       <main>
-         <h2 class="page-heading">Twitch Chat Analysis</h2>
-         <div id="post-container">
-            <section id="blogpost">
-               <div class="card">
-                  <div class="card-meta-blogpost">
-                     Posted by Kalun Ho on 28.07.2021
+            <h2 class="page-heading">Twitch Chat Analysis</h2>
+            <div id="post-container">
+               <section id="blogpost">
+                  <div class="card">
+                     <div class="card-meta-blogpost">
+                        Posted by Kalun Ho on 28.07/2021
+                     </div>
+                     <div class="card-image">
+                        <img src="img/project_1/overview.jpg" alt="Card Image">
+                     </div>
+                     <div class="card-description">
+                        <h3>Overview</h3>
+                        <p>The aim of this project is to provide streamers an overview of the chat messages during a stream by utilizing the current state-of-the-art Natural Language Processing (NLP) models.
+                           Specifically, the <a href="https://dev.twitch.tv/docs/api/" style="color: steelblue; text-decoration: underline;">Twitch API</a> is used to collect the chat messages from users first and the data are stored locally.
+                           Different pre-trained NLP models are used to create a visualization of the data in a way that similar sentences based on its semantics are closed to each others.
+                           Furthermore, a classification indicates the different types of messages by different colors.
+                           An example is shown in Figure above on the bottom right corner.
+                        </p>
+                        <h3>Generate Dataset</h3>
+                        <p>There are in total three different models used.
+                           The first model is a simple Naive Bayes classifier, pre-trained on the  <a href="http://faculty.nps.edu/cmartell/NPSChat.htm" style="color: steelblue; text-decoration: underline;">nps chat corpus</a>.
+                           This model is then fine-tuned on a small, manually labeled  dataset with approximately 500 labeled data, which are collected from Twitch. 
+                           With this initial classifier, more than 11k real-world chat messages with labels are generated in order to fine-tune the second, better performing model.
+                           After cross-checking the generated dataset manually, a pre-trained BERT [1] (model 2) is fine-tuned, achieving a classification accuracy of 82% using a 90%/10% split.
+                        </p>
+                        <h3>Deploying Models</h3>
+                        <div class="card-image">
+                           <img src="img/project_1/details.jpg" alt="Card Image">
+                        </div>
+                        <p>
+                           New data from Twitch are feed forwarded into two different BERT models (model 2 and 3).
+                           Model 2 predicts the class of the chat message.
+                           A pre-trained Sentence BERT [2] (model 3) maps the message to a 768-dimensional vector (embedding). 
+                           The dimensions are then reduced to 2-dimensions using Umap [3] in order to visualize it in a scatter plot (Demo 1).
+                           I also create a graph of frequent occurring words in a sentences based on the same dataset (Demo 2) :)
+                        </p>
+                     </div>
                   </div>
+               </section>
+            </div>
+            <section>
+               <div class="card">
                   <div class="card-image">
-                     <img src="img/project_1/overview.jpg" alt="Card Image">
+                     <a href="project_1/sample_1_umap.html">
+                     <img src="img/project_1/umap_1.jpg" alt="Card Image">
+                     </a>
                   </div>
                   <div class="card-description">
-                     <h3>Twitch Chat Analysis</h3>
-                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique omnis fugiat sapiente corrupti iure vitae
-                        tempora magnam laboriosam eligendi voluptatem? Quisquam similique officia eum? Ullam ex iste in officia eveniet
-                        blanditiis quae iure ducimus explicabo dicta molestias, reiciendis quidem unde.
-                     </p>
-                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique omnis fugiat sapiente corrupti iure vitae
-                        tempora magnam laboriosam eligendi voluptatem? Quisquam similique officia eum? Ullam ex iste in officia eveniet
-                        blanditiis quae iure ducimus explicabo dicta molestias, reiciendis quidem unde.
-                     </p>
-                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique omnis fugiat sapiente corrupti iure vitae
-                        tempora magnam laboriosam eligendi voluptatem? Quisquam similique officia eum? Ullam ex iste in officia eveniet
-                        blanditiis quae iure ducimus explicabo dicta molestias, reiciendis quidem unde.
-                     </p>
+                     <a href="project_1/sample_1_umap.html">
+                        <h4 style="text-align:center">
+                           Demo 1: Twitch Chat Analysis
+                        </h4>
+                     </a>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-image">
+                     <a href="project_1/sample_1_graph.html">
+                     <img src="img/project_1/graph_1.jpg" alt="Card Image">
+                     </a>
+                  </div>
+                  <div class="card-description">
+                     <a href="project_1/sample_1_graph.html">
+                        <h4 style="text-align:center">
+                           Demo 2: Graph of frequent words
+                        </h4>
+                     </a>
                   </div>
                </div>
             </section>
-         </div>
-         <section>
-            <div class="card">
-               <div class="card-image">
-                  <a href="project_1/sample_1_umap.html">
-                  <img src="img/project_1/umap_1.jpg" alt="Card Image">
-                  </a>
+            <section id="blogpost">
+               <div class="card">
+                  <h3>Literature</h3>
+                  <p>
+                     [1] Devlin, J., Chang, M. W., Lee, K., & Toutanova, K. (2018). Bert: Pre-training of deep bidirectional transformers for language understanding. arXiv preprint arXiv:1810.04805.<br>
+                     [2] Reimers, N., & Gurevych, I. (2019). Sentence-bert: Sentence embeddings using siamese bert-networks. arXiv preprint arXiv:1908.10084.<br>
+                     [3] McInnes, L., Healy, J., & Melville, J. (2018). Umap: Uniform manifold approximation and projection for dimension reduction. arXiv preprint arXiv:1802.03426.<br>
+                  </p>
                </div>
-               <div class="card-description">
-                  <a href="project_1/sample_1_umap.html">
-                     <h4 style="text-align:center">
-                     UMap of sentence embeddings + predicted classes</h4>
-                  </a>
-               </div>
-            </div>
-            <div class="card">
-               <div class="card-image">
-                  <a href="project_1/sample_1_graph.html">
-                  <img src="img/project_1/graph_1.jpg" alt="Card Image">
-                  </a>
-               </div>
-               <div class="card-description">
-                  <a href="project_1/sample_1_graph.html">
-                     <h4 style="text-align:center">
-                     Frequently occurring words in sentence</h4>
-                  </a>
-               </div>
-            </div>
-         </section>
-         <footer>
-            <div id="left-footer">
-               <h3>Quick Links</h3>
-               <p>
-               <ul>
-                  <li>
-                     <a href="index.html">Home</a>
-                  </li>
-                  <li>
-                     <a href="list_projects.html">Projects</a>
-                  </li>
-                  <li>
-                     <a href="about.html">About</a>
-                  </li>
-               </ul>
-               </p>
-            </div>
-            <div id="right-footer">
-               <div id="social-media-footer">
+            </section>
+            <footer>
+               <div id="left-footer">
+                  <h3>Quick Links</h3>
+                  <p>
                   <ul>
                      <li>
-                        <a href="https://www.instagram.com/kalunhodotcom">
-                        <i class="fab fa-instagram"></i>
-                        </a>
+                        <a href="index.html">Home</a>
                      </li>
                      <li>
-                        <a href="https://www.youtube.com/c/kalunho">
-                        <i class="fab fa-youtube"></i>
-                        </a>
+                        <a href="list_projects.html">Projects</a>
                      </li>
                      <li>
-                        <a href="https://www.linkedin.com/in/kalun-ho-6391a3113/">
-                        <i class="fab fa-linkedin"></i>
-                        </a>
-                     </li>
-                     <li>
-                        <a href="https://github.com/kalunho17">
-                        <i class="fab fa-github"></i>
-                        </a>
-                     </li>
-                     <li>
-                        <a href="https://www.patreon.com/kalunho">
-                        <i class="fab fa-patreon"></i>
-                        </a>
+                        <a href="about.html">About</a>
                      </li>
                   </ul>
+                  </p>
                </div>
-            </div>
-         </footer>
-      </main>
+               <div id="right-footer">
+                  <div id="social-media-footer">
+                     <ul>
+                        <li>
+                           <a href="https://www.instagram.com/kalunhodotcom">
+                           <i class="fab fa-instagram"></i>
+                           </a>
+                        </li>
+                        <li>
+                           <a href="https://www.youtube.com/c/kalunho">
+                           <i class="fab fa-youtube"></i>
+                           </a>
+                        </li>
+                        <li>
+                           <a href="https://www.linkedin.com/in/kalun-ho-6391a3113/">
+                           <i class="fab fa-linkedin"></i>
+                           </a>
+                        </li>
+                        <li>
+                           <a href="https://github.com/kalunho17">
+                           <i class="fab fa-github"></i>
+                           </a>
+                        </li>
+                        <li>
+                           <a href="https://www.patreon.com/kalunho">
+                           <i class="fab fa-patreon"></i>
+                           </a>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </footer>
+         </main>
       <script src="src/main.js"></script>
    </body>
 </html>
