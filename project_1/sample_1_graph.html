@@ -1,476 +1,489 @@
 <!DOCTYPE html>
 <html>
    <head>
-      <title>Graph</title>
-      <meta charset="utf-8">
+      <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <link rel="apple-touch-icon" sizes="76x76" href="favicon/apple-touch-icon.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="../favicon/favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="../favicon/favicon-16x16.png">
+      <link rel="manifest" href="favicon/site.webmanifest">
+      <link rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#5bbad5">
+      <meta name="msapplication-TileColor" content="#da532c">
+      <meta name="theme-color" content="#ffffff">
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt"
+         crossorigin="anonymous">
+      <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed|Roboto+Slab" rel="stylesheet">
+      <link rel="stylesheet" href="../src/style.css">
+      <title>Kalun Ho</title>
    </head>
    <body>
       <p><input style="width:100%;" type="range" min="0" max="1" step="any" value="0.5"></p>
       <svg width="100%" height="100%"></svg>
-      <script src="https://d3js.org/d3.v4.min.js"></script>
+      <script src="../src/d3.v4.min.js"></script>
       <script>
-var baseNodes =[
- {id: "'re", group: 1, label: "'re", level: 1},
- {id: "Amouranth", group: 1, label: "Amouranth", level: 1},
- {id: "God", group: 1, label: "God", level: 1},
- {id: "HyperCrown", group: 1, label: "HyperCrown", level: 1},
- {id: "LOVE", group: 1, label: "LOVE", level: 1},
- {id: "Lick", group: 1, label: "Lick", level: 1},
- {id: "Love", group: 1, label: "Love", level: 1},
- {id: "Message", group: 1, label: "Message", level: 1},
- {id: "NotLikeThis", group: 1, label: "NotLikeThis", level: 1},
- {id: "She", group: 1, label: "She", level: 1},
- {id: "Very", group: 1, label: "Very", level: 1},
- {id: "YOU", group: 1, label: "YOU", level: 1},
- {id: "You", group: 1, label: "You", level: 1},
- {id: "almost", group: 1, label: "almost", level: 1},
- {id: "ammoHeart", group: 1, label: "ammoHeart", level: 1},
- {id: "ammoMJ", group: 1, label: "ammoMJ", level: 1},
- {id: "amouranth", group: 1, label: "amouranth", level: 1},
- {id: "asmr", group: 1, label: "asmr", level: 1},
- {id: "ass", group: 1, label: "ass", level: 1},
- {id: "big", group: 1, label: "big", level: 1},
- {id: "birthday", group: 1, label: "birthday", level: 1},
- {id: "bless", group: 1, label: "bless", level: 1},
- {id: "body", group: 1, label: "body", level: 1},
- {id: "cmonBruh", group: 1, label: "cmonBruh", level: 1},
- {id: "content", group: 1, label: "content", level: 1},
- {id: "could", group: 1, label: "could", level: 1},
- {id: "cute", group: 1, label: "cute", level: 1},
- {id: "day", group: 1, label: "day", level: 1},
- {id: "deleted", group: 1, label: "deleted", level: 1},
- {id: "dont", group: 1, label: "dont", level: 1},
- {id: "ear", group: 1, label: "ear", level: 1},
- {id: "ears", group: 1, label: "ears", level: 1},
- {id: "else", group: 1, label: "else", level: 1},
- {id: "eyes", group: 1, label: "eyes", level: 1},
- {id: "face", group: 1, label: "face", level: 1},
- {id: "fcking", group: 1, label: "fcking", level: 1},
- {id: "get", group: 1, label: "get", level: 1},
- {id: "girl", group: 1, label: "girl", level: 1},
- {id: "gorgeous", group: 1, label: "gorgeous", level: 1},
- {id: "happy", group: 1, label: "happy", level: 1},
- {id: "hello", group: 1, label: "hello", level: 1},
- {id: "hot", group: 1, label: "hot", level: 1},
- {id: "hub", group: 1, label: "hub", level: 1},
- {id: "ive", group: 1, label: "ive", level: 1},
- {id: "keep", group: 1, label: "keep", level: 1},
- {id: "know", group: 1, label: "know", level: 1},
- {id: "licking", group: 1, label: "licking", level: 1},
- {id: "like", group: 1, label: "like", level: 1},
- {id: "lol", group: 1, label: "lol", level: 1},
- {id: "message", group: 1, label: "message", level: 1},
- {id: "mic", group: 1, label: "mic", level: 1},
- {id: "microphone", group: 1, label: "microphone", level: 1},
- {id: "much", group: 1, label: "much", level: 1},
- {id: "n't", group: 1, label: "n't", level: 1},
- {id: "nice", group: 1, label: "nice", level: 1},
- {id: "night", group: 1, label: "night", level: 1},
- {id: "perfect", group: 1, label: "perfect", level: 1},
- {id: "please", group: 1, label: "please", level: 1},
- {id: "pls", group: 1, label: "pls", level: 1},
- {id: "plz", group: 1, label: "plz", level: 1},
- {id: "pretty", group: 1, label: "pretty", level: 1},
- {id: "roraBOOTY", group: 1, label: "roraBOOTY", level: 1},
- {id: "say", group: 1, label: "say", level: 1},
- {id: "see", group: 1, label: "see", level: 1},
- {id: "seen", group: 1, label: "seen", level: 1},
- {id: "show", group: 1, label: "show", level: 1},
- {id: "site", group: 1, label: "site", level: 1},
- {id: "stop", group: 1, label: "stop", level: 1},
- {id: "streams", group: 1, label: "streams", level: 1},
- {id: "sub", group: 1, label: "sub", level: 1},
- {id: "suck", group: 1, label: "suck", level: 1},
- {id: "time", group: 1, label: "time", level: 1},
- {id: "today", group: 1, label: "today", level: 1},
- {id: "twitchRaid", group: 1, label: "twitchRaid", level: 1},
- {id: "wan", group: 1, label: "wan", level: 1},
- {id: "want", group: 1, label: "want", level: 1},
- {id: "way", group: 1, label: "way", level: 1},
- {id: "work", group: 1, label: "work", level: 1},
- {id: "would", group: 1, label: "would", level: 1},
- {id: "wow", group: 1, label: "wow", level: 1}
-]
-var baseLinks =[
-    {target: "cmonBruh", source: "cmonBruh", strength: 0.45},
-    {target: "night", source: "night", strength: 0.91},
-    {target: "pretty", source: "ammoHeart", strength: 0.91},
-    {target: "perfect", source: "get", strength: 0.91},
-    {target: "please", source: "Lick", strength: 0.91},
-    {target: "birthday", source: "birthday", strength: 0.91},
-    {target: "could", source: "birthday", strength: 0.82},
-    {target: "happy", source: "birthday", strength: 0.82},
-    {target: "say", source: "birthday", strength: 0.82},
-    {target: "today", source: "birthday", strength: 0.82},
-    {target: "happy", source: "could", strength: 0.91},
-    {target: "say", source: "could", strength: 0.91},
-    {target: "today", source: "could", strength: 0.91},
-    {target: "say", source: "happy", strength: 0.91},
-    {target: "today", source: "happy", strength: 0.91},
-    {target: "today", source: "say", strength: 0.91},
-    {target: "face", source: "face", strength: 0.91},
-    {target: "see", source: "face", strength: 0.82},
-    {target: "sub", source: "pls", strength: 0.91},
-    {target: "message", source: "deleted", strength: 0.73},
-    {target: "mic", source: "could", strength: 0.91},
-    {target: "pls", source: "could", strength: 0.91},
-    {target: "pls", source: "mic", strength: 0.91},
-    {target: "twitchRaid", source: "twitchRaid", strength: 0.45},
-    {target: "pls", source: "hub", strength: 0.91},
-    {target: "stop", source: "plz", strength: 0.91},
-    {target: "nice", source: "Very", strength: 0.91},
-    {target: "suck", source: "nice", strength: 0.91},
-    {target: "hot", source: "Amouranth", strength: 0.91},
-    {target: "wan", source: "Amouranth", strength: 0.91},
-    {target: "wan", source: "hot", strength: 0.91},
-    {target: "want", source: "pls", strength: 0.91},
-    {target: "way", source: "eyes", strength: 0.91},
-    {target: "deleted", source: "Message", strength: 0.73},
-    {target: "NotLikeThis", source: "NotLikeThis", strength: 0.45},
-    {target: "deleted", source: "NotLikeThis", strength: 0.64},
-    {target: "message", source: "NotLikeThis", strength: 0.64},
-    {target: "else", source: "ammoMJ", strength: 0.91},
-    {target: "like", source: "ammoMJ", strength: 0.91},
-    {target: "streams", source: "ammoMJ", strength: 0.91},
-    {target: "like", source: "else", strength: 0.91},
-    {target: "streams", source: "else", strength: 0.91},
-    {target: "streams", source: "like", strength: 0.91},
-    {target: "licking", source: "ear", strength: 0.91},
-    {target: "much", source: "ear", strength: 0.91},
-    {target: "streams", source: "ear", strength: 0.91},
-    {target: "much", source: "licking", strength: 0.91},
-    {target: "streams", source: "licking", strength: 0.91},
-    {target: "streams", source: "much", strength: 0.91},
-    {target: "fcking", source: "fcking", strength: 0.91},
-    {target: "day", source: "Amouranth", strength: 0.91},
-    {target: "show", source: "please", strength: 0.91},
-    {target: "YOU", source: "LOVE", strength: 0.82},
-    {target: "amouranth", source: "LOVE", strength: 0.91},
-    {target: "amouranth", source: "YOU", strength: 0.91},
-    {target: "please", source: "ears", strength: 0.91},
-    {target: "see", source: "ears", strength: 0.91},
-    {target: "see", source: "please", strength: 0.91},
-    {target: "n't", source: "microphone", strength: 0.82},
-    {target: "please", source: "microphone", strength: 0.82},
-    {target: "suck", source: "microphone", strength: 0.82},
-    {target: "please", source: "n't", strength: 0.91},
-    {target: "suck", source: "n't", strength: 0.91},
-    {target: "suck", source: "please", strength: 0.82},
-    {target: "microphone", source: "dont", strength: 0.91},
-    {target: "please", source: "dont", strength: 0.82},
-    {target: "suck", source: "dont", strength: 0.91},
-    {target: "pretty", source: "'re", strength: 0.91},
-    {target: "roraBOOTY", source: "Love", strength: 0.64},
-    {target: "roraBOOTY", source: "roraBOOTY", strength: 0.45},
-    {target: "girl", source: "You", strength: 0.91},
-    {target: "ive", source: "You", strength: 0.91},
-    {target: "seen", source: "You", strength: 0.91},
-    {target: "ive", source: "girl", strength: 0.91},
-    {target: "seen", source: "girl", strength: 0.91},
-    {target: "seen", source: "ive", strength: 0.82},
-    {target: "ass", source: "asmr", strength: 0.91},
-    {target: "show", source: "pls", strength: 0.91},
-    {target: "n't", source: "know", strength: 0.91},
-    {target: "site", source: "know", strength: 0.91},
-    {target: "site", source: "n't", strength: 0.91},
-    {target: "site", source: "hub", strength: 0.91},
-    {target: "keep", source: "amouranth", strength: 0.91},
-    {target: "work", source: "amouranth", strength: 0.91},
-    {target: "work", source: "keep", strength: 0.82},
-    {target: "ears", source: "dont", strength: 0.91},
-    {target: "show", source: "dont", strength: 0.91},
-    {target: "show", source: "ears", strength: 0.91},
-    {target: "bless", source: "God", strength: 0.82},
-    {target: "ears", source: "Lick", strength: 0.91},
-    {target: "HyperCrown", source: "HyperCrown", strength: 0.91},
-    {target: "see", source: "cute", strength: 0.91},
-    {target: "hot", source: "cute", strength: 0.91},
-    {target: "suck", source: "She", strength: 0.91},
-    {target: "almost", source: "almost", strength: 0.91},
-    {target: "keep", source: "almost", strength: 0.82},
-    {target: "would", source: "lol", strength: 0.91},
-    {target: "microphone", source: "know", strength: 0.91},
-    {target: "want", source: "mic", strength: 0.91},
-    {target: "else", source: "big", strength: 0.91},
-    {target: "today", source: "Amouranth", strength: 0.91},
-    {target: "cute", source: "She", strength: 0.91},
-    {target: "see", source: "ass", strength: 0.91},
-    {target: "big", source: "ass", strength: 0.82},
-    {target: "much", source: "body", strength: 0.91},
-    {target: "pretty", source: "body", strength: 0.91},
-    {target: "pretty", source: "much", strength: 0.91},
-    {target: "ammoHeart", source: "ammoHeart", strength: 0.00},
-    {target: "amouranth", source: "ammoHeart", strength: 0.64},
-    {target: "lol", source: "ammoHeart", strength: 0.82},
-    {target: "microphone", source: "ammoHeart", strength: 0.82},
-    {target: "n't", source: "ammoHeart", strength: 0.82},
-    {target: "stop", source: "ammoHeart", strength: 0.82},
-    {target: "amouranth", source: "amouranth", strength: 0.91},
-    {target: "lol", source: "amouranth", strength: 0.82},
-    {target: "microphone", source: "amouranth", strength: 0.82},
-    {target: "n't", source: "amouranth", strength: 0.82},
-    {target: "stop", source: "amouranth", strength: 0.82},
-    {target: "microphone", source: "lol", strength: 0.91},
-    {target: "n't", source: "lol", strength: 0.91},
-    {target: "stop", source: "lol", strength: 0.91},
-    {target: "stop", source: "microphone", strength: 0.91},
-    {target: "stop", source: "n't", strength: 0.91},
-    {target: "wow", source: "hot", strength: 0.91},
-    {target: "Amouranth", source: "'re", strength: 0.91},
-    {target: "say", source: "'re", strength: 0.91},
-    {target: "say", source: "Amouranth", strength: 0.91},
-    {target: "way", source: "dont", strength: 0.91},
-    {target: "pretty", source: "eyes", strength: 0.91},
-    {target: "time", source: "content", strength: 0.91},
-    {target: "hello", source: "ears", strength: 0.91},
-    {target: "nice", source: "ears", strength: 0.91},
-    {target: "nice", source: "hello", strength: 0.91},
-    {target: "ive", source: "body", strength: 0.91},
-    {target: "seen", source: "body", strength: 0.91},
-    {target: "ammoMJ", source: "ammoHeart", strength: 0.55},
-    {target: "gorgeous", source: "ammoHeart", strength: 0.55},
-    {target: "gorgeous", source: "ammoMJ", strength: 0.91},
-    {target: "licking", source: "keep", strength: 0.91},
-    {target: "please", source: "keep", strength: 0.91},
-    {target: "please", source: "licking", strength: 0.91}
-  ]
-         
-         var nodes = [...baseNodes]
-         var links = [...baseLinks]
-         
-         function getNeighbors(node) {
-           return baseLinks.reduce(function (neighbors, link) {
-               if (link.target.id === node.id) {
-                 neighbors.push(link.source.id)
-               } else if (link.source.id === node.id) {
-                 neighbors.push(link.target.id)
-               }
-               return neighbors
-             },
-             [node.id]
-           )
-         }
-         
-         function isNeighborLink(node, link) {
-           return link.target.id === node.id || link.source.id === node.id
-         }
-         
-         
-         function getNodeColor(node, neighbors) {
-           if (Array.isArray(neighbors) && neighbors.indexOf(node.id) > -1) {
-             return node.level === 1 ? 'red' : 'green'
-           }
-         
-           return node.level === 1 ? 'steelblue' : 'gray'
-         }
-         
-         
-         function getLinkColor(node, link) {
-           return isNeighborLink(node, link) ? 'green' : '#E5E5E5'
-         }
-         
-         function getTextColor(node, neighbors) {
-           return Array.isArray(neighbors) && neighbors.indexOf(node.id) > -1 ? 'green' : 'black'
-         }
-         
-         var width = window.innerWidth
-         var height = window.innerHeight
-         
-         var svg = d3.select('svg')
-         svg.attr('width', width).attr('height', height)
-         
-         var linkElements,
-           nodeElements,
-           textElements
-         
-         // we use svg groups to logically group the elements together
-         var linkGroup = svg.append('g').attr('class', 'links')
-         var nodeGroup = svg.append('g').attr('class', 'nodes')
-         var textGroup = svg.append('g').attr('class', 'texts')
-         
-         // we use this reference to select/deselect
-         // after clicking the same element twice
-         var selectedId
-         
-         // simulation setup with all forces
-         var linkForce = d3
-           .forceLink()
-           .id(function (link) { return link.id })
-           .strength(function (link) { return link.strength })
-         
-         var simulation = d3
-           .forceSimulation()
-           .force('link', linkForce)
-           .force('charge', d3.forceManyBody().strength(-330))
-           .force('center', d3.forceCenter(width / 2, height / 2))
-         
-         d3.select("input[type=range]")
-             .on("input", inputted);
-         	
-         var dragDrop = d3.drag().on('start', function (node) {
-           node.fx = node.x
-           node.fy = node.y
-         }).on('drag', function (node) {
-           simulation.alphaTarget(0.7).restart()
-           node.fx = d3.event.x
-           node.fy = d3.event.y
-         }).on('end', function (node) {
-           if (!d3.event.active) {
-             simulation.alphaTarget(0)
-           }
-           node.fx = null
-           node.fy = null
-         })
-         
-         // select node is called on every click
-         // we either update the data according to the selection
-         // or reset the data if the same node is clicked twice
-         function selectNode(selectedNode) {
-           if (selectedId === selectedNode.id) {
-             selectedId = undefined
-             resetData()
-             updateSimulation()
-           } else {
-             selectedId = selectedNode.id
-             updateData(selectedNode)
-             updateSimulation()
-           }
-         
-           var neighbors = getNeighbors(selectedNode)
-         
-           // we modify the styles to highlight selected nodes
-           nodeElements.attr('fill', function (node) { return getNodeColor(node, neighbors) })
-           textElements.attr('fill', function (node) { return getTextColor(node, neighbors) })
-           linkElements.attr('stroke', function (link) { return getLinkColor(selectedNode, link) })
-         }
-         
-         // this helper simple adds all nodes and links
-         // that are missing, to recreate the initial state
-         function resetData() {
-           var nodeIds = nodes.map(function (node) { return node.id })
-         
-           baseNodes.forEach(function (node) {
-             if (nodeIds.indexOf(node.id) === -1) {
-               nodes.push(node)
-             }
-           })
-         
-           links = baseLinks
-         }
-         
-         // diffing and mutating the data
-         function updateData(selectedNode) {
-           var neighbors = getNeighbors(selectedNode)
-           var newNodes = baseNodes.filter(function (node) {
-             return neighbors.indexOf(node.id) > -1 || node.level === 1
-           })
-         
-           var diff = {
-             removed: nodes.filter(function (node) { return newNodes.indexOf(node) === -1 }),
-             added: newNodes.filter(function (node) { return nodes.indexOf(node) === -1 })
-           }
-         
-           diff.removed.forEach(function (node) { nodes.splice(nodes.indexOf(node), 1) })
-           diff.added.forEach(function (node) { nodes.push(node) })
-         
-           links = baseLinks.filter(function (link) {
-             return link.target.id === selectedNode.id || link.source.id === selectedNode.id
-           })
-         }
-         
-         function updateGraph() {
-           // links
-           linkElements = linkGroup.selectAll('line')
-             .data(links, function (link) {
-               return link.target.id + link.source.id
-             })
-         
-           linkElements.exit().remove()
-         
-           var linkEnter = linkElements
-             .enter().append('line')
-             .attr('stroke-width', 3)
-             .attr('stroke', 'rgba(50, 50, 50, 0.2)')
-         
-           linkElements = linkEnter.merge(linkElements)
-         
-           // nodes
-           nodeElements = nodeGroup.selectAll('circle')
-             .data(nodes, function (node) { return node.id })
-         
-           nodeElements.exit().remove()
-         
-           var nodeEnter = nodeElements
-             .enter()
-             .append('circle')
-             .attr('r', 15)
-             .attr('fill', function (node) { return node.level === 1 ? 'Steelblue' : 'gray' })
-             .call(dragDrop)
-             // we link the selectNode method here
-             // to update the graph on every click
-             .on('click', selectNode)
-         
-           nodeElements = nodeEnter.merge(nodeElements)
-         
-           // texts
-           textElements = textGroup.selectAll('text')
-             .data(nodes, function (node) { return node.id })
-         
-           textElements.exit().remove()
-         
-           var textEnter = textElements
-             .enter()
-             .append('text')
-             .text(function (node) { return node.label })
-             .attr('font-size', 15)
-             .attr('dx', 15)
-             .attr('dy', 4)
-         
-           textElements = textEnter.merge(textElements)
-         }
-         
-         function updateSimulation() {
-           updateGraph()
-         
-           simulation.nodes(nodes).on('tick', () => {
-             nodeElements
-               .attr('cx', function (node) { return node.x })
-               .attr('cy', function (node) { return node.y })
-             textElements
-               .attr('x', function (node) { return node.x })
-               .attr('y', function (node) { return node.y })
-             linkElements
-               .attr('x1', function (link) { return link.source.x })
-               .attr('y1', function (link) { return link.source.y })
-               .attr('x2', function (link) { return link.target.x })
-               .attr('y2', function (link) { return link.target.y })
-           })
-         
-           simulation.force('link').links(links)
-           simulation.alphaTarget(0.7).restart()
-         }
-         
-         function inputted() {
-           simulation.force("link").strength(+this.value);
-           simulation.alpha(1).restart();
-         }
-         //add zoom capabilities 
-         var zoom_handler = d3.zoom()
-             .on("zoom", zoom_actions);
-         zoom_handler(svg);   
-         
-         //Zoom functions 
-         function zoom_actions(){
-             linkGroup.attr("transform", d3.event.transform);
-             nodeGroup.attr("transform", d3.event.transform);
-             textGroup.attr("transform", d3.event.transform);
-         }
-         
-         // last but not least, we call updateSimulation
-         // to trigger the initial render
-         updateSimulation()
-         
+         var baseNodes =[
+          {id: "'re", group: 1, label: "'re", level: 1},
+          {id: "Amouranth", group: 1, label: "Amouranth", level: 1},
+          {id: "God", group: 1, label: "God", level: 1},
+          {id: "HyperCrown", group: 1, label: "HyperCrown", level: 1},
+          {id: "LOVE", group: 1, label: "LOVE", level: 1},
+          {id: "Lick", group: 1, label: "Lick", level: 1},
+          {id: "Love", group: 1, label: "Love", level: 1},
+          {id: "Message", group: 1, label: "Message", level: 1},
+          {id: "NotLikeThis", group: 1, label: "NotLikeThis", level: 1},
+          {id: "She", group: 1, label: "She", level: 1},
+          {id: "Very", group: 1, label: "Very", level: 1},
+          {id: "YOU", group: 1, label: "YOU", level: 1},
+          {id: "You", group: 1, label: "You", level: 1},
+          {id: "almost", group: 1, label: "almost", level: 1},
+          {id: "ammoHeart", group: 1, label: "ammoHeart", level: 1},
+          {id: "ammoMJ", group: 1, label: "ammoMJ", level: 1},
+          {id: "amouranth", group: 1, label: "amouranth", level: 1},
+          {id: "asmr", group: 1, label: "asmr", level: 1},
+          {id: "ass", group: 1, label: "ass", level: 1},
+          {id: "big", group: 1, label: "big", level: 1},
+          {id: "birthday", group: 1, label: "birthday", level: 1},
+          {id: "bless", group: 1, label: "bless", level: 1},
+          {id: "body", group: 1, label: "body", level: 1},
+          {id: "cmonBruh", group: 1, label: "cmonBruh", level: 1},
+          {id: "content", group: 1, label: "content", level: 1},
+          {id: "could", group: 1, label: "could", level: 1},
+          {id: "cute", group: 1, label: "cute", level: 1},
+          {id: "day", group: 1, label: "day", level: 1},
+          {id: "deleted", group: 1, label: "deleted", level: 1},
+          {id: "dont", group: 1, label: "dont", level: 1},
+          {id: "ear", group: 1, label: "ear", level: 1},
+          {id: "ears", group: 1, label: "ears", level: 1},
+          {id: "else", group: 1, label: "else", level: 1},
+          {id: "eyes", group: 1, label: "eyes", level: 1},
+          {id: "face", group: 1, label: "face", level: 1},
+          {id: "fcking", group: 1, label: "fcking", level: 1},
+          {id: "get", group: 1, label: "get", level: 1},
+          {id: "girl", group: 1, label: "girl", level: 1},
+          {id: "gorgeous", group: 1, label: "gorgeous", level: 1},
+          {id: "happy", group: 1, label: "happy", level: 1},
+          {id: "hello", group: 1, label: "hello", level: 1},
+          {id: "hot", group: 1, label: "hot", level: 1},
+          {id: "hub", group: 1, label: "hub", level: 1},
+          {id: "ive", group: 1, label: "ive", level: 1},
+          {id: "keep", group: 1, label: "keep", level: 1},
+          {id: "know", group: 1, label: "know", level: 1},
+          {id: "licking", group: 1, label: "licking", level: 1},
+          {id: "like", group: 1, label: "like", level: 1},
+          {id: "lol", group: 1, label: "lol", level: 1},
+          {id: "message", group: 1, label: "message", level: 1},
+          {id: "mic", group: 1, label: "mic", level: 1},
+          {id: "microphone", group: 1, label: "microphone", level: 1},
+          {id: "much", group: 1, label: "much", level: 1},
+          {id: "n't", group: 1, label: "n't", level: 1},
+          {id: "nice", group: 1, label: "nice", level: 1},
+          {id: "night", group: 1, label: "night", level: 1},
+          {id: "perfect", group: 1, label: "perfect", level: 1},
+          {id: "please", group: 1, label: "please", level: 1},
+          {id: "pls", group: 1, label: "pls", level: 1},
+          {id: "plz", group: 1, label: "plz", level: 1},
+          {id: "pretty", group: 1, label: "pretty", level: 1},
+          {id: "roraBOOTY", group: 1, label: "roraBOOTY", level: 1},
+          {id: "say", group: 1, label: "say", level: 1},
+          {id: "see", group: 1, label: "see", level: 1},
+          {id: "seen", group: 1, label: "seen", level: 1},
+          {id: "show", group: 1, label: "show", level: 1},
+          {id: "site", group: 1, label: "site", level: 1},
+          {id: "stop", group: 1, label: "stop", level: 1},
+          {id: "streams", group: 1, label: "streams", level: 1},
+          {id: "sub", group: 1, label: "sub", level: 1},
+          {id: "suck", group: 1, label: "suck", level: 1},
+          {id: "time", group: 1, label: "time", level: 1},
+          {id: "today", group: 1, label: "today", level: 1},
+          {id: "twitchRaid", group: 1, label: "twitchRaid", level: 1},
+          {id: "wan", group: 1, label: "wan", level: 1},
+          {id: "want", group: 1, label: "want", level: 1},
+          {id: "way", group: 1, label: "way", level: 1},
+          {id: "work", group: 1, label: "work", level: 1},
+          {id: "would", group: 1, label: "would", level: 1},
+          {id: "wow", group: 1, label: "wow", level: 1}
+         ]
+         var baseLinks =[
+             {target: "cmonBruh", source: "cmonBruh", strength: 0.45},
+             {target: "night", source: "night", strength: 0.91},
+             {target: "pretty", source: "ammoHeart", strength: 0.91},
+             {target: "perfect", source: "get", strength: 0.91},
+             {target: "please", source: "Lick", strength: 0.91},
+             {target: "birthday", source: "birthday", strength: 0.91},
+             {target: "could", source: "birthday", strength: 0.82},
+             {target: "happy", source: "birthday", strength: 0.82},
+             {target: "say", source: "birthday", strength: 0.82},
+             {target: "today", source: "birthday", strength: 0.82},
+             {target: "happy", source: "could", strength: 0.91},
+             {target: "say", source: "could", strength: 0.91},
+             {target: "today", source: "could", strength: 0.91},
+             {target: "say", source: "happy", strength: 0.91},
+             {target: "today", source: "happy", strength: 0.91},
+             {target: "today", source: "say", strength: 0.91},
+             {target: "face", source: "face", strength: 0.91},
+             {target: "see", source: "face", strength: 0.82},
+             {target: "sub", source: "pls", strength: 0.91},
+             {target: "message", source: "deleted", strength: 0.73},
+             {target: "mic", source: "could", strength: 0.91},
+             {target: "pls", source: "could", strength: 0.91},
+             {target: "pls", source: "mic", strength: 0.91},
+             {target: "twitchRaid", source: "twitchRaid", strength: 0.45},
+             {target: "pls", source: "hub", strength: 0.91},
+             {target: "stop", source: "plz", strength: 0.91},
+             {target: "nice", source: "Very", strength: 0.91},
+             {target: "suck", source: "nice", strength: 0.91},
+             {target: "hot", source: "Amouranth", strength: 0.91},
+             {target: "wan", source: "Amouranth", strength: 0.91},
+             {target: "wan", source: "hot", strength: 0.91},
+             {target: "want", source: "pls", strength: 0.91},
+             {target: "way", source: "eyes", strength: 0.91},
+             {target: "deleted", source: "Message", strength: 0.73},
+             {target: "NotLikeThis", source: "NotLikeThis", strength: 0.45},
+             {target: "deleted", source: "NotLikeThis", strength: 0.64},
+             {target: "message", source: "NotLikeThis", strength: 0.64},
+             {target: "else", source: "ammoMJ", strength: 0.91},
+             {target: "like", source: "ammoMJ", strength: 0.91},
+             {target: "streams", source: "ammoMJ", strength: 0.91},
+             {target: "like", source: "else", strength: 0.91},
+             {target: "streams", source: "else", strength: 0.91},
+             {target: "streams", source: "like", strength: 0.91},
+             {target: "licking", source: "ear", strength: 0.91},
+             {target: "much", source: "ear", strength: 0.91},
+             {target: "streams", source: "ear", strength: 0.91},
+             {target: "much", source: "licking", strength: 0.91},
+             {target: "streams", source: "licking", strength: 0.91},
+             {target: "streams", source: "much", strength: 0.91},
+             {target: "fcking", source: "fcking", strength: 0.91},
+             {target: "day", source: "Amouranth", strength: 0.91},
+             {target: "show", source: "please", strength: 0.91},
+             {target: "YOU", source: "LOVE", strength: 0.82},
+             {target: "amouranth", source: "LOVE", strength: 0.91},
+             {target: "amouranth", source: "YOU", strength: 0.91},
+             {target: "please", source: "ears", strength: 0.91},
+             {target: "see", source: "ears", strength: 0.91},
+             {target: "see", source: "please", strength: 0.91},
+             {target: "n't", source: "microphone", strength: 0.82},
+             {target: "please", source: "microphone", strength: 0.82},
+             {target: "suck", source: "microphone", strength: 0.82},
+             {target: "please", source: "n't", strength: 0.91},
+             {target: "suck", source: "n't", strength: 0.91},
+             {target: "suck", source: "please", strength: 0.82},
+             {target: "microphone", source: "dont", strength: 0.91},
+             {target: "please", source: "dont", strength: 0.82},
+             {target: "suck", source: "dont", strength: 0.91},
+             {target: "pretty", source: "'re", strength: 0.91},
+             {target: "roraBOOTY", source: "Love", strength: 0.64},
+             {target: "roraBOOTY", source: "roraBOOTY", strength: 0.45},
+             {target: "girl", source: "You", strength: 0.91},
+             {target: "ive", source: "You", strength: 0.91},
+             {target: "seen", source: "You", strength: 0.91},
+             {target: "ive", source: "girl", strength: 0.91},
+             {target: "seen", source: "girl", strength: 0.91},
+             {target: "seen", source: "ive", strength: 0.82},
+             {target: "ass", source: "asmr", strength: 0.91},
+             {target: "show", source: "pls", strength: 0.91},
+             {target: "n't", source: "know", strength: 0.91},
+             {target: "site", source: "know", strength: 0.91},
+             {target: "site", source: "n't", strength: 0.91},
+             {target: "site", source: "hub", strength: 0.91},
+             {target: "keep", source: "amouranth", strength: 0.91},
+             {target: "work", source: "amouranth", strength: 0.91},
+             {target: "work", source: "keep", strength: 0.82},
+             {target: "ears", source: "dont", strength: 0.91},
+             {target: "show", source: "dont", strength: 0.91},
+             {target: "show", source: "ears", strength: 0.91},
+             {target: "bless", source: "God", strength: 0.82},
+             {target: "ears", source: "Lick", strength: 0.91},
+             {target: "HyperCrown", source: "HyperCrown", strength: 0.91},
+             {target: "see", source: "cute", strength: 0.91},
+             {target: "hot", source: "cute", strength: 0.91},
+             {target: "suck", source: "She", strength: 0.91},
+             {target: "almost", source: "almost", strength: 0.91},
+             {target: "keep", source: "almost", strength: 0.82},
+             {target: "would", source: "lol", strength: 0.91},
+             {target: "microphone", source: "know", strength: 0.91},
+             {target: "want", source: "mic", strength: 0.91},
+             {target: "else", source: "big", strength: 0.91},
+             {target: "today", source: "Amouranth", strength: 0.91},
+             {target: "cute", source: "She", strength: 0.91},
+             {target: "see", source: "ass", strength: 0.91},
+             {target: "big", source: "ass", strength: 0.82},
+             {target: "much", source: "body", strength: 0.91},
+             {target: "pretty", source: "body", strength: 0.91},
+             {target: "pretty", source: "much", strength: 0.91},
+             {target: "ammoHeart", source: "ammoHeart", strength: 0.00},
+             {target: "amouranth", source: "ammoHeart", strength: 0.64},
+             {target: "lol", source: "ammoHeart", strength: 0.82},
+             {target: "microphone", source: "ammoHeart", strength: 0.82},
+             {target: "n't", source: "ammoHeart", strength: 0.82},
+             {target: "stop", source: "ammoHeart", strength: 0.82},
+             {target: "amouranth", source: "amouranth", strength: 0.91},
+             {target: "lol", source: "amouranth", strength: 0.82},
+             {target: "microphone", source: "amouranth", strength: 0.82},
+             {target: "n't", source: "amouranth", strength: 0.82},
+             {target: "stop", source: "amouranth", strength: 0.82},
+             {target: "microphone", source: "lol", strength: 0.91},
+             {target: "n't", source: "lol", strength: 0.91},
+             {target: "stop", source: "lol", strength: 0.91},
+             {target: "stop", source: "microphone", strength: 0.91},
+             {target: "stop", source: "n't", strength: 0.91},
+             {target: "wow", source: "hot", strength: 0.91},
+             {target: "Amouranth", source: "'re", strength: 0.91},
+             {target: "say", source: "'re", strength: 0.91},
+             {target: "say", source: "Amouranth", strength: 0.91},
+             {target: "way", source: "dont", strength: 0.91},
+             {target: "pretty", source: "eyes", strength: 0.91},
+             {target: "time", source: "content", strength: 0.91},
+             {target: "hello", source: "ears", strength: 0.91},
+             {target: "nice", source: "ears", strength: 0.91},
+             {target: "nice", source: "hello", strength: 0.91},
+             {target: "ive", source: "body", strength: 0.91},
+             {target: "seen", source: "body", strength: 0.91},
+             {target: "ammoMJ", source: "ammoHeart", strength: 0.55},
+             {target: "gorgeous", source: "ammoHeart", strength: 0.55},
+             {target: "gorgeous", source: "ammoMJ", strength: 0.91},
+             {target: "licking", source: "keep", strength: 0.91},
+             {target: "please", source: "keep", strength: 0.91},
+             {target: "please", source: "licking", strength: 0.91}
+           ]
+                  
+                  var nodes = [...baseNodes]
+                  var links = [...baseLinks]
+                  
+                  function getNeighbors(node) {
+                    return baseLinks.reduce(function (neighbors, link) {
+                        if (link.target.id === node.id) {
+                          neighbors.push(link.source.id)
+                        } else if (link.source.id === node.id) {
+                          neighbors.push(link.target.id)
+                        }
+                        return neighbors
+                      },
+                      [node.id]
+                    )
+                  }
+                  
+                  function isNeighborLink(node, link) {
+                    return link.target.id === node.id || link.source.id === node.id
+                  }
+                  
+                  
+                  function getNodeColor(node, neighbors) {
+                    if (Array.isArray(neighbors) && neighbors.indexOf(node.id) > -1) {
+                      return node.level === 1 ? 'red' : 'green'
+                    }
+                  
+                    return node.level === 1 ? 'steelblue' : 'gray'
+                  }
+                  
+                  
+                  function getLinkColor(node, link) {
+                    return isNeighborLink(node, link) ? 'green' : '#E5E5E5'
+                  }
+                  
+                  function getTextColor(node, neighbors) {
+                    return Array.isArray(neighbors) && neighbors.indexOf(node.id) > -1 ? 'green' : 'black'
+                  }
+                  
+                  var width = window.innerWidth
+                  var height = window.innerHeight
+                  
+                  var svg = d3.select('svg')
+                  svg.attr('width', width).attr('height', height)
+                  
+                  var linkElements,
+                    nodeElements,
+                    textElements
+                  
+                  // we use svg groups to logically group the elements together
+                  var linkGroup = svg.append('g').attr('class', 'links')
+                  var nodeGroup = svg.append('g').attr('class', 'nodes')
+                  var textGroup = svg.append('g').attr('class', 'texts')
+                  
+                  // we use this reference to select/deselect
+                  // after clicking the same element twice
+                  var selectedId
+                  
+                  // simulation setup with all forces
+                  var linkForce = d3
+                    .forceLink()
+                    .id(function (link) { return link.id })
+                    .strength(function (link) { return link.strength })
+                  
+                  var simulation = d3
+                    .forceSimulation()
+                    .force('link', linkForce)
+                    .force('charge', d3.forceManyBody().strength(-330))
+                    .force('center', d3.forceCenter(width / 2, height / 2))
+                  
+                  d3.select("input[type=range]")
+                      .on("input", inputted);
+                  	
+                  var dragDrop = d3.drag().on('start', function (node) {
+                    node.fx = node.x
+                    node.fy = node.y
+                  }).on('drag', function (node) {
+                    simulation.alphaTarget(0.7).restart()
+                    node.fx = d3.event.x
+                    node.fy = d3.event.y
+                  }).on('end', function (node) {
+                    if (!d3.event.active) {
+                      simulation.alphaTarget(0)
+                    }
+                    node.fx = null
+                    node.fy = null
+                  })
+                  
+                  // select node is called on every click
+                  // we either update the data according to the selection
+                  // or reset the data if the same node is clicked twice
+                  function selectNode(selectedNode) {
+                    if (selectedId === selectedNode.id) {
+                      selectedId = undefined
+                      resetData()
+                      updateSimulation()
+                    } else {
+                      selectedId = selectedNode.id
+                      updateData(selectedNode)
+                      updateSimulation()
+                    }
+                  
+                    var neighbors = getNeighbors(selectedNode)
+                  
+                    // we modify the styles to highlight selected nodes
+                    nodeElements.attr('fill', function (node) { return getNodeColor(node, neighbors) })
+                    textElements.attr('fill', function (node) { return getTextColor(node, neighbors) })
+                    linkElements.attr('stroke', function (link) { return getLinkColor(selectedNode, link) })
+                  }
+                  
+                  // this helper simple adds all nodes and links
+                  // that are missing, to recreate the initial state
+                  function resetData() {
+                    var nodeIds = nodes.map(function (node) { return node.id })
+                  
+                    baseNodes.forEach(function (node) {
+                      if (nodeIds.indexOf(node.id) === -1) {
+                        nodes.push(node)
+                      }
+                    })
+                  
+                    links = baseLinks
+                  }
+                  
+                  // diffing and mutating the data
+                  function updateData(selectedNode) {
+                    var neighbors = getNeighbors(selectedNode)
+                    var newNodes = baseNodes.filter(function (node) {
+                      return neighbors.indexOf(node.id) > -1 || node.level === 1
+                    })
+                  
+                    var diff = {
+                      removed: nodes.filter(function (node) { return newNodes.indexOf(node) === -1 }),
+                      added: newNodes.filter(function (node) { return nodes.indexOf(node) === -1 })
+                    }
+                  
+                    diff.removed.forEach(function (node) { nodes.splice(nodes.indexOf(node), 1) })
+                    diff.added.forEach(function (node) { nodes.push(node) })
+                  
+                    links = baseLinks.filter(function (link) {
+                      return link.target.id === selectedNode.id || link.source.id === selectedNode.id
+                    })
+                  }
+                  
+                  function updateGraph() {
+                    // links
+                    linkElements = linkGroup.selectAll('line')
+                      .data(links, function (link) {
+                        return link.target.id + link.source.id
+                      })
+                  
+                    linkElements.exit().remove()
+                  
+                    var linkEnter = linkElements
+                      .enter().append('line')
+                      .attr('stroke-width', 3)
+                      .attr('stroke', 'rgba(50, 50, 50, 0.2)')
+                  
+                    linkElements = linkEnter.merge(linkElements)
+                  
+                    // nodes
+                    nodeElements = nodeGroup.selectAll('circle')
+                      .data(nodes, function (node) { return node.id })
+                  
+                    nodeElements.exit().remove()
+                  
+                    var nodeEnter = nodeElements
+                      .enter()
+                      .append('circle')
+                      .attr('r', 15)
+                      .attr('fill', function (node) { return node.level === 1 ? 'Steelblue' : 'gray' })
+                      .call(dragDrop)
+                      // we link the selectNode method here
+                      // to update the graph on every click
+                      .on('click', selectNode)
+                  
+                    nodeElements = nodeEnter.merge(nodeElements)
+                  
+                    // texts
+                    textElements = textGroup.selectAll('text')
+                      .data(nodes, function (node) { return node.id })
+                  
+                    textElements.exit().remove()
+                  
+                    var textEnter = textElements
+                      .enter()
+                      .append('text')
+                      .text(function (node) { return node.label })
+                      .attr('font-size', 15)
+                      .attr('dx', 15)
+                      .attr('dy', 4)
+                  
+                    textElements = textEnter.merge(textElements)
+                  }
+                  
+                  function updateSimulation() {
+                    updateGraph()
+                  
+                    simulation.nodes(nodes).on('tick', () => {
+                      nodeElements
+                        .attr('cx', function (node) { return node.x })
+                        .attr('cy', function (node) { return node.y })
+                      textElements
+                        .attr('x', function (node) { return node.x })
+                        .attr('y', function (node) { return node.y })
+                      linkElements
+                        .attr('x1', function (link) { return link.source.x })
+                        .attr('y1', function (link) { return link.source.y })
+                        .attr('x2', function (link) { return link.target.x })
+                        .attr('y2', function (link) { return link.target.y })
+                    })
+                  
+                    simulation.force('link').links(links)
+                    simulation.alphaTarget(0.7).restart()
+                  }
+                  
+                  function inputted() {
+                    simulation.force("link").strength(+this.value);
+                    simulation.alpha(1).restart();
+                  }
+                  //add zoom capabilities 
+                  var zoom_handler = d3.zoom()
+                      .on("zoom", zoom_actions);
+                  zoom_handler(svg);   
+                  
+                  //Zoom functions 
+                  function zoom_actions(){
+                      linkGroup.attr("transform", d3.event.transform);
+                      nodeGroup.attr("transform", d3.event.transform);
+                      textGroup.attr("transform", d3.event.transform);
+                  }
+                  
+                  // last but not least, we call updateSimulation
+                  // to trigger the initial render
+                  updateSimulation()
+                  
+               
       </script>
    </body>
 </html>
