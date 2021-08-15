@@ -67,23 +67,23 @@
                <section id="blogpost">
                   <div class="card">
                      <div class="card-meta-blogpost">
-                        Posted by Kalun Ho on 28.07.2021
+                        Posted by Kalun Ho on 28.07/2021
                      </div>
                      <div class="card-image">
                         <img src="img/project_1/overview.jpg" alt="Card Image">
                      </div>
                      <div class="card-description">
                         <h3>Overview</h3>
-                        <p>The aim of this project is to provide streamers an overview of chat messages during a stream by utilizing the current state-of-the-art Natural Language Processing (NLP) models.
+                        <p>This project summarizes the chat messages of a live stream on <a href="https://dev.twitch.tv/" style="color: steelblue; text-decoration: underline;">Twitch</a> by utilizing the current state-of-the-art Natural Language Processing (NLP) models.
                            Specifically, the <a href="https://dev.twitch.tv/docs/api/" style="color: steelblue; text-decoration: underline;">Twitch API</a> is used to collect the chat messages from users first and the data are stored locally.
                            Different pre-trained NLP models are used to create a visualization of the data in a way that similar sentences based on its semantics are closed to each others.
-                           Furthermore, a classification indicates the different types of messages by different colors.
+                           Furthermore, a classification model assigns each message with one out of five categories, which is defined my me.
                            An example is shown in Figure above on the bottom right corner.
                         </p>
                         <h3>Generate Dataset</h3>
-                        <p>There are in total three different models.
+                        <p>There are in total three different models used.
                            The first model is a simple Naive Bayes classifier, pre-trained on the  <a href="http://faculty.nps.edu/cmartell/NPSChat.htm" style="color: steelblue; text-decoration: underline;">nps chat corpus</a>.
-                           This model is then fine-tuned on a small, manually labeled  dataset with approximately 500 labeled data, which are collected from Twitch. 
+                           This model is then fine-tuned on a small, manually labeled dataset with approximately 500 labeled data, which are collected from Twitch. 
                            With this initial classifier, more than 11k real-world chat messages with labels are generated in order to fine-tune the second, better performing model.
                            After cross-checking the generated dataset manually, a pre-trained BERT [1] (model 2) is fine-tuned, achieving a classification accuracy of 82% using a 90%/10% split.
                         </p>
