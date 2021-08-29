@@ -20,6 +20,7 @@ function read_data (){
 		["2010-09-01","2013-07-31","Bachelor", "Bachelor of Science<br>Business Informatics<br>University of Mannheim", "Steelblue"],
 		["2014-02-01","2017-01-31","Master", "Master of Science<br>Business Informatics<br>University of Mannheim", "Steelblue"],
 		["2018-07-01",,"PhD", "PhD Candidate<br>Computer Vision<br>University of Mannheim<br>Fraunhofer ITWM<br>Kaiserslautern, Germany", "Steelblue"],
+		["2019-07-01",,"Research", "Research Assistant<br>Fraunhofer ITWM<br>Kaiserslautern, Germany", "Gray"],
 		["2012-08-01","2013-01-31","Exchange", "Exchange Semester<br>National Chengchi University<br>Taipei, Taiwan", "Navy"],
 		["2016-08-01","2017-01-31","Exchange", "Exchange Semester<br>University of Ottawa<br>Ottawa, Canada", "Navy"],
 		["2010-07-01","2010-08-20","Internship", "Student Internship (1.5 Month)<br>Freudenberg FV Service SE & Co. KG<br>Weinheim, Germany", "Gray"],
