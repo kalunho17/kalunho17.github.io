@@ -30,6 +30,7 @@ function read_data (){
 		["2013-09-01","2014-01-31","Internship", "IT Consultant (Full-Time)<br>Freudenberg Vilene Nonwovens Co. Ltd<br>Taoyuan, Taiwan", "Gray"],
 		["2014-02-03","2017-02-28","IT Consultant", "IT Consultant (Part-Time)<br>Freudenberg Performance Materials SE & Co. KG <br>Weinheim, Germany", "Gray"],
 		["2017-03-01","2018-06-30","IT Consultant", "IT Consultant (Full-Time)<br>Freudenberg Performance Materials SE & Co. KG <br>Weinheim, Germany", "Gray"],
+		["2022-01-01",,"SVP Assistant", "SVP Assistant (Full-Time)<br>Freudenberg Performance Materials Service GmbH <br>Weinheim, Germany", "Gray"],
 	];
 
 	var data = [];
