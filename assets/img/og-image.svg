@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <!-- Open Graph image source (1200 × 630). Export to og-image.png, see README.
+       Text uses Open Sans: install it (assets/fonts or Google Fonts) before exporting. -->
+  <rect width="1200" height="630" fill="#FFFFFF"/>
+
+  <!-- Title-slide motif, scaled to 72 % and anchored right -->
+  <g transform="translate(646 0) scale(0.72)" fill="none">
+    <polygon points="430,1080 770,620 770,1080" fill="#F3F5F7"/>
+    <polygon points="770,420 770,1080 180,1080" fill="#F3F5F7" opacity="0.6"/>
+    <line x1="0" y1="760" x2="330" y2="390" stroke="#174A7E" stroke-width="2"/>
+    <line x1="330" y1="390" x2="770" y2="390" stroke="#174A7E" stroke-width="2"/>
+    <line x1="330" y1="390" x2="700" y2="120" stroke="#D9DEE5" stroke-width="1.6"/>
+    <line x1="330" y1="390" x2="560" y2="600" stroke="#D9DEE5" stroke-width="1.6"/>
+    <line x1="560" y1="600" x2="770" y2="700" stroke="#D9DEE5" stroke-width="1.6"/>
+    <circle cx="330" cy="390" r="22" fill="#174A7E"/>
+    <circle cx="490" cy="258" r="10" fill="#7498C0"/>
+    <circle cx="560" cy="600" r="9" fill="#A3BBD5"/>
+  </g>
+
+  <g font-family="Open Sans, Arial, sans-serif" fill="#174A7E">
+    <text x="80" y="186" font-size="22" font-weight="600" letter-spacing="2.64">AI STRATEGY FOR EXECUTIVES</text>
+    <rect x="80" y="214" width="80" height="5"/>
+    <text font-size="68" font-weight="700">
+      <tspan x="78" y="318">What AI means</tspan>
+      <tspan x="78" y="398">for your business.</tspan>
+    </text>
+    <rect x="80" y="514" width="520" height="1" fill="#D9DEE5"/>
+    <text x="80" y="556" font-size="26" font-weight="600">Dr. Kalun Ho</text>
+  </g>
+</svg>

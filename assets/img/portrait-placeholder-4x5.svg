@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000">
+  <!-- Placeholder. Replace with your photo: 4:5, JPG or WebP, at least 1200 px wide. See README. -->
+  <rect width="800" height="1000" fill="#F3F5F7"/>
+  <circle cx="400" cy="440" r="140" fill="#D9DEE5"/>
+  <path d="M150 1000V900c0-150 112-262 250-262s250 112 250 262v100z" fill="#D9DEE5"/>
+  <g font-family="Open Sans, Arial, sans-serif" font-size="30" fill="#6B7280" text-anchor="middle">
+    <text x="400" y="130" font-weight="600">Portrait placeholder · 4:5</text>
+    <text x="400" y="176">Replace with JPG/WebP ≥ 1200 px wide</text>
+  </g>
+</svg>

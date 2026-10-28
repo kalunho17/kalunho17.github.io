@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <!-- Placeholder. Replace with your photo: 1:1, JPG or WebP, at least 600 px wide. See README. -->
+  <rect width="600" height="600" fill="#F3F5F7"/>
+  <circle cx="300" cy="250" r="110" fill="#D9DEE5"/>
+  <path d="M110 600v-50c0-110 85-190 190-190s190 80 190 190v50z" fill="#D9DEE5"/>
+  <g font-family="Open Sans, Arial, sans-serif" font-size="34" fill="#6B7280" text-anchor="middle">
+    <text x="300" y="96" font-weight="600">Placeholder · 1:1</text>
+  </g>
+</svg>
