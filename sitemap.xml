@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Public pages only. /work-with-me/ is hidden and must not be listed until it launches. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://kalunho.com/</loc></url>
+  <url><loc>https://kalunho.com/newsletter/</loc></url>
+  <url><loc>https://kalunho.com/about/</loc></url>
+  <url><loc>https://kalunho.com/links/</loc></url>
+  <url><loc>https://kalunho.com/impressum/</loc></url>
+  <url><loc>https://kalunho.com/privacy/</loc></url>
+</urlset>
