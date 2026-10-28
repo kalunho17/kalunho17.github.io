@@ -233,10 +233,10 @@ address { font-style: normal; }
 
 /* Two columns on desktop: heading left, content right */
 .split { display: grid; gap: var(--s4); }
+.split > .section-head { margin-bottom: 0; }
 @media (min-width: 960px) {
   .split { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s5); align-items: start; }
   .split--even { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-  .split .section-head { margin-bottom: 0; }
 }
 
 /* --- Hero (home) -------------------------------------------------------- */
@@ -269,7 +269,7 @@ address { font-style: normal; }
 @media (max-width: 899px) { .page-head__motif { display: none; } }
 
 /* Page head with a portrait instead of the motif (About) */
-.page-head--portrait .page-head__inner { display: grid; gap: var(--s4); align-items: end; }
+.page-head--portrait .page-head__inner { display: grid; gap: var(--s4); align-items: center; }
 .page-head--portrait .portrait { max-width: 280px; }
 @media (min-width: 900px) {
   .page-head--portrait .page-head__inner { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: var(--s5); }
@@ -288,6 +288,10 @@ address { font-style: normal; }
 .card h3 { margin-bottom: var(--s1); }
 .card p { font-size: var(--fs-body); }
 .card__label { margin: var(--s3) 0 4px; color: var(--primary); font-size: var(--fs-small); font-weight: 600; }
+
+/* Lists that follow a heading */
+.section-head + .bullets, .section-head + .actions { margin-top: 0; }
+.bullets + .actions, .bullets + p, .cards + .takeaway { margin-top: var(--s4); }
 
 /* Bullets with a short dash, like the slides */
 .bullets { display: grid; gap: var(--s2); margin: 0; padding: 0; list-style: none; max-width: var(--measure); }
@@ -390,10 +394,10 @@ address { font-style: normal; }
   border: 1px solid var(--divider); background: var(--white);
 }
 .slide__inner { display: flex; flex-direction: column; height: 100%; padding: 5cqi 6cqi 3cqi; }
-.slide__headline { margin: 0; max-width: none; color: var(--primary); font-size: 3.6cqi; font-weight: 700; line-height: 1.15; }
+.slide__headline { margin: 0; max-width: none; color: var(--primary); font-size: 3.3cqi; font-weight: 700; line-height: 1.15; }
 .slide__context { margin: 1cqi 0 0; max-width: none; color: var(--secondary); font-size: 2.1cqi; line-height: 1.3; }
-.slide__chart { flex: 1; min-height: 0; width: 100%; margin-top: 2.5cqi; }
-.slide__source { margin: 1.2cqi 0 0; max-width: none; color: var(--secondary); font-size: 1.6cqi; }
+.slide__chart { flex: none; width: 100%; height: auto; margin-top: 3cqi; }
+.slide__source { margin: auto 0 0; padding-top: 1.2cqi; max-width: none; color: var(--secondary); font-size: 1.6cqi; }
 .slide__footer {
   display: flex; justify-content: space-between;
   margin-top: 1.6cqi; padding-top: 1.2cqi; border-top: 1px solid var(--divider);
@@ -403,8 +407,11 @@ address { font-style: normal; }
 .chart-axis { stroke: var(--secondary); stroke-width: 1; }
 .chart-bar { fill: var(--primary-40); }
 .chart-bar--focus { fill: var(--primary); }
-.chart-value { fill: var(--graphite); font-size: 15px; font-weight: 600; text-anchor: middle; }
-.chart-label { fill: var(--secondary); font-size: 13px; text-anchor: middle; }
+.chart-value {
+  fill: var(--graphite); font-size: 17px; font-weight: 600; text-anchor: middle;
+  paint-order: stroke; stroke: var(--white); stroke-width: 4px; stroke-linejoin: round;  /* halo over gridlines */
+}
+.chart-label { fill: var(--secondary); font-size: 14px; text-anchor: middle; }
 .slide-figure figcaption { margin-top: 12px; }
 
 /* --- Editorial rows (About) -------------------------------------------------- */
@@ -429,6 +436,7 @@ address { font-style: normal; }
   .band__inner { grid-template-columns: minmax(0, 1fr) auto; gap: var(--s5); }
 }
 .band .actions { margin-top: 0; }
+.band .caption { margin-top: var(--s2); color: var(--primary-20); font-size: var(--fs-small); }
 
 /* --- Legal / long text --------------------------------------------------- */
 
