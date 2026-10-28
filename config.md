@@ -12,15 +12,17 @@ grep -rn "{{" --include='*.html' .
 
 | Token | What to enter | Example | Used in (count) |
 |---|---|---|---|
-| `{{YOUTUBE_CHANNEL_URL}}` | Your channel URL, **without a trailing slash**. The site adds `/videos` and `?sub_confirmation=1` itself. | `https://www.youtube.com/@yourhandle` | `index.html` (6), `about/` (4), `links/` (4), `newsletter/` (3), `impressum/` (3), `privacy/` (3), `work-with-me/` (3), `404.html` (3) |
-| `{{YOUTUBE_UPLOADS_PLAYLIST}}` | Your channel ID with `UC` at the start replaced by `UU`. Find the channel ID in YouTube Studio → Settings → Channel → Advanced settings. | channel `UCabc123…` → `UUabc123…` | `index.html` (1, the click-to-load player) |
-| `{{BEEHIIV_SUBSCRIBE_URL}}` | The public subscribe page of your Beehiiv newsletter. | `https://yourname.beehiiv.com/subscribe` | `newsletter/` (2), `index.html` (1), `links/` (1) |
+| `{{YOUTUBE_CHANNEL_URL}}` | Your channel URL, **without a trailing slash**. The site adds `/videos` and `?sub_confirmation=1` itself. | `https://www.youtube.com/@yourhandle` | `home/index.html` (6), `about/` (4), `links/` (4), `newsletter/` (3), `impressum/` (3), `privacy/` (3), `work-with-me/` (3), `404.html` (3) |
+| `{{YOUTUBE_UPLOADS_PLAYLIST}}` | Your channel ID with `UC` at the start replaced by `UU`. Find the channel ID in YouTube Studio → Settings → Channel → Advanced settings. | channel `UCabc123…` → `UUabc123…` | `home/index.html` (1, the click-to-load player) |
+| `{{BEEHIIV_SUBSCRIBE_URL}}` | The public subscribe page of your Beehiiv newsletter. | `https://yourname.beehiiv.com/subscribe` | `newsletter/` (2), `home/index.html` (1), `links/` (1) |
 | `{{INSTAGRAM_URL}}` | Your Instagram profile URL. | `https://www.instagram.com/yourhandle/` | footer of every page (1 each), `links/` (+1 button), JSON-LD `sameAs` on every public page (1 each) |
 | `{{TIKTOK_URL}}` | Your TikTok profile URL. | `https://www.tiktok.com/@yourhandle` | footer of every page (1 each), `links/` (+1 button), JSON-LD `sameAs` on every public page (1 each) |
 | `{{CONTACT_EMAIL}}` | A public contact address, **not your private one**. Shown as text and used in `mailto:` links. Also serves as the email in the Impressum and the privacy policy. | `hello@kalunho.com` | `privacy/` (4), `about/` (2), `impressum/` (2), `work-with-me/` (1) |
 | `{{CHANNEL_NAME}}` | Not decided yet, so it is **not used as a token**. Where a name is needed, the site uses "Dr. Kalun Ho". See below. | | – |
 
 `{{YOUTUBE_CHANNEL_URL}}` also appears in the header button and footer of every page, which is why every file contains it.
+
+`home/index.html` is the finished home page. It moves to `index.html` when you go live (README, "Go live"); the construction page at `index.html` has no placeholders.
 
 ### When you decide on a channel name
 

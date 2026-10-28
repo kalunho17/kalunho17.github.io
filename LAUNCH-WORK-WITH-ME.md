@@ -16,7 +16,7 @@ The page is built but hidden: no link points to it, it carries `noindex`, and it
    - The About page itself has `aria-current="page"` on its About link, so do it there by hand: add the same `<li>` after its About item.
    - In `work-with-me/index.html`, add `aria-current="page"` to the new link: `<a href="/work-with-me/" aria-current="page">`.
 
-   This covers `index.html`, `newsletter/`, `about/`, `work-with-me/`, `impressum/`, `privacy/` and `404.html`. `/links/` has no navigation; add a button there only if you want one.
+   This covers `index.html` (or `home/index.html` while the site is still under construction), `newsletter/`, `about/`, `work-with-me/`, `impressum/`, `privacy/` and `404.html`. `/links/` and the construction page have no navigation.
 
 4. **Add it to the sitemap.** In `sitemap.xml`, add this line before `</urlset>`:
 

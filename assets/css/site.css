@@ -492,6 +492,11 @@ address { font-style: normal; }
 .page-404 .page-head { border-bottom: 0; }
 .page-404 .page-head__inner { padding-block: clamp(64px, 10vw, 144px); }
 
+/* --- Under construction (temporary home page; delete at launch) ----------- */
+
+.page-construction { display: flex; flex-direction: column; min-height: 100vh; min-height: 100svh; }
+.page-construction main { flex: 1; display: flex; align-items: center; border-bottom: 0; }
+
 /* --- Motion: fade in with a 12 px rise on first view (JS adds the classes) -- */
 
 .reveal-pending { opacity: 0; transform: translateY(12px); }

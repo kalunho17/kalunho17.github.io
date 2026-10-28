@@ -2,15 +2,106 @@
 
 The website of Dr. Kalun Ho's YouTube channel on AI strategy for executives: plain static HTML, one CSS file and a little JavaScript, hosted on GitHub Pages at **https://kalunho.com**.
 
-> **Before going live:** the Impressum and the privacy policy are templates. Fill in every `[TODO]` and have both pages reviewed by a qualified person. See the launch checklist in section 6.
+> **Status: under construction.** Visitors to kalunho.com see a temporary "under construction" page. The finished home page waits in `home/index.html`, and search engines are kept out by `robots.txt`. Work through the to-do list (section 1), then go live (section 2).
 
-The site needs no routine maintenance. The home page player shows the channel's uploads playlist, so it always plays the newest video. Handouts and decks live on Google Drive and are linked from YouTube and the newsletter, not from this site.
+Once live, the site needs no routine maintenance. The home page player shows the channel's uploads playlist, so it always plays the newest video. Handouts and decks live on Google Drive and are linked from YouTube and the newsletter, not from this site. Every push to `main` is online in about a minute.
 
-## 1. Pages
+## 1. To-do list before going live
+
+### Already done
+
+- [x] Site built and online on GitHub Pages: "Deploy from a branch", `main`, `/ (root)`
+- [x] Custom domain `kalunho.com`, HTTPS enforced, `www.kalunho.com` redirects to `kalunho.com`
+- [x] DNS: the four A records and the `www` CNAME (checked 28 October 2026)
+- [x] Open Graph image exported (`assets/img/og-image.png`)
+
+### A. Fill in the placeholders
+
+Details and the exact places for each are in `config.md`. Replace them with Replace in Files in VS Code (`Cmd+Shift+H`).
+
+- [ ] `{{YOUTUBE_CHANNEL_URL}}`: your channel URL without a trailing slash, for example `https://www.youtube.com/@yourhandle`
+- [ ] `{{YOUTUBE_UPLOADS_PLAYLIST}}`: your channel ID (YouTube Studio → Settings → Channel → Advanced settings) with the leading `UC` replaced by `UU`
+- [ ] `{{BEEHIIV_SUBSCRIBE_URL}}`: the public subscribe page of your Beehiiv newsletter (set up the publication first)
+- [ ] `{{INSTAGRAM_URL}}`: your Instagram profile URL
+- [ ] `{{TIKTOK_URL}}`: your TikTok profile URL
+- [ ] `{{CONTACT_EMAIL}}`: a public contact address, not your private one
+- [ ] Optional: a channel name. Until you decide, the site uses "Dr. Kalun Ho"; `config.md` lists the two places to change.
+- [ ] Check: `grep -rn "{{" --include='*.html' .` prints nothing.
+
+### B. Replace the photos
+
+- [ ] **Large portrait, 4:5:** JPG or WebP, at least 1200 × 1500 px, under 250 KB. Shown on the home page and the About page.
+- [ ] **Round portrait, 1:1:** JPG or WebP, at least 600 × 600 px, under 100 KB. Shown on `/links/`.
+- [ ] Delete the placeholder files and the `<!-- TODO PHOTO -->` comments.
+
+How to swap them is in section 4.
+
+### C. Finish the legal pages
+
+- [ ] **Impressum** (`impressum/index.html`): street and house number, postcode and city, a phone number or other fast contact route, VAT ID (or delete that section), and check that the name matches your legal name.
+- [ ] **Privacy policy** (`privacy/index.html`): date of the review, your address, confirm GitHub's EU-U.S. Data Privacy Framework certification, the newsletter section (once your Beehiiv account is set up), and your federal state's data protection authority.
+- [ ] Have both pages reviewed by a qualified person.
+- [ ] Delete the "Template" notice at the top of both pages.
+- [ ] Check: `grep -rn "TODO" --include='*.html' .` prints nothing (this also finds the `TODO PHOTO` comments).
+
+### D. Domain
+
+- [ ] **Verify the domain on GitHub** (prevents someone else from taking it over). Not done yet: there is no verification record as of 28 October 2026. Click your profile picture → **Settings** → **Pages** (sidebar, under "Code, planning, and automation") → **Add a domain** → `kalunho.com`. Add the TXT record GitHub shows (host `_github-pages-challenge-kalunho17`) at your registrar, wait a few minutes, then click **Verify**.
+- [ ] Optional but recommended: **add the four AAAA records** for visitors on IPv6 (missing as of 28 October 2026). See section 5.
+
+### E. Final check before going live
+
+- [ ] Preview locally (section 3) and click every link on the home page, `/links/`, `/newsletter/` and `/about/`. Each one should open the right YouTube, Instagram, TikTok or Beehiiv page.
+- [ ] Click play on the home page: the newest video should start.
+- [ ] Run the identity and banned-words checks (section 6). Both must print nothing.
+
+## 2. Go live
+
+Run these in the project folder:
+
+1. **Put the finished home page in place.** This replaces the construction page:
+
+   ```sh
+   git mv -f home/index.html index.html
+   rmdir home
+   ```
+
+   Without the command line: delete `index.html`, move `home/index.html` to the top folder, then delete the empty `home` folder.
+
+2. **Let search engines in.** Replace the content of `robots.txt`:
+
+   ```sh
+   printf 'User-agent: *\nAllow: /\n\nSitemap: https://kalunho.com/sitemap.xml\n' > robots.txt
+   ```
+
+3. **Optional:** delete the block `/* --- Under construction … */` (two rules) from `assets/css/site.css`. Nothing uses it after the swap.
+
+4. **Publish:**
+
+   ```sh
+   git add -A
+   git commit -m "Go live"
+   git push origin main
+   ```
+
+5. After about a minute, open https://kalunho.com and check that the full home page appears.
+
+## 3. After going live
+
+- [ ] **Lighthouse:** on the live site, Chrome → DevTools → Lighthouse, mobile and desktop. All four categories should be at 95 or above.
+- [ ] **Phone test:** every button on https://kalunho.com/links/, the video, the subscribe and newsletter buttons.
+- [ ] **Bio links:** set `https://kalunho.com/links/` as the link in your Instagram and TikTok bios.
+- [ ] **Share preview:** paste `https://kalunho.com` into the LinkedIn Post Inspector and check the image and text.
+- [ ] Optional: **Google Search Console:** add `kalunho.com` as a property and submit `https://kalunho.com/sitemap.xml`.
+
+## 4. Reference
+
+### Pages
 
 | Path | In the nav | Purpose |
 |---|---|---|
-| `/` | yes (Home) | Hero, latest video (click to load), what you get, how episodes are made, newsletter band |
+| `/` | – | **Temporary:** "under construction" page. Replaced by the home page at launch |
+| `/home/` | – | **Temporary:** the finished home page, waiting for launch (moves to `/`) |
 | `/links/` | no | Bio link page for Instagram and TikTok |
 | `/newsletter/` | yes | Why subscribe, illustrative slide, Beehiiv button |
 | `/about/` | yes | What the channel stands for and how it works |
@@ -19,10 +110,14 @@ The site needs no routine maintenance. The home page player shows the channel's 
 | `/privacy/` | footer | Privacy policy (template) |
 | `/404.html` | – | Shown by GitHub Pages for unknown addresses |
 
+Until launch, all pages except `/` are reachable only by typing their address, and search engines stay out. The "Home" links in the navigation lead to the construction page until you go live.
+
 ### Files
 
 ```
-index.html, links/, newsletter/, about/, work-with-me/, impressum/, privacy/, 404.html
+index.html               temporary "under construction" page
+home/index.html          finished home page (moves to index.html at launch)
+links/, newsletter/, about/, work-with-me/, impressum/, privacy/, 404.html
 assets/css/site.css      all styles; colour tokens at the top
 assets/js/site.js        click-to-load video + fade-in (the only script)
 assets/fonts/            Open Sans 300/400/600/700 (woff2) + OFL.txt licence
@@ -33,37 +128,33 @@ config.md                every placeholder and where it is used
 LAUNCH-WORK-WITH-ME.md   steps to switch on the hidden page
 ```
 
-**Header and footer** are copied on every page, between `<!-- HEADER START -->` / `<!-- HEADER END -->` and `<!-- FOOTER START -->` / `<!-- FOOTER END -->`. To change them, use Replace in Files in VS Code (`Cmd+Shift+H`) so every page changes at once. The footer year is plain text (`© 2026`); update it whenever you like.
+**Header and footer** are copied on every page, between `<!-- HEADER START -->` / `<!-- HEADER END -->` and `<!-- FOOTER START -->` / `<!-- FOOTER END -->`. To change them, use Replace in Files (`Cmd+Shift+H`) so every page changes at once. The footer year is plain text (`© 2026`); update it whenever you like.
 
-## 2. Preview locally
+### Preview locally
 
 ```sh
 cd path/to/kalunho17.github.io
 python3 -m http.server
 ```
 
-Then open http://localhost:8000. All paths start with `/`, so open the site through the server, not by double-clicking the files.
+Then open http://localhost:8000/home/ for the finished home page (http://localhost:8000 shows the construction page until launch). Open the site through the server, not by double-clicking the files, because all paths start with `/`. Online, the finished home page is at https://kalunho.com/home/ until launch.
 
-## 3. Placeholders and photos
-
-**Placeholders:** `config.md` lists every token (`{{YOUTUBE_CHANNEL_URL}}` and the rest), what to enter and where it is used. Replace them with Replace in Files.
-
-**Photos:** the portraits are neutral SVG placeholders. Each place that uses one has a `<!-- TODO PHOTO -->` comment.
+### Swapping the photos
 
 | Slot | Placeholder file | Aspect | Recommended size | Where it appears |
 |---|---|---|---|---|
 | Portrait, large | `assets/img/portrait-placeholder-4x5.svg` | 4:5 | JPG or WebP, at least 1200 × 1500 px, under 250 KB | Home ("How every episode is made"), About (page head) |
 | Portrait, round | `assets/img/portrait-placeholder-1x1.svg` | 1:1 | JPG or WebP, at least 600 × 600 px, under 100 KB | `/links/` (shown as a 112 px circle) |
 
-To swap a photo:
-
-1. Save it in `assets/img/`, for example as `portrait-4x5.webp` and `portrait-1x1.webp`.
+1. Save each photo in `assets/img/`, for example as `portrait-4x5.webp` and `portrait-1x1.webp`.
 2. Replace in Files: `portrait-placeholder-4x5.svg` → `portrait-4x5.webp` (2 places), and `portrait-placeholder-1x1.svg` → `portrait-1x1.webp` (1 place).
 3. Delete the placeholder files and the `<!-- TODO PHOTO -->` comments.
 
 Keep the aspect ratio. The layout crops to 4:5 and 1:1, so a different ratio gets cut off.
 
-**Open Graph image** (the preview when someone shares the link): `assets/img/og-image.png` is already exported from `assets/img/og-image.svg`. Re-export only if you change the headline in the SVG:
+### Open Graph image
+
+The preview when someone shares the link is `assets/img/og-image.png`, exported from `assets/img/og-image.svg`. Re-export only if you change the headline in the SVG:
 
 1. Install Open Sans on your Mac: Google Fonts → Open Sans → Get font → Download, then open the `.ttf` files and click Install.
 2. Run:
@@ -72,49 +163,28 @@ Keep the aspect ratio. The layout crops to 4:5 and 1:1, so a different ratio get
    /Applications/Inkscape.app/Contents/MacOS/inkscape assets/img/og-image.svg --export-type=png --export-filename=assets/img/og-image.png --export-width=1200
    ```
 
-The **video poster** on the home page is HTML and CSS (in `index.html`), not an image. Edit its text there.
+The video poster on the home page is HTML and CSS (in `home/index.html`, later `index.html`), not an image. Edit its text there.
 
-## 4. GitHub Pages setup
+## 5. Hosting and DNS
 
-The repository already exists (`kalunho17/kalunho17.github.io`, remote `origin`) and currently deploys the "under construction" page with a GitHub Actions workflow. The new site is on the branch `site-v1` and deploys **from the branch** instead: no workflow and nothing to update.
+**GitHub Pages** (set up, checked 28 October 2026): repository `kalunho17/kalunho17.github.io` → Settings → Pages → Source **Deploy from a branch**, branch `main`, folder `/ (root)`; custom domain `kalunho.com`; **Enforce HTTPS** on. The `CNAME` file in the repository root contains `kalunho.com`. Each push to `main` deploys automatically; progress shows under the repository's **Actions** tab ("pages build and deployment").
 
-1. **Switch the deployment source first.** On github.com, open the repository → **Settings** → **Pages** → **Build and deployment** → **Source**: select **Deploy from a branch**, then **Branch: `main`**, folder **`/ (root)`** → **Save**.
-   Do this before pushing. The new `main` no longer contains the Actions workflow, so with the old setting nothing would deploy.
-2. **Merge and push:**
+**DNS records at your registrar.** `kalunho.com` is the main address; `www.kalunho.com` redirects to it.
 
-   ```sh
-   git checkout main
-   git merge --ff-only site-v1
-   git push origin main
-   git branch -d site-v1
-   ```
+| Type | Host / name | Value | Status (28 Oct 2026) |
+|---|---|---|---|
+| A | `@` | `185.199.108.153` | set |
+| A | `@` | `185.199.109.153` | set |
+| A | `@` | `185.199.110.153` | set |
+| A | `@` | `185.199.111.153` | set |
+| AAAA | `@` | `2606:50c0:8000::153` | missing (optional) |
+| AAAA | `@` | `2606:50c0:8001::153` | missing (optional) |
+| AAAA | `@` | `2606:50c0:8002::153` | missing (optional) |
+| AAAA | `@` | `2606:50c0:8003::153` | missing (optional) |
+| CNAME | `www` | `kalunho17.github.io` | set |
+| TXT | `_github-pages-challenge-kalunho17` | the value GitHub shows when you verify the domain | missing |
 
-3. **Custom domain:** Settings → Pages → **Custom domain**: `kalunho.com` → **Save** (it may already be set). The `CNAME` file in the repository root already contains `kalunho.com`.
-4. **HTTPS:** once the DNS check passes, tick **Enforce HTTPS**. The certificate can take up to 24 hours.
-5. **Verify the domain** (prevents someone else from taking it over): click your profile picture → **Settings** → **Pages** (in the sidebar under "Code, planning, and automation") → **Add a domain** → `kalunho.com`. GitHub shows a TXT record. Add it at your registrar (see section 5), wait a few minutes, then click **Verify**.
-
-The first deployment takes about a minute. Check its progress under the repository's **Actions** tab ("pages build and deployment").
-
-## 5. DNS records at your registrar
-
-`kalunho.com` (the apex) is the main address. `www.kalunho.com` redirects to it automatically once its CNAME record exists.
-
-| Type | Host / name | Value |
-|---|---|---|
-| A | `@` | `185.199.108.153` |
-| A | `@` | `185.199.109.153` |
-| A | `@` | `185.199.110.153` |
-| A | `@` | `185.199.111.153` |
-| AAAA | `@` | `2606:50c0:8000::153` |
-| AAAA | `@` | `2606:50c0:8001::153` |
-| AAAA | `@` | `2606:50c0:8002::153` |
-| AAAA | `@` | `2606:50c0:8003::153` |
-| CNAME | `www` | `kalunho17.github.io` |
-| TXT | `_github-pages-challenge-kalunho17` | the value GitHub shows in step 5 above |
-
-Delete any other A, AAAA or ALIAS records for `@`, and any other record for `www` (for example a parking page). These values were checked against GitHub's documentation ("Managing a custom domain for your GitHub Pages site") on 28 October 2026.
-
-To check the records once they're live:
+These values match GitHub's documentation ("Managing a custom domain for your GitHub Pages site"). To check the records:
 
 ```sh
 dig kalunho.com +noall +answer -t A
@@ -122,18 +192,14 @@ dig kalunho.com +noall +answer -t AAAA
 dig www.kalunho.com +noall +answer -t CNAME
 ```
 
-## 6. Launch checklist
+## 6. Checks
 
-- [ ] **Placeholders replaced:** `grep -rn "{{" --include='*.html' .` prints nothing.
-- [ ] **Photos replaced:** both slots from section 3, and the `TODO PHOTO` comments removed.
-- [ ] **OG image:** `assets/img/og-image.png` exists. It does already; re-export only if you changed the SVG.
-- [ ] **Legal pages reviewed:** every `[TODO]` in `impressum/` and `privacy/` filled, both pages checked by a qualified person, and the "Template" notices deleted. `grep -rn "TODO" --include='*.html' .` prints nothing.
-- [ ] **Identity check clean:** the command below prints nothing.
-- [ ] **Banned-words check clean:** the command below prints nothing.
-- [ ] **Lighthouse:** on the live site, Chrome → DevTools → Lighthouse, mobile and desktop. All four categories at 95 or above.
-- [ ] **Links tested on a phone:** every button on `/links/`, the video plays after the click, "Subscribe on YouTube" opens the subscribe dialog, the newsletter button opens Beehiiv.
-- [ ] **Bio links set:** `https://kalunho.com/links/` as the link in the Instagram and TikTok bios.
-- [ ] **Share preview:** paste `https://kalunho.com` into the LinkedIn Post Inspector and check the image and text.
+**Placeholders and to-dos left:**
+
+```sh
+grep -rn "{{" --include='*.html' .
+grep -rn "TODO" --include='*.html' .
+```
 
 **Identity check.** The only identity string allowed anywhere on the site is "Dr. Kalun Ho". The brackets stop the command from matching itself in this file:
 
@@ -147,10 +213,12 @@ grep -rniIE --exclude-dir=.git '[p]hd|[p]h\.d|[c]omputer science|[a]i lab|[h]ead
 grep -rniIE --exclude-dir=.git '[g]ame-changer|[r]evolutionary|[u]nlock|[s]upercharge|[j]ourney|[e]cosystem|[d]isrupt|[c]utting-edge|[n]ext-level|[e]mpower|[h]arness|[s]eamless|[t]ransformative|[w]orld-class|[p]assionate' .
 ```
 
+All four commands must print nothing before you go live.
+
 ## 7. Later
 
 - **Work with me:** follow `LAUNCH-WORK-WITH-ME.md`.
-- **Newsletter embed:** every newsletter button sits under a `<!-- NEWSLETTER CTA -->` comment (home band, newsletter page twice). To use a Beehiiv embed, replace the `<a class="btn …">` there with Beehiiv's embed code. An embed loads Beehiiv as soon as the page opens, so update the privacy policy first and check whether you then need consent. The plain link avoids both.
+- **Newsletter embed:** every newsletter button sits under a `<!-- NEWSLETTER CTA -->` comment (home page band, newsletter page twice). To use a Beehiiv embed, replace the `<a class="btn …">` there with Beehiiv's embed code. An embed loads Beehiiv as soon as the page opens, so update the privacy policy first and check whether you then need consent. The plain link avoids both.
 - **Analytics:** every page has an `<!-- ANALYTICS SLOT -->` comment in the `<head>` with GoatCounter and Plausible examples (both cookieless). Paste one snippet on every page, and replace the "Cookies and analytics" section of the privacy policy with the commented template below it.
 
 ## Rules for future edits

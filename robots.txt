@@ -1,4 +1,8 @@
-User-agent: *
-Allow: /
+# UNDER CONSTRUCTION: keeps search engines out while the site is unfinished.
+# At launch, replace everything in this file with these three lines (see README, "Go live"):
+#   User-agent: *
+#   Allow: /
+#   Sitemap: https://kalunho.com/sitemap.xml
 
-Sitemap: https://kalunho.com/sitemap.xml
+User-agent: *
+Disallow: /
