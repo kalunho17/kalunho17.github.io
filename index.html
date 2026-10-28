@@ -115,16 +115,16 @@
         <!-- VIDEO: click-to-load. Nothing loads from YouTube until the click (see /assets/js/site.js).
              The playlist is the channel's uploads playlist, so it always plays the newest video. -->
         <div class="video">
-          <a class="video__poster" href="{{YOUTUBE_CHANNEL_URL}}/videos" data-playlist="{{YOUTUBE_UPLOADS_PLAYLIST}}" data-title="Latest episodes on YouTube" aria-label="Play the latest episode (loads the YouTube player)">
+          <a class="video__poster" href="{{YOUTUBE_CHANNEL_URL}}/videos" data-playlist="{{YOUTUBE_UPLOADS_PLAYLIST}}" data-title="Latest episodes on YouTube">
             <img class="video__motif" src="/assets/img/motif.svg" alt="" width="770" height="1080" loading="lazy">
-            <span class="video__kicker">AI strategy for executives</span>
+            <span class="video__kicker" aria-hidden="true">AI strategy for executives</span>
             <span class="video__bar"></span>
-            <span class="video__title">What AI means for your business.</span>
+            <span class="video__title" aria-hidden="true">What AI means for your business.</span>
             <span class="video__play">
               <span class="video__button"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#play"></use></svg></span>
-              Play the latest episode
+              Play the latest episode<span class="sr-only"> (loads the YouTube player)</span>
             </span>
-            <span class="video__footer">Dr. Kalun Ho</span>
+            <span class="video__footer" aria-hidden="true">Dr. Kalun Ho</span>
           </a>
         </div>
         <p class="caption video-note">The video loads from YouTube (youtube-nocookie.com) only when you click play. <a href="/privacy/#youtube">How YouTube handles your data</a></p>
