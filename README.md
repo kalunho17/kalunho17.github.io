@@ -19,11 +19,12 @@ Once live, the site needs no routine maintenance. The home page player shows the
 
 Details and the exact places for each are in `config.md`. Replace them with Replace in Files in VS Code (`Cmd+Shift+H`).
 
-- [ ] `{{YOUTUBE_CHANNEL_URL}}`: your channel URL without a trailing slash, for example `https://www.youtube.com/@yourhandle`
-- [ ] `{{YOUTUBE_UPLOADS_PLAYLIST}}`: your channel ID (YouTube Studio → Settings → Channel → Advanced settings) with the leading `UC` replaced by `UU`
+- [x] `{{YOUTUBE_CHANNEL_URL}}`: filled in as `https://www.youtube.com/@KalunHo` (3 November 2026)
+- [ ] `{{YOUTUBE_UPLOADS_PLAYLIST}}`: your channel ID (YouTube Studio → Settings → Channel → Advanced settings) with `UC` at the start replaced by `UU`
 - [ ] `{{BEEHIIV_SUBSCRIBE_URL}}`: the public subscribe page of your Beehiiv newsletter (set up the publication first)
-- [ ] `{{INSTAGRAM_URL}}`: your Instagram profile URL
-- [ ] `{{TIKTOK_URL}}`: your TikTok profile URL
+- [x] `{{INSTAGRAM_URL}}`: filled in as `https://www.instagram.com/kalunhodotcom/`
+- [x] `{{TIKTOK_URL}}`: filled in as `https://www.tiktok.com/@kalunhodotcom`
+- [x] LinkedIn (`https://www.linkedin.com/in/kalunho`): written directly into the footer, the JSON-LD `sameAs`, the links page and the About page
 - [ ] `{{CONTACT_EMAIL}}`: a public contact address, not your private one
 - [ ] Optional: a channel name. Until you decide, the site uses "Dr. Kalun Ho"; `config.md` lists the two places to change.
 - [ ] Check: `grep -rn "{{" --include='*.html' .` prints nothing.
@@ -203,10 +204,10 @@ grep -rn "{{" --include='*.html' .
 grep -rn "TODO" --include='*.html' .
 ```
 
-**Identity check.** The only identity string allowed anywhere on the site is "Dr. Kalun Ho". The brackets stop the command from matching itself in this file:
+**Identity check.** Since 3 November 2026 the site carries a short bio: one sentence on the home page (method section) and the "Who I am" paragraph on `/about/`, plus the About page's meta description. Everywhere else, "Dr. Kalun Ho" stays the only identity string. Self-praise words stay banned on every page. The brackets stop the command from matching itself in this file:
 
 ```sh
-grep -rniIE --exclude-dir=.git '[p]hd|[p]h\.d|[c]omputer science|[a]i lab|[h]ead of|[l]eader of|[s]trategist|[a]i strategy & execution|[e]xpert|[t]hought leader|[f]ormer' .
+grep -rniIE --exclude-dir=.git '[s]trategist|[a]i strategy & execution|[e]xpert|[t]hought leader|[p]ioneer|[l]eading|[v]isionary|[a]ward|[f]reudenberg|[w]einheim' .
 ```
 
 **Banned-words check:**
@@ -225,7 +226,7 @@ All four commands must print nothing before you go live.
 
 ## Rules for future edits
 
-- **Identity:** "Dr. Kalun Ho" is the only identity string. No credentials, titles, roles, employers or descriptors anywhere: not in text, meta tags, alt text, JSON-LD, images or file names.
+- **Identity:** "Dr. Kalun Ho" is the identity string in headers, footers, alt text, JSON-LD, images and file names. Role and degree appear only in the short bio (home page method section, `/about/` "Who I am", About meta description), stated as facts without adjectives. The employer is never named: the bio says "a large German company". No self-praise words anywhere (the identity check in section 6 lists them). The videos are described as a personal project that does not speak for the employer.
 - **Voice:** headlines state a conclusion, in sentence case, ending with a full stop. Short sentences, "you" singular, plain words, no exclamation marks, no invented facts or numbers.
 - **Design:** colours only through the tokens at the top of `site.css`, and every token needs a light and a dark value. No shadows, no gradients, no stock photos. In the light theme, `--text-muted` only on `--bg`: on tinted backgrounds it fails WCAG AA.
 - **Third parties:** nothing may load from another domain before a click. Fonts stay self-hosted.
