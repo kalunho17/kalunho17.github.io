@@ -3,8 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- THEME START: same on every page. Applies a stored colour theme before the first paint (toggle: /assets/js/site.js) -->
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#10365C" media="(prefers-color-scheme: dark)">
+<script>
+  (function () {
+    var root = document.documentElement, theme = null;
+    root.classList.add('js');
+    try { theme = localStorage.getItem('theme'); } catch (error) {}
+    if (theme !== 'light' && theme !== 'dark') return;
+    root.setAttribute('data-theme', theme);
+    document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
+      meta.content = theme === 'dark' ? '#10365C' : '#FFFFFF';
+    });
+  }());
+</script>
+<!-- THEME END -->
 <title>What AI means for your business · Dr. Kalun Ho</title>
-<meta name="description" content="Ten-minute videos on AI strategy for executives: the sourced numbers, the decision you need to make, and a free handout for your next meeting.">
+<meta name="description" content="Why technology moves the way it does. Ten-minute videos with the sourced numbers, the decision you need to make, and a free handout for your next meeting.">
 <link rel="canonical" href="https://kalunho.com/">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -18,14 +35,14 @@
 <meta property="og:locale" content="en_GB">
 <meta property="og:url" content="https://kalunho.com/">
 <meta property="og:title" content="What AI means for your business">
-<meta property="og:description" content="Ten-minute videos on AI strategy for executives: the sourced numbers, the decision you need to make, and a free handout for your next meeting.">
+<meta property="og:description" content="Why technology moves the way it does. Ten-minute videos with the sourced numbers, the decision you need to make, and a free handout for your next meeting.">
 <meta property="og:image" content="https://kalunho.com/assets/img/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Dr. Kalun Ho: What AI means for your business.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="What AI means for your business">
-<meta name="twitter:description" content="Ten-minute videos on AI strategy for executives: the sourced numbers, the decision you need to make, and a free handout for your next meeting.">
+<meta name="twitter:description" content="Why technology moves the way it does. Ten-minute videos with the sourced numbers, the decision you need to make, and a free handout for your next meeting.">
 <meta name="twitter:image" content="https://kalunho.com/assets/img/og-image.png">
 <script type="application/ld+json">
 {
@@ -72,6 +89,11 @@
       </ul>
       <a class="btn btn--small" href="{{YOUTUBE_CHANNEL_URL}}?sub_confirmation=1">Subscribe on YouTube</a>
     </nav>
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Colour theme">
+      <svg class="icon theme-toggle__system" aria-hidden="true"><use href="/assets/img/icons.svg#monitor"></use></svg>
+      <svg class="icon theme-toggle__light" aria-hidden="true"><use href="/assets/img/icons.svg#sun"></use></svg>
+      <svg class="icon theme-toggle__dark" aria-hidden="true"><use href="/assets/img/icons.svg#moon"></use></svg>
+    </button>
   </div>
 </header>
 <!-- HEADER END -->
@@ -82,7 +104,7 @@
     <img class="hero__motif" src="/assets/img/motif.svg" alt="" width="770" height="1080">
     <div class="container hero__inner">
       <div class="hero__content">
-        <p class="kicker">AI strategy for executives</p>
+        <p class="kicker">Why technology moves the way it does.</p>
         <div class="accent-bar"></div>
         <h1 class="display">What AI means for your business.</h1>
         <p class="lead">Ten-minute videos with the sourced numbers, the decision you need to make, and a handout for your next meeting.</p>
@@ -117,7 +139,7 @@
         <div class="video">
           <a class="video__poster" href="{{YOUTUBE_CHANNEL_URL}}/videos" data-playlist="{{YOUTUBE_UPLOADS_PLAYLIST}}" data-title="Latest episodes on YouTube">
             <img class="video__motif" src="/assets/img/motif.svg" alt="" width="770" height="1080" loading="lazy">
-            <span class="video__kicker" aria-hidden="true">AI strategy for executives</span>
+            <span class="video__kicker" aria-hidden="true">Why technology moves the way it does.</span>
             <span class="video__bar"></span>
             <span class="video__title" aria-hidden="true">What AI means for your business.</span>
             <span class="video__play">

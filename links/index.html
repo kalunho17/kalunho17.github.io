@@ -3,6 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- THEME START: same on every page. Applies a stored colour theme before the first paint (toggle: /assets/js/site.js) -->
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#10365C" media="(prefers-color-scheme: dark)">
+<script>
+  (function () {
+    var root = document.documentElement, theme = null;
+    root.classList.add('js');
+    try { theme = localStorage.getItem('theme'); } catch (error) {}
+    if (theme !== 'light' && theme !== 'dark') return;
+    root.setAttribute('data-theme', theme);
+    document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
+      meta.content = theme === 'dark' ? '#10365C' : '#FFFFFF';
+    });
+  }());
+</script>
+<!-- THEME END -->
 <title>Links · Dr. Kalun Ho</title>
 <meta name="description" content="Watch the latest video, subscribe on YouTube, get the editable decks by email, or follow on Instagram and TikTok.">
 <link rel="canonical" href="https://kalunho.com/links/">
@@ -62,7 +79,7 @@
   <img class="links__portrait" src="/assets/img/portrait-placeholder-1x1.svg" alt="Portrait of Dr. Kalun Ho" width="600" height="600">
   <h1>Dr. Kalun Ho</h1>
   <div class="accent-bar"></div>
-  <p class="links__intro">Ten-minute videos on AI strategy for executives, with the numbers, the decision and a handout.</p>
+  <p class="links__intro">Why technology moves the way it does. Ten-minute videos with the numbers, the decision and a handout.</p>
   <ul class="links__list">
     <li><a class="btn btn--outline" href="{{YOUTUBE_CHANNEL_URL}}/videos"><svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#play"></use></svg>Watch the latest video</a></li>
     <li><a class="btn" href="{{YOUTUBE_CHANNEL_URL}}?sub_confirmation=1"><svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#youtube"></use></svg>Subscribe on YouTube</a></li>

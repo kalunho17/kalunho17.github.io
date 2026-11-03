@@ -1,4 +1,4 @@
-/* kalunho.com: click-to-load video and fade-in on first view. No dependencies. */
+/* kalunho.com: click-to-load video, colour theme toggle and fade-in on first view. No dependencies. */
 (function () {
   'use strict';
 
@@ -22,6 +22,56 @@
       frame.referrerPolicy = 'strict-origin-when-cross-origin';
       poster.replaceWith(frame);
       frame.focus();
+    });
+  });
+
+  // Colour theme toggle: system → light → dark → system. A choice is stored in
+  // localStorage under "theme"; "system" removes it, so the device setting applies again.
+  // The script in <head> (between THEME START and THEME END) applies a stored choice
+  // before the first paint; the colours themselves are tokens in site.css.
+  var root = document.documentElement;
+  var THEMES = ['system', 'light', 'dark'];
+  var THEME_COLOR = { light: '#FFFFFF', dark: '#10365C' };  // must match the <meta name="theme-color"> tags
+
+  function currentTheme() {
+    var theme = root.getAttribute('data-theme');
+    return theme === 'light' || theme === 'dark' ? theme : 'system';
+  }
+
+  function nextTheme(theme) {
+    return THEMES[(THEMES.indexOf(theme) + 1) % THEMES.length];
+  }
+
+  function setTheme(theme) {
+    if (theme === 'system') root.removeAttribute('data-theme');
+    else root.setAttribute('data-theme', theme);
+    try {
+      if (theme === 'system') localStorage.removeItem('theme');
+      else localStorage.setItem('theme', theme);
+    } catch (error) { /* storage blocked: the choice lasts until the page is closed */ }
+    // Browser chrome: each tag keeps its own colour for "system", both follow a fixed choice
+    document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
+      var mode = theme === 'system' ? (/dark/.test(meta.media) ? 'dark' : 'light') : theme;
+      meta.content = THEME_COLOR[mode];
+    });
+  }
+
+  document.querySelectorAll('[data-theme-toggle]').forEach(function (button) {
+    function updateLabel() {
+      var theme = currentTheme();
+      var label = 'Colour theme: ' + theme + '. Switch to ' + nextTheme(theme) + '.';
+      button.setAttribute('aria-label', label);
+      button.title = label;
+    }
+    updateLabel();
+    button.addEventListener('click', function () {
+      // Short cross-fade (site.css), never with reduced motion
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        root.classList.add('theme-switching');
+        window.setTimeout(function () { root.classList.remove('theme-switching'); }, 250);
+      }
+      setTheme(nextTheme(currentTheme()));
+      updateLabel();
     });
   });
 

@@ -1,6 +1,6 @@
 # kalunho.com
 
-The website of Dr. Kalun Ho's YouTube channel on AI strategy for executives: plain static HTML, one CSS file and a little JavaScript, hosted on GitHub Pages at **https://kalunho.com**.
+The website of Dr. Kalun Ho's YouTube channel ("Why technology moves the way it does."): plain static HTML, one CSS file and a little JavaScript, hosted on GitHub Pages at **https://kalunho.com**.
 
 > **Status: under construction.** Visitors to kalunho.com see a temporary "under construction" page. The finished home page waits in `home/index.html`, and search engines are kept out by `robots.txt`. Work through the to-do list (section 1), then go live (section 2).
 
@@ -128,7 +128,9 @@ config.md                every placeholder and where it is used
 LAUNCH-WORK-WITH-ME.md   steps to switch on the hidden page
 ```
 
-**Header and footer** are copied on every page, between `<!-- HEADER START -->` / `<!-- HEADER END -->` and `<!-- FOOTER START -->` / `<!-- FOOTER END -->`. To change them, use Replace in Files (`Cmd+Shift+H`) so every page changes at once. The footer year is plain text (`© 2026`); update it whenever you like.
+**Header and footer** are copied on every page, between `<!-- HEADER START -->` / `<!-- HEADER END -->` and `<!-- FOOTER START -->` / `<!-- FOOTER END -->`. To change them, use Replace in Files (`Cmd+Shift+H`) so every page changes at once. The footer year is plain text (`© 2026`); update it whenever you like. The same goes for the `<!-- THEME START -->` / `<!-- THEME END -->` block in each `<head>`: it applies a visitor's stored light or dark choice before the page appears, so there is no flash.
+
+**Light and dark theme.** The toggle in the header cycles through system, light and dark, and remembers the choice in the visitor's browser (`localStorage`, key `theme`). Without a choice, the site follows the device setting. All colours are tokens at the top of `site.css`: light values on `:root`, dark values in two identical blocks below it. The home page video poster and the newsletter slide mock-up stay light in both themes, because they show slides.
 
 ### Preview locally
 
@@ -225,5 +227,5 @@ All four commands must print nothing before you go live.
 
 - **Identity:** "Dr. Kalun Ho" is the only identity string. No credentials, titles, roles, employers or descriptors anywhere: not in text, meta tags, alt text, JSON-LD, images or file names.
 - **Voice:** headlines state a conclusion, in sentence case, ending with a full stop. Short sentences, "you" singular, plain words, no exclamation marks, no invented facts or numbers.
-- **Design:** colours only through the tokens at the top of `site.css`. No shadows, no gradients, no stock photos. `--secondary` text only on white: on tinted backgrounds it fails WCAG AA.
+- **Design:** colours only through the tokens at the top of `site.css`, and every token needs a light and a dark value. No shadows, no gradients, no stock photos. In the light theme, `--text-muted` only on `--bg`: on tinted backgrounds it fails WCAG AA.
 - **Third parties:** nothing may load from another domain before a click. Fonts stay self-hosted.

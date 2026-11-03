@@ -5,8 +5,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- THEME START: same on every page. Applies a stored colour theme before the first paint (toggle: /assets/js/site.js) -->
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#10365C" media="(prefers-color-scheme: dark)">
+<script>
+  (function () {
+    var root = document.documentElement, theme = null;
+    root.classList.add('js');
+    try { theme = localStorage.getItem('theme'); } catch (error) {}
+    if (theme !== 'light' && theme !== 'dark') return;
+    root.setAttribute('data-theme', theme);
+    document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
+      meta.content = theme === 'dark' ? '#10365C' : '#FFFFFF';
+    });
+  }());
+</script>
+<!-- THEME END -->
 <title>Under construction · Dr. Kalun Ho</title>
-<meta name="description" content="This website is being built. Ten-minute videos on AI strategy for executives, with the numbers, the decision and a handout.">
+<meta name="description" content="This website is being built. Why technology moves the way it does. Ten-minute videos with the numbers, the decision and a handout.">
 <meta name="robots" content="noindex">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -14,6 +31,7 @@
 <link rel="preload" href="/assets/fonts/open-sans-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/open-sans-700.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/site.css">
+<script src="/assets/js/site.js" defer></script>
 </head>
 <body class="page-construction">
 
@@ -23,6 +41,11 @@
       <svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#mark"></use></svg>
       <span>Dr. Kalun Ho</span>
     </span>
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Colour theme">
+      <svg class="icon theme-toggle__system" aria-hidden="true"><use href="/assets/img/icons.svg#monitor"></use></svg>
+      <svg class="icon theme-toggle__light" aria-hidden="true"><use href="/assets/img/icons.svg#sun"></use></svg>
+      <svg class="icon theme-toggle__dark" aria-hidden="true"><use href="/assets/img/icons.svg#moon"></use></svg>
+    </button>
   </div>
 </header>
 
@@ -33,7 +56,7 @@
       <p class="kicker">Under construction</p>
       <div class="accent-bar"></div>
       <h1 class="display">This website is being built.</h1>
-      <p class="lead">Ten-minute videos on AI strategy for executives, with the numbers, the decision and a handout. Check back soon.</p>
+      <p class="lead">Why technology moves the way it does. Ten-minute videos with the numbers, the decision and a handout. Check back soon.</p>
     </div>
   </div>
 </main>

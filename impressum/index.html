@@ -3,6 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- THEME START: same on every page. Applies a stored colour theme before the first paint (toggle: /assets/js/site.js) -->
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#10365C" media="(prefers-color-scheme: dark)">
+<script>
+  (function () {
+    var root = document.documentElement, theme = null;
+    root.classList.add('js');
+    try { theme = localStorage.getItem('theme'); } catch (error) {}
+    if (theme !== 'light' && theme !== 'dark') return;
+    root.setAttribute('data-theme', theme);
+    document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
+      meta.content = theme === 'dark' ? '#10365C' : '#FFFFFF';
+    });
+  }());
+</script>
+<!-- THEME END -->
 <title>Impressum · Dr. Kalun Ho</title>
 <meta name="description" content="Legal notice (Impressum) for kalunho.com according to § 5 DDG.">
 <link rel="canonical" href="https://kalunho.com/impressum/">
@@ -72,6 +89,11 @@
       </ul>
       <a class="btn btn--small" href="{{YOUTUBE_CHANNEL_URL}}?sub_confirmation=1">Subscribe on YouTube</a>
     </nav>
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Colour theme">
+      <svg class="icon theme-toggle__system" aria-hidden="true"><use href="/assets/img/icons.svg#monitor"></use></svg>
+      <svg class="icon theme-toggle__light" aria-hidden="true"><use href="/assets/img/icons.svg#sun"></use></svg>
+      <svg class="icon theme-toggle__dark" aria-hidden="true"><use href="/assets/img/icons.svg#moon"></use></svg>
+    </button>
   </div>
 </header>
 <!-- HEADER END -->
