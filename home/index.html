@@ -21,7 +21,7 @@
 </script>
 <!-- THEME END -->
 <title>Why technology moves the way it does · Dr. Kalun Ho</title>
-<meta name="description" content="Why technology moves the way it does. One question per video: what is happening in technology, and why. Each video comes with a free PDF handout.">
+<meta name="description" content="Why technology moves the way it does. What is happening in technology, and why. Videos with the numbers, a plain explanation and a free PDF handout.">
 <link rel="canonical" href="https://kalunho.com/">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -35,14 +35,14 @@
 <meta property="og:locale" content="en_GB">
 <meta property="og:url" content="https://kalunho.com/">
 <meta property="og:title" content="Why technology moves the way it does">
-<meta property="og:description" content="One question per video: what is happening in technology, and why. Each video comes with a free PDF handout.">
+<meta property="og:description" content="What is happening in technology, and why. Videos with the numbers, a plain explanation and a free PDF handout.">
 <meta property="og:image" content="https://kalunho.com/assets/img/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Dr. Kalun Ho: Why technology moves the way it does.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Why technology moves the way it does">
-<meta name="twitter:description" content="One question per video: what is happening in technology, and why. Each video comes with a free PDF handout.">
+<meta name="twitter:description" content="What is happening in technology, and why. Videos with the numbers, a plain explanation and a free PDF handout.">
 <meta name="twitter:image" content="https://kalunho.com/assets/img/og-image.png">
 <script type="application/ld+json">
 {
@@ -84,6 +84,7 @@
     <nav class="site-nav" aria-label="Main">
       <ul>
         <li><a href="/" aria-current="page">Home</a></li>
+        <li><a href="/videos/">Videos</a></li>
         <li><a href="/newsletter/">Newsletter</a></li>
         <li><a href="/about/">About</a></li>
       </ul>
@@ -107,14 +108,15 @@
         <p class="kicker">Dr. Kalun Ho</p>
         <div class="accent-bar"></div>
         <h1 class="display">Why technology moves the way it does.</h1>
-        <p class="lead">One question per video: what is happening in technology, and why. Each video comes with a free PDF handout.</p>
+        <p class="lead">What is happening in technology, and why. Videos with the numbers, a plain explanation and a free PDF handout.</p>
+        <p class="hero__audience">For people who have to explain technology to others at work.</p>
         <div class="actions">
-          <a class="btn" href="https://www.youtube.com/@KalunHo?sub_confirmation=1">
-            <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#youtube"></use></svg>
-            Subscribe on YouTube
+          <a class="btn" href="https://www.youtube.com/@KalunHo/videos">
+            <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#play"></use></svg>
+            Watch the latest video
           </a>
-          <a class="link-arrow" href="/newsletter/">
-            Get the editable deck
+          <a class="link-arrow" href="https://www.youtube.com/@KalunHo?sub_confirmation=1">
+            Subscribe on YouTube
             <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>
           </a>
         </div>
@@ -127,9 +129,9 @@
       <div class="section-head">
         <p class="kicker">Latest video</p>
         <h2 id="latest-title">The newest video.</h2>
-        <p class="lead">The free PDF handout is linked in the video description.</p>
-        <a class="link-arrow" href="https://www.youtube.com/@KalunHo/videos">
-          See all videos on YouTube
+        <p class="lead">The free PDF handout is linked in the video description and on the videos page.</p>
+        <a class="link-arrow" href="/videos/">
+          All videos, handouts and sources
           <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>
         </a>
       </div>
@@ -137,14 +139,14 @@
         <!-- VIDEO: click-to-load. Nothing loads from YouTube until the click (see /assets/js/site.js).
              The playlist is the channel's uploads playlist, so it always plays the newest video. -->
         <div class="video">
-          <a class="video__poster" href="https://www.youtube.com/@KalunHo/videos" data-playlist="{{YOUTUBE_UPLOADS_PLAYLIST}}" data-title="Latest episodes on YouTube">
+          <a class="video__poster" href="https://www.youtube.com/@KalunHo/videos" data-playlist="{{YOUTUBE_UPLOADS_PLAYLIST}}" data-title="Latest videos on YouTube">
             <img class="video__motif" src="/assets/img/motif.svg" alt="" width="770" height="1080" loading="lazy">
             <span class="video__kicker" aria-hidden="true">Latest video</span>
             <span class="video__bar"></span>
             <span class="video__title" aria-hidden="true">Why technology moves the way it does.</span>
             <span class="video__play">
               <span class="video__button"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#play"></use></svg></span>
-              Play the latest episode<span class="sr-only"> (loads the YouTube player)</span>
+              Play the latest video<span class="sr-only"> (loads the YouTube player)</span>
             </span>
             <span class="video__footer" aria-hidden="true">Dr. Kalun Ho</span>
           </a>
@@ -154,10 +156,28 @@
     </div>
   </section>
 
+  <section class="section" aria-labelledby="questions-title">
+    <div class="container split">
+      <div class="section-head">
+        <p class="kicker">The questions</p>
+        <h2 id="questions-title">Why, not only what.</h2>
+        <p class="lead">The videos explain the forces behind what is happening: cost curves, compute, chips, energy, capital, supply chains. Right now mostly AI, because that is where the movement is.</p>
+      </div>
+      <!-- EXAMPLE QUESTIONS: replace with the questions of real videos once they are published. -->
+      <ul class="bullets">
+        <li>Why did the price of a model's answer fall so fast?</li>
+        <li>Why are chips, not software, the bottleneck?</li>
+        <li>Why has electricity become a technology question?</li>
+        <li>Why do some companies run their AI in-house, and others not?</li>
+      </ul>
+    </div>
+  </section>
+
   <section class="section" aria-labelledby="get-title">
     <div class="container">
       <div class="section-head">
         <h2 id="get-title">What comes with each video.</h2>
+        <p class="lead">Made for people who have to understand a technology shift well enough to explain it to others at work: managers, engineers outside the specialty, and anyone who presents.</p>
       </div>
       <ul class="cards cards--3" data-reveal-group>
         <li class="panel card" data-reveal>
@@ -173,7 +193,7 @@
         <li class="panel card" data-reveal>
           <svg class="icon icon--lg" aria-hidden="true"><use href="/assets/img/icons.svg#document"></use></svg>
           <h3>The handout</h3>
-          <p>A free PDF with the charts and sources. Subscribers get the editable deck.</p>
+          <p>A free PDF with the charts and sources, linked in the description and on the <a href="/videos/">videos page</a>. Subscribers get the editable deck.</p>
         </li>
       </ul>
     </div>

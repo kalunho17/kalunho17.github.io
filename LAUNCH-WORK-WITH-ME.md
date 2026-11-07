@@ -38,7 +38,7 @@ The page is built but hidden: no link points to it, it carries `noindex`, and it
 6. **Fill the remaining placeholder.** The page has one `{{CONTACT_EMAIL}}` token (line 154). It is the same address as on `/about/`, `/impressum/` and `/privacy/`, so replace it everywhere at once (`config.md`).
 
 7. **Check before you push:**
-   - Open the site locally (`python3 -m http.server`) and check the header at 360 px wide: four nav items must fit on one line.
+   - Open the site locally (`python3 -m http.server`) and check the header at 360 px wide: five nav items (Home, Videos, Newsletter, About, Work with me) must fit on one line, or wrap cleanly onto two.
    - Run the identity and banned-words checks from `README.md` (section 6). Both must print nothing.
    - Read the page once more against the About page: same tone, same facts, nothing the About page does not also say.
 

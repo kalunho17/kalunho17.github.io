@@ -333,6 +333,7 @@ address { font-style: normal; }
 .hero__inner { position: relative; padding-block: clamp(56px, 9vw, 128px); }
 .hero__content { position: relative; max-width: 40rem; }
 .hero .lead { max-width: 32em; }
+.hero__audience { margin-top: var(--s2); max-width: 32em; color: var(--text); font-weight: 600; }
 
 /* Motif from the title slides: right edge on desktop, faint behind the text on mobile */
 .hero__motif {
@@ -514,6 +515,22 @@ address { font-style: normal; }
 @media (min-width: 900px) {
   .row { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s5); }
 }
+
+/* --- Video entries (/videos/): newest first, sources folded ------------------ */
+
+.entries { display: grid; }
+.entry { padding-block: var(--s4); border-top: 1px solid var(--rule); }
+.entry:first-child { border-top: 0; padding-top: 0; }
+.entry .meta { margin-bottom: var(--s1); }
+.entry h2 { font-size: clamp(1.375rem, 1.2rem + 0.8vw, 1.75rem); }
+.entry h2 + p { margin-top: var(--s2); }
+.entry .actions { margin-top: var(--s3); }
+.entry__sources { max-width: var(--measure); margin-top: var(--s3); }
+.entry__sources summary { display: flex; align-items: center; min-height: 44px; color: var(--accent); font-weight: 600; cursor: pointer; }
+.entry__sources summary:hover { color: var(--accent-hover); text-decoration: underline; }
+.sources { margin: var(--s1) 0 0; padding-left: 1.5em; font-size: var(--fs-small); line-height: 1.5; }
+.sources li { margin-bottom: 6px; overflow-wrap: anywhere; }
+.entries + .caption { margin-top: var(--s4); }
 
 /* --- Dark band (newsletter / subscribe) ---------------------------------- */
 

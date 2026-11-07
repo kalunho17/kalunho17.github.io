@@ -4,7 +4,7 @@ The website of Dr. Kalun Ho's YouTube channel ("Why technology moves the way it 
 
 > **Status: under construction.** Visitors to kalunho.com see a temporary "under construction" page. The finished home page waits in `home/index.html`, and search engines are kept out by `robots.txt`. Work through the to-do list (section 1), then go live (section 2).
 
-Once live, the site needs no routine maintenance. The home page player shows the channel's uploads playlist, so it always plays the newest video. Handouts and decks live on Google Drive and are linked from YouTube and the newsletter, not from this site. Every push to `main` is online in about a minute.
+Once live, the site needs one edit per video: a new entry at the top of `videos/index.html` (the template is in a comment there) with the takeaway, the YouTube link, the Google Drive link of the free handout and the sources. The channel repo's publishing step writes that entry. Decks for subscribers are linked only from the newsletter, never from this site. The home page player shows the channel's uploads playlist, so it always plays the newest video. Every push to `main` is online in about a minute.
 
 ## 1. To-do list before going live
 
@@ -28,6 +28,7 @@ Details and the exact places for each are in `config.md`. Replace them with Repl
 - [ ] `{{CONTACT_EMAIL}}`: a public contact address, not your private one
 - [ ] Optional: a channel name. Until you decide, the site uses "Dr. Kalun Ho"; `config.md` lists the two places to change.
 - [ ] Check: `grep -rn "{{" --include='*.html' .` prints nothing.
+- [ ] Replace the four example questions on the home page (`<!-- EXAMPLE QUESTIONS -->`) with the questions of real videos, or leave them until the first videos exist.
 
 ### B. Replace the photos
 
@@ -57,6 +58,12 @@ How to swap them is in section 4.
 - [ ] Run the identity and banned-words checks (section 6). Both must print nothing.
 
 ## 2. Go live
+
+The site goes live on the day the first video is published (decided 7 November 2026). On that day, before the steps below:
+
+- [ ] Add the first entry to `videos/index.html` (template in the `<!-- ENTRY TEMPLATE -->` comment): headline, takeaway, YouTube link, the Google Drive link of the handout, the sources. Delete the `<!-- FIRST VIDEO NOTICE -->` block.
+- [ ] Replace the four example questions on the home page with the first video's question (keep the others only if they are planned).
+- [ ] Optional: replace the illustrative slide on `/newsletter/` with a real slide from the first deck, so the page shows real data.
 
 Run these in the project folder:
 
@@ -103,6 +110,7 @@ Run these in the project folder:
 |---|---|---|
 | `/` | – | **Temporary:** "under construction" page. Replaced by the home page at launch |
 | `/home/` | – | **Temporary:** the finished home page, waiting for launch (moves to `/`) |
+| `/videos/` | yes | One entry per published video: takeaway, YouTube link, handout link (Google Drive), numbered sources. Empty until the first video |
 | `/links/` | no | Bio link page for Instagram and TikTok |
 | `/newsletter/` | yes | Why subscribe, illustrative slide, Beehiiv button |
 | `/about/` | yes | What the channel stands for and how it works |
@@ -118,7 +126,7 @@ Until launch, all pages except `/` are reachable only by typing their address, a
 ```
 index.html               temporary "under construction" page
 home/index.html          finished home page (moves to index.html at launch)
-links/, newsletter/, about/, work-with-me/, impressum/, privacy/, 404.html
+videos/, links/, newsletter/, about/, work-with-me/, impressum/, privacy/, 404.html
 assets/css/site.css      all styles; colour tokens at the top
 assets/js/site.js        click-to-load video + fade-in (the only script)
 assets/fonts/            Open Sans 300/400/600/700 (woff2) + OFL.txt licence
@@ -226,6 +234,7 @@ All four commands must print nothing before you go live.
 
 ## Rules for future edits
 
+- **Mission and audience:** "Why technology moves the way it does." The channel repo (`../youtube/channel/channel.md`) is the source for mission, audience, bio and deliverables; the site must say the same. The public word is "video", never "episode" (that is the channel repo's internal term). "AI" is the subject of many videos, never the frame: the site says "technology" and names AI as the current focus.
 - **Identity:** "Dr. Kalun Ho" is the identity string in headers, footers, alt text, JSON-LD, images and file names. Role and degree appear only in the short bio (home page method section, `/about/` "Who I am", About meta description), stated as facts without adjectives. The employer is never named: the bio says "a large German company". No self-praise words anywhere (the identity check in section 6 lists them). The videos are described as a personal project that does not speak for the employer.
 - **Voice:** headlines state a conclusion, in sentence case, ending with a full stop. Short sentences, "you" singular, plain words, no exclamation marks, no invented facts or numbers.
 - **Design:** colours only through the tokens at the top of `site.css`, and every token needs a light and a dark value. No shadows, no gradients, no stock photos. In the light theme, `--text-muted` only on `--bg`: on tinted backgrounds it fails WCAG AA.
