@@ -15,10 +15,10 @@
 @font-face { font-family: "Open Sans Fallback"; src: local("Arial"), local("ArialMT"); ascent-override: 101.65%; descent-override: 27.86%; line-gap-override: 0%; size-adjust: 105.22%; }
 
 /* --- Colour themes -----------------------------------------------------------
-   Light values on :root. Dark values in the two blocks below: the first applies
-   when a visitor picks dark with the header toggle (data-theme="dark" on <html>),
-   the second when no choice is stored and the device is set to dark. Keep the
-   two dark blocks identical. Rules further down use only these tokens.
+   Light is the default. Light values on :root. Dark values in the two blocks
+   below: the first applies when a visitor picks dark with the header toggle
+   (data-theme="dark" on <html>), the second when a visitor picks "system" and
+   the device is set to dark. Keep the two dark blocks identical. Rules further down use only these tokens.
    Brand tints: #174A7E, #10365C (deep), #4671A4 (80 %), #7498C0 (60 %),
    #A3BBD5 (40 %), #D1DDEA (20 %), #E8EEF5 (10 %).
    .video and .slide show slides, so they keep the light values in both themes. */
@@ -50,8 +50,7 @@
   --motif-blend:  normal;
 }
 
-:root { color-scheme: light dark; }
-:root[data-theme="light"] { color-scheme: light; }
+:root { color-scheme: light; }
 
 /* Dark, chosen with the toggle. Screen only, so printouts stay light. */
 @media screen {
@@ -77,9 +76,9 @@
   }
 }
 
-/* Dark, "system": no stored choice and the device is set to dark */
+/* Dark, "system": the visitor picked system with the toggle and the device is set to dark */
 @media screen and (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
+  :root[data-theme="system"] {
     color-scheme: dark;
     --bg:           #10365C;
     --bg-panel:     #174A7E;
@@ -293,7 +292,7 @@ address { font-style: normal; }
   .site-nav ul { column-gap: var(--s2); }
 }
 
-/* Colour theme toggle: cycles system → light → dark (site.js). Hidden without
+/* Colour theme toggle: cycles light → dark → system (site.js). Hidden without
    JavaScript; the script in <head> adds .js to <html>. Shows the current state. */
 .theme-toggle {
   display: none; place-items: center; flex: none;
@@ -305,9 +304,9 @@ address { font-style: normal; }
 .js .theme-toggle { display: grid; }
 .theme-toggle:hover { background: var(--bg-tint); color: var(--accent); }
 .theme-toggle .icon { display: none; width: 22px; height: 22px; }
-:root:not([data-theme]) .theme-toggle__system,
-:root[data-theme="light"] .theme-toggle__light,
-:root[data-theme="dark"] .theme-toggle__dark { display: block; }
+:root:not([data-theme]) .theme-toggle__light,
+:root[data-theme="dark"] .theme-toggle__dark,
+:root[data-theme="system"] .theme-toggle__system { display: block; }
 
 /* --- Sections ------------------------------------------------------------- */
 

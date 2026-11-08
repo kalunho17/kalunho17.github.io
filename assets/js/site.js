@@ -25,17 +25,17 @@
     });
   });
 
-  // Colour theme toggle: system → light → dark → system. A choice is stored in
-  // localStorage under "theme"; "system" removes it, so the device setting applies again.
-  // The script in <head> (between THEME START and THEME END) applies a stored choice
-  // before the first paint; the colours themselves are tokens in site.css.
+  // Colour theme toggle: light → dark → system → light. Light is the default: it removes
+  // the stored choice. "dark" and "system" (follow the device) are stored in localStorage
+  // under "theme". The script in <head> (between THEME START and THEME END) applies a
+  // stored choice before the first paint; the colours themselves are tokens in site.css.
   var root = document.documentElement;
-  var THEMES = ['system', 'light', 'dark'];
+  var THEMES = ['light', 'dark', 'system'];
   var THEME_COLOR = { light: '#FFFFFF', dark: '#10365C' };  // must match the <meta name="theme-color"> tags
 
   function currentTheme() {
     var theme = root.getAttribute('data-theme');
-    return theme === 'light' || theme === 'dark' ? theme : 'system';
+    return theme === 'dark' || theme === 'system' ? theme : 'light';
   }
 
   function nextTheme(theme) {
@@ -43,10 +43,10 @@
   }
 
   function setTheme(theme) {
-    if (theme === 'system') root.removeAttribute('data-theme');
+    if (theme === 'light') root.removeAttribute('data-theme');
     else root.setAttribute('data-theme', theme);
     try {
-      if (theme === 'system') localStorage.removeItem('theme');
+      if (theme === 'light') localStorage.removeItem('theme');
       else localStorage.setItem('theme', theme);
     } catch (error) { /* storage blocked: the choice lasts until the page is closed */ }
     // Browser chrome: each tag keeps its own colour for "system", both follow a fixed choice

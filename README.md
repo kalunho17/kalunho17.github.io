@@ -137,9 +137,9 @@ config.md                every placeholder and where it is used
 LAUNCH-WORK-WITH-ME.md   steps to switch on the hidden page
 ```
 
-**Header and footer** are copied on every page, between `<!-- HEADER START -->` / `<!-- HEADER END -->` and `<!-- FOOTER START -->` / `<!-- FOOTER END -->`. To change them, use Replace in Files (`Cmd+Shift+H`) so every page changes at once. The footer year is plain text (`© 2026`); update it whenever you like. The same goes for the `<!-- THEME START -->` / `<!-- THEME END -->` block in each `<head>`: it applies a visitor's stored light or dark choice before the page appears, so there is no flash.
+**Header and footer** are copied on every page, between `<!-- HEADER START -->` / `<!-- HEADER END -->` and `<!-- FOOTER START -->` / `<!-- FOOTER END -->`. To change them, use Replace in Files (`Cmd+Shift+H`) so every page changes at once. The footer year is plain text (`© 2026`); update it whenever you like. The same goes for the `<!-- THEME START -->` / `<!-- THEME END -->` block in each `<head>`: it applies a visitor's stored dark or system choice before the page appears, so there is no flash.
 
-**Light and dark theme.** The toggle in the header cycles through system, light and dark, and remembers the choice in the visitor's browser (`localStorage`, key `theme`). Without a choice, the site follows the device setting. All colours are tokens at the top of `site.css`: light values on `:root`, dark values in two identical blocks below it. The home page video poster and the newsletter slide mock-up stay light in both themes, because they show slides.
+**Light and dark theme.** The site is light by default, whatever the device is set to. The toggle in the header cycles through light, dark and system (follow the device), and remembers a dark or system choice in the visitor's browser (`localStorage`, key `theme`); choosing light again removes it. All colours are tokens at the top of `site.css`: light values on `:root`, dark values in two identical blocks below it. The home page video poster and the newsletter slide mock-up stay light in both themes, because they show slides.
 
 ### Preview locally
 

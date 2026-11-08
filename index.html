@@ -5,19 +5,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- THEME START: same on every page. Applies a stored colour theme before the first paint (toggle: /assets/js/site.js) -->
-<meta name="color-scheme" content="light dark">
+<!-- THEME START: same on every page. Light by default; applies a stored "dark" or "system" choice before the first paint (toggle: /assets/js/site.js) -->
+<meta name="color-scheme" content="light">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#10365C" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: dark)">
 <script>
   (function () {
     var root = document.documentElement, theme = null;
     root.classList.add('js');
     try { theme = localStorage.getItem('theme'); } catch (error) {}
-    if (theme !== 'light' && theme !== 'dark') return;
+    if (theme !== 'dark' && theme !== 'system') return;
     root.setAttribute('data-theme', theme);
     document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
-      meta.content = theme === 'dark' ? '#10365C' : '#FFFFFF';
+      meta.content = theme === 'dark' || /dark/.test(meta.media) ? '#10365C' : '#FFFFFF';
     });
   }());
 </script>
