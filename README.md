@@ -40,7 +40,7 @@ How to swap them is in section 4.
 
 ### C. Finish the legal pages
 
-- [ ] **Legal notice** (`legal/index.html`). You live in Spain, so Spanish law applies (Art. 10 LSSI-CE), not the German Impressum rules. Name, full postal address and email are filled in (8 November 2026). Open: the NIF/NIE section (needed once the site is an economic activity, for example with YouTube ads), and check that the name matches your legal name.
+- [ ] **Legal notice** (`legal/index.html`). You live in Spain, so Spanish law applies (Art. 10 LSSI-CE), not the German Impressum rules. Name, full postal address and email are filled in (8 November 2026). Open: check that the name matches your legal name. The tax number is left out on purpose while the site earns nothing (section 7, "When the site starts earning money").
 - [ ] **Privacy policy** (`privacy/index.html`): date of the review, confirm GitHub's EU-U.S. Data Privacy Framework certification, the newsletter section (once your Beehiiv account is set up). Address, email and the Spanish supervisory authority (AEPD) are filled in.
 - [ ] Have both pages reviewed by a qualified person.
 - [ ] Delete the "Template" notice at the top of both pages.
@@ -48,7 +48,7 @@ How to swap them is in section 4.
 
 ### D. Domain
 
-- [ ] **Verify the domain on GitHub** (prevents someone else from taking it over). Not done yet: there is no verification record as of 28 October 2026. Click your profile picture → **Settings** → **Pages** (sidebar, under "Code, planning, and automation") → **Add a domain** → `kalunho.com`. Add the TXT record GitHub shows (host `_github-pages-challenge-kalunho17`) at your registrar, wait a few minutes, then click **Verify**.
+- [x] **Verify the domain on GitHub** (prevents someone else from taking it over). Done 8 November 2026: the TXT record `_github-pages-challenge-kalunho17` is set at Cloudflare. Keep it: GitHub checks it again from time to time, and deleting it ends the verification. To redo it: click your profile picture → **Settings** → **Pages** (sidebar, under "Code, planning, and automation") → **Add a domain** → `kalunho.com`. Add the TXT record GitHub shows (host `_github-pages-challenge-kalunho17`) at your registrar, wait a few minutes, then click **Verify**.
 - [ ] Optional but recommended: **add the four AAAA records** for visitors on IPv6 (missing as of 28 October 2026). See section 5.
 
 ### E. Final check before going live
@@ -192,7 +192,7 @@ The video poster on the home page is HTML and CSS (in `home/index.html`, later `
 | AAAA | `@` | `2606:50c0:8002::153` | missing (optional) |
 | AAAA | `@` | `2606:50c0:8003::153` | missing (optional) |
 | CNAME | `www` | `kalunho17.github.io` | set |
-| TXT | `_github-pages-challenge-kalunho17` | the value GitHub shows when you verify the domain | missing |
+| TXT | `_github-pages-challenge-kalunho17` | the value GitHub shows when you verify the domain | set (8 Nov 2026) |
 
 These values match GitHub's documentation ("Managing a custom domain for your GitHub Pages site"). To check the records:
 
@@ -233,7 +233,8 @@ All five commands must print nothing before you go live, and before every push t
 
 ## 7. Later
 
-- **Work with me:** the page (`work-with-me/`) and its launch guide (`LAUNCH-WORK-WITH-ME.md`) are git-ignored since 8 November 2026, so they stay on your computer and are not online. When you offer workshops or talks, remove both lines from `.gitignore` and follow the launch guide. Earlier versions are still in the repository history.
+- **When the site starts earning money** (YouTube ads, sponsorships, affiliate links, paid workshops or talks): add your NIF or NIE to the legal notice (`legal/index.html`, a "Tax identification number" section after "Provider"). Art. 10 LSSI-CE asks for it once the website is an economic activity. Also change the sentence "It sells nothing" under "About this website", and have both legal pages reviewed again.
+$1 (`work-with-me/`) and its launch guide (`LAUNCH-WORK-WITH-ME.md`) are git-ignored since 8 November 2026, so they stay on your computer and are not online. When you offer workshops or talks, remove both lines from `.gitignore` and follow the launch guide. Earlier versions are still in the repository history.
 - **New experiment:** copy `experiments/tokens-per-task/` to a new folder, replace the content, add a card to `experiments/index.html` and a line to `sitemap.xml`.
 - **Newsletter embed:** every newsletter button sits under a `<!-- NEWSLETTER CTA -->` comment (home page band, newsletter page twice). To use a Beehiiv embed, replace the `<a class="btn …">` there with Beehiiv's embed code. An embed loads Beehiiv as soon as the page opens, so update the privacy policy first and check whether you then need consent. The plain link avoids both.
 - **Analytics:** every page has an `<!-- ANALYTICS SLOT -->` comment in the `<head>` with GoatCounter and Plausible examples (both cookieless). Paste one snippet on every page, and replace the "Cookies and analytics" section of the privacy policy with the commented template below it.

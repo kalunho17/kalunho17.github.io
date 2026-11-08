@@ -40,7 +40,7 @@ The legal notice and the privacy policy use visible `[TODO: …]` markers instea
 
 | File | Markers |
 |---|---|
-| `legal/index.html` | NIF/NIE (or delete the section). Also check that the name matches your legal name. |
+| `legal/index.html` | Check that the name matches your legal name. The NIF/NIE is added later, when the site starts earning money (README, section 7). |
 | `privacy/index.html` | date of the review, GitHub's Data Privacy Framework certification (confirm), the newsletter section (Beehiiv processing) |
 
 Check what's left with:
