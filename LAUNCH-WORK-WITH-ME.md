@@ -39,7 +39,7 @@ The page is built but hidden: no link points to it, it carries `noindex`, and it
 
 7. **Check before you push:**
    - Open the site locally (`python3 -m http.server`) and check the header at 360 px wide: five nav items (Home, Videos, Newsletter, About, Work with me) must fit on one line, or wrap cleanly onto two.
-   - Run the identity and banned-words checks from `README.md` (section 6). Both must print nothing.
+   - Run the identity, private-terms and banned-words checks from `README.md` (section 6). All three must print nothing.
    - Read the page once more against the About page: same tone, same facts, nothing the About page does not also say.
 
 8. **Commit and push.**

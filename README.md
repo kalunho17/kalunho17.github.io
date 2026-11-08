@@ -4,7 +4,7 @@ The website of Dr. Kalun Ho's YouTube channel ("Why technology moves the way it 
 
 > **Status: under construction.** Visitors to kalunho.com see a temporary "under construction" page. The finished home page waits in `home/index.html`, and search engines are kept out by `robots.txt`. Work through the to-do list (section 1), then go live (section 2).
 
-Once live, the site needs one edit per video: a new entry at the top of `videos/index.html` (the template is in a comment there) with the takeaway, the YouTube link, the Google Drive link of the free handout and the sources. The channel repo's publishing step writes that entry. Decks for subscribers are linked only from the newsletter, never from this site. The home page player shows the channel's uploads playlist, so it always plays the newest video. Every push to `main` is online in about a minute.
+Once live, the site needs one edit per video: a new entry at the top of `videos/index.html` (the template is in a comment there) with the takeaway, the YouTube link, the Google Drive link of the free handout and the sources. The `add-video` skill does it: open this folder in Claude Code, paste the YouTube URL and say "add this video". It reads the episode from the channel repo (`../youtube`), inserts the entry, runs the checks, commits and pushes. On the first video it also walks you through going live. Decks for subscribers are linked only from the newsletter, never from this site. The home page player shows the channel's uploads playlist, so it always plays the newest video. Every push to `main` is online in about a minute.
 
 ## 1. To-do list before going live
 
@@ -55,7 +55,7 @@ How to swap them is in section 4.
 
 - [ ] Preview locally (section 3) and click every link on the home page, `/links/`, `/newsletter/` and `/about/`. Each one should open the right YouTube, Instagram, TikTok or Beehiiv page.
 - [ ] Click play on the home page: the newest video should start.
-- [ ] Run the identity and banned-words checks (section 6). Both must print nothing.
+- [ ] Run the identity, private-terms and banned-words checks (section 6). All three must print nothing.
 
 ## 2. Go live
 
@@ -215,7 +215,13 @@ grep -rn "TODO" --include='*.html' .
 **Identity check.** Since 3 November 2026 the site carries a short bio: one sentence on the home page (method section) and the "Who I am" paragraph on `/about/`, plus the About page's meta description. Everywhere else, "Dr. Kalun Ho" stays the only identity string. Self-praise words stay banned on every page. The brackets stop the command from matching itself in this file:
 
 ```sh
-grep -rniIE --exclude-dir=.git '[s]trategist|[a]i strategy & execution|[e]xpert|[t]hought leader|[p]ioneer|[l]eading|[v]isionary|[a]ward|[f]reudenberg|[w]einheim' .
+grep -rniIE --exclude-dir=.git '[s]trategist|[a]i strategy & execution|[e]xpert|[t]hought leader|[p]ioneer|[l]eading|[v]isionary|[a]ward' .
+```
+
+**Private-terms check.** Names that must never appear on the site, such as the employer and its city, are not written in this README: everything in this repository is public, on GitHub and on kalunho.com. They live in `.local/private-terms.txt`, one term per line. The `.local/` folder is git-ignored, so it stays on your computer. If the file is missing on a new machine, create it again with the terms you want to keep off the site.
+
+```sh
+grep -rniIF --exclude-dir=.git --exclude-dir=.local -f .local/private-terms.txt .
 ```
 
 **Banned-words check:**
@@ -224,7 +230,7 @@ grep -rniIE --exclude-dir=.git '[s]trategist|[a]i strategy & execution|[e]xpert|
 grep -rniIE --exclude-dir=.git '[g]ame-changer|[r]evolutionary|[u]nlock|[s]upercharge|[j]ourney|[e]cosystem|[d]isrupt|[c]utting-edge|[n]ext-level|[e]mpower|[h]arness|[s]eamless|[t]ransformative|[w]orld-class|[p]assionate' .
 ```
 
-All four commands must print nothing before you go live.
+All five commands must print nothing before you go live, and before every push that changes text.
 
 ## 7. Later
 
@@ -235,7 +241,7 @@ All four commands must print nothing before you go live.
 ## Rules for future edits
 
 - **Mission and audience:** "Why technology moves the way it does." The channel repo (`../youtube/channel/channel.md`) is the source for mission, audience, bio and deliverables; the site must say the same. The public word is "video", never "episode" (that is the channel repo's internal term). "AI" is the subject of many videos, never the frame: the site says "technology" and names AI as the current focus.
-- **Identity:** "Dr. Kalun Ho" is the identity string in headers, footers, alt text, JSON-LD, images and file names. Role and degree appear only in the short bio (home page method section, `/about/` "Who I am", About meta description), stated as facts without adjectives. The employer is never named: the bio says "a large German company". No self-praise words anywhere (the identity check in section 6 lists them). The videos are described as a personal project that does not speak for the employer.
+- **Identity:** "Dr. Kalun Ho" is the identity string in headers, footers, alt text, JSON-LD, images and file names. Role and degree appear only in the short bio (home page method section, `/about/` "Who I am", About meta description), stated as facts without adjectives. The employer is never named: the bio says "a large German company". No self-praise words anywhere (the identity check in section 6 lists them). Never write the employer's or its city's name in any file of this repository, not even in a check or a comment: the repository is public. Use the private-terms check (section 6) instead. The videos are described as a personal project that does not speak for the employer.
 - **Voice:** headlines state a conclusion, in sentence case, ending with a full stop. Short sentences, "you" singular, plain words, no exclamation marks, no invented facts or numbers.
 - **Design:** colours only through the tokens at the top of `site.css`, and every token needs a light and a dark value. No shadows, no gradients, no stock photos. In the light theme, `--text-muted` only on `--bg`: on tinted backgrounds it fails WCAG AA.
 - **Third parties:** nothing may load from another domain before a click. Fonts stay self-hosted.

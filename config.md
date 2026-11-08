@@ -51,7 +51,7 @@ grep -rn "TODO" --include='*.html' .
 
 ## Per video
 
-Not a token. Each published video gets an entry at the top of `videos/index.html` (template in the `<!-- ENTRY TEMPLATE -->` comment there): the headline, the takeaway, the YouTube link, the Google Drive share link of the free PDF handout and the numbered sources. The deck link for subscribers never goes on the site. The channel repo's publishing step writes the entry; until then, copy the template by hand.
+Not a token. Each published video gets an entry at the top of `videos/index.html` (template in the `<!-- ENTRY TEMPLATE -->` comment there): the headline, the takeaway, the YouTube link, the Google Drive share link of the free PDF handout and the numbered sources. The deck link for subscribers never goes on the site. The `add-video` skill writes the entry (`.claude/skills/add-video/`): paste the YouTube URL into Claude Code in this folder. By hand, copy the template.
 
 ## Photos
 
