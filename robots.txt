@@ -1,5 +1,5 @@
 # UNDER CONSTRUCTION: keeps search engines out while the site is unfinished.
-# At launch, replace everything in this file with these three lines (see README, "Go live"):
+# At launch, replace everything in this file with these three lines (see TODO.md, "Go live"):
 #   User-agent: *
 #   Allow: /
 #   Sitemap: https://kalunho.com/sitemap.xml

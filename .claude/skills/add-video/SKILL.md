@@ -60,7 +60,7 @@ were approved.
 
 ### 3. First video only (`first_video: true`)
 
-The site goes live on the day of the first video (README, "Go live"). Before pushing:
+The site goes live on the day of the first video (TODO.md, "Go live"). Before pushing:
 
 1. Delete the block from `<!-- FIRST VIDEO NOTICE: delete with the first entry. -->` to the
    end of its `<div class="section-head">` in `videos/index.html`.
@@ -72,9 +72,9 @@ The site goes live on the day of the first video (README, "Go live"). Before pus
    `{{YOUTUBE_UPLOADS_PLAYLIST}}` needs the channel ID (YouTube Studio → Settings → Channel →
    Advanced settings, `UC…` becomes `UU…`). `{{BEEHIIV_SUBSCRIBE_URL}}` needs the
    user's value. Ask for any that are left.
-4. Ask the user whether to go live now. If yes, follow README section 2, "Go live":
+4. Ask the user whether to go live now. If yes, follow TODO.md section 2, "Go live":
    move `home/index.html` to `index.html`, replace `robots.txt`, optionally drop the
-   under-construction CSS block. Also check the README's to-do list (photos, legal pages)
+   under-construction CSS block. Also check the to-do list in TODO.md (photos, legal pages)
    and tell the user what is still open. Going live with unfinished legal pages is the
    user's call, not yours.
 
@@ -86,7 +86,7 @@ This must print nothing:
 grep -rn "PDF_URL_MISSING" --include='*.html' .
 ```
 
-Then run the identity, private-terms and banned-words checks from `README.md`, section 6
+Then run the identity, private-terms and banned-words checks from `TODO.md` (local, git-ignored), section 6
 ("Checks"). All three must print nothing. If `.local/private-terms.txt` is missing, tell
 the user the private-terms check could not run. Never copy private terms into this file or
 any other tracked file: everything in this repository is public on GitHub and on kalunho.com.
