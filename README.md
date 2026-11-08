@@ -25,7 +25,7 @@ Details and the exact places for each are in `config.md`. Replace them with Repl
 - [x] `{{INSTAGRAM_URL}}`: filled in as `https://www.instagram.com/kalunhodotcom/`
 - [x] `{{TIKTOK_URL}}`: filled in as `https://www.tiktok.com/@kalunhodotcom`
 - [x] LinkedIn (`https://www.linkedin.com/in/kalunho`): written directly into the footer, the JSON-LD `sameAs`, the links page and the About page
-- [ ] `{{CONTACT_EMAIL}}`: a public contact address, not your private one
+- [x] Contact email: filled in as `kalunho17@gmail.com` (8 November 2026). It appears only on the legal notice and in the privacy policy; the About page sends people to the video comments, GitHub issues and LinkedIn instead.
 - [ ] Optional: a channel name. Until you decide, the site uses "Dr. Kalun Ho"; `config.md` lists the two places to change.
 - [ ] Check: `grep -rn "{{" --include='*.html' .` prints nothing.
 - [ ] Replace the four example questions on the home page (`<!-- EXAMPLE QUESTIONS -->`) with the questions of real videos, or leave them until the first videos exist.
@@ -40,8 +40,8 @@ How to swap them is in section 4.
 
 ### C. Finish the legal pages
 
-- [ ] **Impressum** (`impressum/index.html`): street and house number, postcode and city, a phone number or other fast contact route, VAT ID (or delete that section), and check that the name matches your legal name.
-- [ ] **Privacy policy** (`privacy/index.html`): date of the review, your address, confirm GitHub's EU-U.S. Data Privacy Framework certification, the newsletter section (once your Beehiiv account is set up), and your federal state's data protection authority.
+- [ ] **Legal notice** (`legal/index.html`). You live in Spain, so Spanish law applies (Art. 10 LSSI-CE), not the German Impressum rules. Name, full postal address and email are filled in (8 November 2026). Open: the NIF/NIE section (needed once the site is an economic activity, for example with YouTube ads), and check that the name matches your legal name.
+- [ ] **Privacy policy** (`privacy/index.html`): date of the review, confirm GitHub's EU-U.S. Data Privacy Framework certification, the newsletter section (once your Beehiiv account is set up). Address, email and the Spanish supervisory authority (AEPD) are filled in.
 - [ ] Have both pages reviewed by a qualified person.
 - [ ] Delete the "Template" notice at the top of both pages.
 - [ ] Check: `grep -rn "TODO" --include='*.html' .` prints nothing (this also finds the `TODO PHOTO` comments).
@@ -114,8 +114,8 @@ Run these in the project folder:
 | `/links/` | no | Bio link page for Instagram and TikTok |
 | `/newsletter/` | yes | Why subscribe, illustrative slide, Beehiiv button |
 | `/about/` | yes | What the channel stands for and how it works |
-| `/work-with-me/` | **no** | Hidden: built, not linked, `noindex`, not in the sitemap. See `LAUNCH-WORK-WITH-ME.md` |
-| `/impressum/` | footer | Legal notice (template) |
+| `/experiments/` | yes | One page per own measurement (`/experiments/<slug>/`): question, setup, findings with charts, full results, limits, code on GitHub, how to cite |
+| `/legal/` | footer | Legal notice under Spanish law (template, to be reviewed) |
 | `/privacy/` | footer | Privacy policy (template) |
 | `/404.html` | – | Shown by GitHub Pages for unknown addresses |
 
@@ -126,7 +126,7 @@ Until launch, all pages except `/` are reachable only by typing their address, a
 ```
 index.html               temporary "under construction" page
 home/index.html          finished home page (moves to index.html at launch)
-videos/, links/, newsletter/, about/, work-with-me/, impressum/, privacy/, 404.html
+videos/, experiments/, links/, newsletter/, about/, legal/, privacy/, 404.html
 assets/css/site.css      all styles; colour tokens at the top
 assets/js/site.js        click-to-load video + fade-in (the only script)
 assets/fonts/            Open Sans 300/400/600/700 (woff2) + OFL.txt licence
@@ -134,7 +134,6 @@ assets/img/              motif, icons sprite, portrait placeholders, OG image
 favicon.svg, favicon-32.png, favicon.ico, apple-touch-icon.png
 sitemap.xml, robots.txt, CNAME (kalunho.com), .nojekyll
 config.md                every placeholder and where it is used
-LAUNCH-WORK-WITH-ME.md   steps to switch on the hidden page
 ```
 
 **Header and footer** are copied on every page, between `<!-- HEADER START -->` / `<!-- HEADER END -->` and `<!-- FOOTER START -->` / `<!-- FOOTER END -->`. To change them, use Replace in Files (`Cmd+Shift+H`) so every page changes at once. The footer year is plain text (`© 2026`); update it whenever you like. The same goes for the `<!-- THEME START -->` / `<!-- THEME END -->` block in each `<head>`: it applies a visitor's stored dark or system choice before the page appears, so there is no flash.
@@ -234,7 +233,8 @@ All five commands must print nothing before you go live, and before every push t
 
 ## 7. Later
 
-- **Work with me:** follow `LAUNCH-WORK-WITH-ME.md`.
+- **Work with me:** the page (`work-with-me/`) and its launch guide (`LAUNCH-WORK-WITH-ME.md`) are git-ignored since 8 November 2026, so they stay on your computer and are not online. When you offer workshops or talks, remove both lines from `.gitignore` and follow the launch guide. Earlier versions are still in the repository history.
+- **New experiment:** copy `experiments/tokens-per-task/` to a new folder, replace the content, add a card to `experiments/index.html` and a line to `sitemap.xml`.
 - **Newsletter embed:** every newsletter button sits under a `<!-- NEWSLETTER CTA -->` comment (home page band, newsletter page twice). To use a Beehiiv embed, replace the `<a class="btn …">` there with Beehiiv's embed code. An embed loads Beehiiv as soon as the page opens, so update the privacy policy first and check whether you then need consent. The plain link avoids both.
 - **Analytics:** every page has an `<!-- ANALYTICS SLOT -->` comment in the `<head>` with GoatCounter and Plausible examples (both cookieless). Paste one snippet on every page, and replace the "Cookies and analytics" section of the privacy policy with the commented template below it.
 

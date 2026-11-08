@@ -50,6 +50,10 @@ replacing the `<!-- Newest video goes here -->` comment line on the first video,
 previous newest entry afterwards. Newest is always first. Leave the `<!-- ENTRY TEMPLATE -->`
 comment in place.
 
+If the episode has an experiment page (`experiments/<slug>/` whose "The video" link still points
+at the channel, `<!-- VIDEO LINK -->`), add the third link "The experiment" to the entry (the
+template shows it), and point the experiment page's video link at the new video URL.
+
 Do not change the headline: it is the title as published on YouTube, so a visitor recognises
 it. Do not rewrite the takeaway or the sources: they come from the channel repo, where they
 were approved.
@@ -64,10 +68,10 @@ The site goes live on the day of the first video (README, "Go live"). Before pus
    if the site is already live; the list under `<!-- EXAMPLE QUESTIONS -->`). Propose the
    first video's question, phrased like the others ("Why …?"), and ask the user which
    planned questions to keep. Remove the `EXAMPLE QUESTIONS` comment when they are real.
-3. Check the placeholders: `grep -rn "{{" --include='*.html' . | grep -v work-with-me`.
+3. Check the placeholders: `grep -rn "{{" --include='*.html' .`.
    `{{YOUTUBE_UPLOADS_PLAYLIST}}` needs the channel ID (YouTube Studio → Settings → Channel →
-   Advanced settings, `UC…` becomes `UU…`). `{{BEEHIIV_SUBSCRIBE_URL}}` and
-   `{{CONTACT_EMAIL}}` need the user's values. Ask for any that are left.
+   Advanced settings, `UC…` becomes `UU…`). `{{BEEHIIV_SUBSCRIBE_URL}}` needs the
+   user's value. Ask for any that are left.
 4. Ask the user whether to go live now. If yes, follow README section 2, "Go live":
    move `home/index.html` to `index.html`, replace `robots.txt`, optionally drop the
    under-construction CSS block. Also check the README's to-do list (photos, legal pages)

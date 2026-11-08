@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- THEME START: same on every page. Light by default; applies a stored "dark" or "system" choice before the first paint (toggle: /assets/js/site.js) -->
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: dark)">
+<script>
+  (function () {
+    var root = document.documentElement, theme = null;
+    root.classList.add('js');
+    try { theme = localStorage.getItem('theme'); } catch (error) {}
+    if (theme !== 'dark' && theme !== 'system') return;
+    root.setAttribute('data-theme', theme);
+    document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
+      meta.content = theme === 'dark' || /dark/.test(meta.media) ? '#10365C' : '#FFFFFF';
+    });
+  }());
+</script>
+<!-- THEME END -->
+<title>Tokens per task · Dr. Kalun Ho</title>
+<meta name="description" content="Own measurement on one RTX 5090: four open AI models, thinking off and on, a single answer and an agent. Thinking multiplied tokens per task up to 6.8 times; accuracy moved by −20 to +14 points.">
+<link rel="canonical" href="https://kalunho.com/experiments/tokens-per-task/">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/open-sans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/open-sans-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css">
+<script src="/assets/js/site.js" defer></script>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dr. Kalun Ho">
+<meta property="og:locale" content="en_GB">
+<meta property="og:url" content="https://kalunho.com/experiments/tokens-per-task/">
+<meta property="og:title" content="More thinking costs more tokens, not always more accuracy.">
+<meta property="og:description" content="Own measurement on one RTX 5090: four open AI models, thinking off and on, a single answer and an agent. Thinking multiplied tokens per task up to 6.8 times; accuracy moved by −20 to +14 points.">
+<meta property="og:image" content="https://kalunho.com/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dr. Kalun Ho: Why technology moves the way it does.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="More thinking costs more tokens, not always more accuracy.">
+<meta name="twitter:description" content="Own measurement on one RTX 5090: four open AI models, thinking off and on, a single answer and an agent. Thinking multiplied tokens per task up to 6.8 times; accuracy moved by −20 to +14 points.">
+<meta name="twitter:image" content="https://kalunho.com/assets/img/og-image.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://kalunho.com/#website",
+      "url": "https://kalunho.com/",
+      "name": "Dr. Kalun Ho",
+      "inLanguage": "en-GB",
+      "publisher": { "@id": "https://kalunho.com/#person" }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://kalunho.com/#person",
+      "name": "Dr. Kalun Ho",
+      "url": "https://kalunho.com/",
+      "sameAs": ["https://www.youtube.com/@KalunHo", "https://www.instagram.com/kalunhodotcom/", "https://www.tiktok.com/@kalunhodotcom", "https://www.linkedin.com/in/kalunho", "https://github.com/kalunho17"]
+    }
+  ]
+}
+</script>
+<!-- ANALYTICS SLOT: empty at launch. For cookieless analytics, paste ONE snippet here on every page
+     and update the privacy policy (section "Analytics"). Examples:
+     GoatCounter: <script data-goatcounter="https://YOUR-CODE.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+     Plausible:   <script defer data-domain="kalunho.com" src="https://plausible.io/js/script.js"></script> -->
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- HEADER START: same on every page except aria-current -->
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href="/">
+      <svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#mark"></use></svg>
+      <span>Dr. Kalun Ho</span>
+    </a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/videos/">Videos</a></li>
+        <li><a href="/experiments/" aria-current="page">Experiments</a></li>
+        <li><a href="/newsletter/">Newsletter</a></li>
+        <li><a href="/about/">About</a></li>
+      </ul>
+      <a class="btn btn--small" href="https://www.youtube.com/@KalunHo?sub_confirmation=1">Subscribe on YouTube</a>
+    </nav>
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Colour theme">
+      <svg class="icon theme-toggle__system" aria-hidden="true"><use href="/assets/img/icons.svg#monitor"></use></svg>
+      <svg class="icon theme-toggle__light" aria-hidden="true"><use href="/assets/img/icons.svg#sun"></use></svg>
+      <svg class="icon theme-toggle__dark" aria-hidden="true"><use href="/assets/img/icons.svg#moon"></use></svg>
+    </button>
+  </div>
+</header>
+<!-- HEADER END -->
+
+<main id="main">
+
+  <section class="page-head">
+    <img class="page-head__motif" src="/assets/img/motif.svg" alt="" width="770" height="1080">
+    <div class="container page-head__inner">
+      <div class="page-head__content">
+        <p class="kicker">Experiment 1 · November 2026</p>
+        <div class="accent-bar"></div>
+        <h1>More thinking costs more tokens, not always more accuracy.</h1>
+        <p class="lead">I ran four open AI models on my own graphics card and counted the tokens each task used: thinking off and on, a single answer and an agent. The price per token stayed fixed. Only the tokens per task and the success rate changed.</p>
+        <ul class="exp-meta">
+          <li><strong>4</strong> open models</li>
+          <li><strong>12</strong> settings</li>
+          <li><strong>4</strong> tasks</li>
+          <li><strong>2,540</strong> answers scored against a key</li>
+          <li><strong>1</strong> RTX 5090</li>
+          <li>Run on <strong>8 November 2026</strong></li>
+        </ul>
+        <div class="actions">
+          <a class="btn" href="https://github.com/kalunho17/yt-experiment-001">
+            <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#github"></use></svg>
+            Code and data on GitHub
+          </a>
+          <!-- VIDEO LINK: points at the channel until the video is published; the add-video skill replaces it with the video URL. -->
+          <a class="link-arrow" href="https://www.youtube.com/@KalunHo/videos" data-video-link>
+            Watch the video
+            <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="short-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="kicker">The short version</p>
+        <h2 id="short-title">Tokens per task decide the bill, and they move a lot.</h2>
+      </div>
+      <ul class="kpis" data-reveal-group>
+        <li class="kpi" data-reveal><span class="kpi__value">×6.8</span><span class="kpi__label">tokens with thinking on</span><span class="kpi__note">Small model, hard maths, and 20 points less accuracy.</span></li>
+        <li class="kpi" data-reveal><span class="kpi__value">×11</span><span class="kpi__label">tokens as an agent</span><span class="kpi__note">But only ×3.5 the cost, because input is cheap.</span></li>
+        <li class="kpi" data-reveal><span class="kpi__value">×128</span><span class="kpi__label">cost, frontier vs small model</span><span class="kpi__note">Same school maths questions, at list prices (projection).</span></li>
+        <li class="kpi" data-reveal><span class="kpi__value">×14</span><span class="kpi__label">speed gap on one GPU</span><span class="kpi__note">287 against 20 tokens per second.</span></li>
+      </ul>
+      <p class="takeaway">
+        <svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>
+        Measure tokens per task and the success rate before you pay for more thinking, a bigger model or an agent.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" aria-label="Findings">
+    <div class="container">
+
+      <article class="finding" id="thinking">
+        <div>
+          <p class="kicker">Finding 1 · Thinking</p>
+          <h2>More thinking means more tokens, not always more accuracy.</h2>
+          <p>The same fifty hard maths problems, with thinking off and on. Tokens per problem rose 1.3 to 6.8 times. Accuracy moved by −20 to +14 points.</p>
+          <p>The small model thought until it ran out of room on 10 of the 50 problems, and solved fewer than without thinking. On a hundred school maths problems, thinking bought one to three points for 1.3 to 6.5 times the tokens.</p>
+          <p class="takeaway"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>Turn thinking on only where it raises the success rate on your own test.</p>
+        </div>
+        <figure class="slide-figure">
+          <div class="slide slide--auto">
+            <div class="slide__inner">
+              <p class="slide__headline" id="c1t">Thinking multiplied tokens per problem by up to 6.8.</p>
+              <p class="slide__context">Hard maths (MATH-500, level 5), 50 problems: mean tokens per problem · % correct</p>
+              <ul class="chart-legend"><li><i class=""></i>Thinking off (gpt-oss: effort low)</li><li><i class="is-b"></i>Thinking on (Qwen3.8-27B: xhigh, its default; gpt-oss: effort high)</li></ul>
+              <svg class="slide__chart" viewBox="0 0 400 320" role="img" aria-labelledby="c1t"><text class="chart-text chart-text--strong" x="0.0" y="13.0">Qwen3.8-27B</text><text class="chart-text chart-text--muted chart-text--end" x="400.0" y="13.0">×1.3 tokens</text><g><title>Qwen3.8-27B, thinking off: 2,318 tokens per problem, 94% correct</title><path class="chart-bar--focus chart-bar" d="M0.0,22.0h35.8a4,4 0 0 1 4,4v10.0a4,4 0 0 1 -4,4h-35.8z"></path><text class="chart-text" x="45.8" y="35.5">2,318 · 94%</text></g><g><title>Qwen3.8-27B, effort xhigh (default): 3,027 tokens per problem, 98% correct</title><path class="chart-bar--b" d="M0.0,42.0h48.1a4,4 0 0 1 4,4v10.0a4,4 0 0 1 -4,4h-48.1z"></path><text class="chart-text" x="58.1" y="55.5">3,027 · 98%</text></g><text class="chart-text chart-text--strong" x="0.0" y="89.0">Gemma 4 31B</text><text class="chart-text chart-text--muted chart-text--end" x="400.0" y="89.0">×4.8 tokens</text><g><title>Gemma 4 31B, thinking off: 897 tokens per problem, 98% correct</title><path class="chart-bar--focus chart-bar" d="M0.0,98.0h11.4a4,4 0 0 1 4,4v10.0a4,4 0 0 1 -4,4h-11.4z"></path><text class="chart-text" x="21.4" y="111.5">897 · 98%</text></g><g><title>Gemma 4 31B, thinking on: 4,319 tokens per problem, 100% correct</title><path class="chart-bar--b" d="M0.0,118.0h70.3a4,4 0 0 1 4,4v10.0a4,4 0 0 1 -4,4h-70.3z"></path><text class="chart-text" x="80.3" y="131.5">4,319 · 100%</text></g><text class="chart-text chart-text--strong" x="0.0" y="165.0">gpt-oss-20b</text><text class="chart-text chart-text--muted chart-text--end" x="400.0" y="165.0">×6.5 tokens</text><g><title>gpt-oss-20b, effort low: 1,224 tokens per problem, 84% correct</title><path class="chart-bar--focus chart-bar" d="M0.0,174.0h17.0a4,4 0 0 1 4,4v10.0a4,4 0 0 1 -4,4h-17.0z"></path><text class="chart-text" x="27.0" y="187.5">1,224 · 84%</text></g><g><title>gpt-oss-20b, effort high: 7,954 tokens per problem, 98% correct</title><path class="chart-bar--b" d="M0.0,194.0h132.8a4,4 0 0 1 4,4v10.0a4,4 0 0 1 -4,4h-132.8z"></path><text class="chart-text" x="142.8" y="207.5">7,954 · 98%</text></g><text class="chart-text chart-text--strong" x="0.0" y="241.0">Qwen3.5-4B</text><text class="chart-text chart-text--muted chart-text--end" x="400.0" y="241.0">×6.8 tokens</text><g><title>Qwen3.5-4B, thinking off: 2,422 tokens per problem, 100% correct</title><path class="chart-bar--focus chart-bar" d="M0.0,250.0h37.6a4,4 0 0 1 4,4v10.0a4,4 0 0 1 -4,4h-37.6z"></path><text class="chart-text" x="47.6" y="263.5">2,422 · 100%</text></g><g><title>Qwen3.5-4B, thinking on: 16,400 tokens per problem, 80% correct</title><path class="chart-bar--b" d="M0.0,270.0h278.0a4,4 0 0 1 4,4v10.0a4,4 0 0 1 -4,4h-278.0z"></path><text class="chart-text" x="288.0" y="283.5">16,400 · 80%</text></g><text class="chart-text chart-risk" x="0.0" y="306.0">−20 pts: ran out of room on 10 of 50</text></svg>
+              <p class="slide__source">Source: own measurement, Dr. Kalun Ho (2026) · chart redrawn in brand style</p>
+              <div class="slide__footer"><span>Dr. Kalun Ho | Tokens per task</span><span>1</span></div>
+            </div>
+          </div>
+        </figure>
+      </article>
+
+      <article class="finding" id="classify">
+        <div>
+          <p class="kicker">Finding 2 · Classifying</p>
+          <h2>The model that used the most tokens was not the most accurate.</h2>
+          <p>A hundred customer messages, each to be sorted into one of 77 intents. The best result came from gpt-oss-20b at low effort: 87 % for 570 tokens per message. Qwen3.8-27B at its default effort scored 79 % for 676 tokens. The small model with thinking on reached 75 % for 2,856.</p>
+          <p class="takeaway"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>Test each task on several models before you pick one.</p>
+        </div>
+        <figure class="slide-figure">
+          <div class="slide slide--auto">
+            <div class="slide__inner">
+              <p class="slide__headline" id="c2t">The best setting used a fifth of the tokens of the most expensive one.</p>
+              <p class="slide__context">Banking77, 100 customer messages, 77 intents: % correct by mean tokens per message, every setting</p>
+              <ul class="chart-legend"><li><i class="is-dot"></i>Thinking off or low effort</li><li><i class="is-ring"></i>Thinking on, medium, high or xhigh</li></ul>
+              <svg class="slide__chart" viewBox="0 0 400 264" role="img" aria-labelledby="c2t"><line class="chart-grid" x1="40" x2="372" y1="212.0" y2="212.0"></line><text class="chart-text chart-text--muted chart-text--end" x="34.0" y="216.0">60%</text><line class="chart-grid" x1="40" x2="372" y1="144.7" y2="144.7"></line><text class="chart-text chart-text--muted chart-text--end" x="34.0" y="148.7">70%</text><line class="chart-grid" x1="40" x2="372" y1="77.3" y2="77.3"></line><text class="chart-text chart-text--muted chart-text--end" x="34.0" y="81.3">80%</text><line class="chart-grid" x1="40" x2="372" y1="10.0" y2="10.0"></line><text class="chart-text chart-text--muted chart-text--end" x="34.0" y="14.0">90%</text><line class="chart-axis" x1="40" x2="372" y1="212" y2="212"></line><text class="chart-text chart-text--muted chart-text--mid" x="40.0" y="230.0">0</text><text class="chart-text chart-text--muted chart-text--mid" x="150.7" y="230.0">1,000</text><text class="chart-text chart-text--muted chart-text--mid" x="261.3" y="230.0">2,000</text><text class="chart-text chart-text--muted chart-text--mid" x="372.0" y="230.0">3,000</text><text class="chart-text chart-text--muted chart-text--end" x="372.0" y="260.0">Tokens per message</text><g><title>Qwen3.5-4B, thinking off: 70% correct, 456 tokens per message</title><circle class="chart-dot" cx="90.4" cy="144.7" r="5"></circle><circle cx="90.4" cy="144.7" r="12" fill="transparent"></circle></g><g><title>Qwen3.5-4B, thinking on: 75% correct, 2,856 tokens per message</title><circle class="chart-dot--ring" cx="356.0" cy="111.0" r="5"></circle><circle cx="356.0" cy="111.0" r="12" fill="transparent"></circle></g><g><title>Qwen3.8-27B, thinking off: 71% correct, 456 tokens per message</title><circle class="chart-dot" cx="90.4" cy="137.9" r="5"></circle><circle cx="90.4" cy="137.9" r="12" fill="transparent"></circle></g><g><title>Qwen3.8-27B, effort low: 79% correct, 632 tokens per message</title><circle class="chart-dot" cx="110.0" cy="84.1" r="5"></circle><circle cx="110.0" cy="84.1" r="12" fill="transparent"></circle></g><g><title>Qwen3.8-27B, effort medium (no instruction): 80% correct, 664 tokens per message</title><circle class="chart-dot--ring" cx="113.5" cy="77.3" r="5"></circle><circle cx="113.5" cy="77.3" r="12" fill="transparent"></circle></g><g><title>Qwen3.8-27B, effort xhigh (default): 79% correct, 676 tokens per message</title><circle class="chart-dot--ring" cx="114.8" cy="84.1" r="5"></circle><circle cx="114.8" cy="84.1" r="12" fill="transparent"></circle></g><g><title>Gemma 4 31B, thinking off: 81% correct, 603 tokens per message</title><circle class="chart-dot" cx="106.7" cy="70.6" r="5"></circle><circle cx="106.7" cy="70.6" r="12" fill="transparent"></circle></g><g><title>Gemma 4 31B, thinking on: 85% correct, 987 tokens per message</title><circle class="chart-dot--ring" cx="149.2" cy="43.7" r="5"></circle><circle cx="149.2" cy="43.7" r="12" fill="transparent"></circle></g><g><title>gpt-oss-20b, effort low: 87% correct, 570 tokens per message</title><circle class="chart-dot" cx="103.1" cy="30.2" r="5"></circle><circle cx="103.1" cy="30.2" r="12" fill="transparent"></circle></g><g><title>gpt-oss-20b, effort high: 84% correct, 979 tokens per message</title><circle class="chart-dot--ring" cx="148.3" cy="50.4" r="5"></circle><circle cx="148.3" cy="50.4" r="12" fill="transparent"></circle></g><text class="chart-text chart-text--strong" x="113.1" y="24.2">gpt-oss-20b, effort low: 87%</text><text class="chart-text chart-text--strong" x="126.8" y="100.1">Qwen3.8-27B, effort xhigh: 79%</text><text class="chart-text chart-text--strong chart-text--end" x="360.0" y="133.0">Qwen3.5-4B, thinking on: 75%</text></svg>
+              <p class="slide__source">Source: own measurement, Dr. Kalun Ho (2026)</p>
+              <div class="slide__footer"><span>Dr. Kalun Ho | Tokens per task</span><span>2</span></div>
+            </div>
+          </div>
+        </figure>
+      </article>
+
+      <article class="finding" id="agent">
+        <div>
+          <p class="kicker">Finding 3 · Agents</p>
+          <h2>An agent sends its whole context again at every step.</h2>
+          <p>As an agent with three tools, Qwen3.8-27B answered all twenty invoice questions correctly, with 3.8 calls and 5,613 tokens per question. A single answer to a school maths problem took 494 tokens: the agent used 11 times as many, on a different task.</p>
+          <p>Each call sends everything seen so far. 93 % of the tokens are input, which costs a fifth of output at list prices. So the cost rises about 3.5 times, not 11.</p>
+          <p class="takeaway"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>Use an agent only when the task needs to look something up.</p>
+        </div>
+        <figure class="slide-figure">
+          <div class="slide slide--auto">
+            <div class="slide__inner">
+              <p class="slide__headline" id="c3t">Every call sends more: 712 tokens, then 2,025 by the fourth.</p>
+              <p class="slide__context">Invoice agent, Qwen3.8-27B, thinking off: input tokens sent per call (mean of the 12 four-call questions)</p>
+              <svg class="slide__chart" viewBox="0 0 400 220" role="img" aria-labelledby="c3t"><line class="chart-grid" x1="54" x2="386" y1="180.0" y2="180.0"></line><text class="chart-text chart-text--muted chart-text--end" x="46.0" y="184.0">0</text><line class="chart-grid" x1="54" x2="386" y1="119.2" y2="119.2"></line><text class="chart-text chart-text--muted chart-text--end" x="46.0" y="123.2">1,000</text><line class="chart-grid" x1="54" x2="386" y1="58.3" y2="58.3"></line><text class="chart-text chart-text--muted chart-text--end" x="46.0" y="62.3">2,000</text><polyline class="chart-line" points="64.0,136.7 168.0,112.8 272.0,70.3 376.0,56.8"></polyline><g><title>Call 1: 712 tokens sent (mean of the 12 four-call questions)</title><circle class="chart-dot" cx="64.0" cy="136.7" r="5"></circle><circle cx="64.0" cy="136.7" r="14" fill="transparent"></circle></g><text class="chart-text chart-text--strong chart-text--mid" x="64.0" y="124.7">712</text><text class="chart-text chart-text--muted chart-text--mid" x="64.0" y="200.0">Call 1</text><g><title>Call 2: 1,104 tokens sent (mean of the 12 four-call questions)</title><circle class="chart-dot" cx="168.0" cy="112.8" r="5"></circle><circle cx="168.0" cy="112.8" r="14" fill="transparent"></circle></g><text class="chart-text chart-text--strong chart-text--mid" x="168.0" y="100.8">1,104</text><text class="chart-text chart-text--muted chart-text--mid" x="168.0" y="200.0">Call 2</text><g><title>Call 3: 1,803 tokens sent (mean of the 12 four-call questions)</title><circle class="chart-dot" cx="272.0" cy="70.3" r="5"></circle><circle cx="272.0" cy="70.3" r="14" fill="transparent"></circle></g><text class="chart-text chart-text--strong chart-text--mid" x="272.0" y="58.3">1,803</text><text class="chart-text chart-text--muted chart-text--mid" x="272.0" y="200.0">Call 3</text><g><title>Call 4: 2,025 tokens sent (mean of the 12 four-call questions)</title><circle class="chart-dot" cx="376.0" cy="56.8" r="5"></circle><circle cx="376.0" cy="56.8" r="14" fill="transparent"></circle></g><text class="chart-text chart-text--strong chart-text--mid" x="376.0" y="44.8">2,025</text><text class="chart-text chart-text--muted chart-text--mid" x="376.0" y="200.0">Call 4</text><text class="chart-text" x="0.0" y="12.0">Each call sends everything seen so far</text></svg>
+              <p class="slide__source">Source: own measurement, Dr. Kalun Ho (2026)</p>
+              <div class="slide__footer"><span>Dr. Kalun Ho | Tokens per task</span><span>3</span></div>
+            </div>
+          </div>
+        </figure>
+      </article>
+
+      <article class="finding" id="cost">
+        <div>
+          <p class="kicker">Finding 4 · Cost</p>
+          <h2>Which model answers moves the bill more than thinking or agents.</h2>
+          <p>Priced at OpenAI’s list prices, a million school maths questions cost €144 with the small model and €18,325 with the frontier model: 128 times more. Thinking at xhigh adds a quarter (€22,859). The agent, on its invoice questions, comes to €64,643.</p>
+          <p>The token counts come from the open models and the prices from a commercial price list, so this is a projection, not a bill.</p>
+          <p class="takeaway"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>Route each task to the smallest model that passes your test.</p>
+        </div>
+        <figure class="slide-figure">
+          <div class="slide slide--auto">
+            <div class="slide__inner">
+              <p class="slide__headline" id="c4t">The frontier model costs 128 times the small one.</p>
+              <p class="slide__context">€ per million questions, measured tokens at OpenAI list prices (projection)</p>
+              <svg class="slide__chart" viewBox="0 0 400 246" role="img" aria-labelledby="c4t"><g><title>Small model (gpt-6-luna): €144 per million questions</title><text class="chart-text chart-text--strong" x="0.0" y="13.0">Small model</text><text class="chart-text chart-text--muted chart-text--end" x="400.0" y="13.0">gpt-6-luna</text><path class="chart-bar chart-bar--focus" d="M0.0,22.0h0.0a2,2 0 0 1 2,2v16.0a2,2 0 0 1 -2,2h-0.0z"></path><text class="chart-text chart-text--strong" x="6.7" y="37.0">€144</text></g><g><title>Frontier model (gpt-6-astra): €18,325 per million questions</title><text class="chart-text chart-text--strong" x="0.0" y="73.0">Frontier model</text><text class="chart-text chart-text--muted chart-text--end" x="400.0" y="73.0">gpt-6-astra</text><path class="chart-bar chart-bar--focus" d="M0.0,82.0h82.2a4,4 0 0 1 4,4v12.0a4,4 0 0 1 -4,4h-82.2z"></path><text class="chart-text chart-text--strong" x="92.2" y="97.0">€18,325  ×128</text></g><g><title>Frontier, xhigh (gpt-6-astra): €22,859 per million questions</title><text class="chart-text chart-text--strong" x="0.0" y="133.0">Frontier, xhigh</text><text class="chart-text chart-text--muted chart-text--end" x="400.0" y="133.0">gpt-6-astra</text><path class="chart-bar" d="M0.0,142.0h103.5a4,4 0 0 1 4,4v12.0a4,4 0 0 1 -4,4h-103.5z"></path><text class="chart-text chart-text--strong" x="113.5" y="157.0">€22,859</text></g><g><title>Frontier as an agent (gpt-6-astra): €64,643 per million questions</title><text class="chart-text chart-text--strong" x="0.0" y="193.0">Frontier as an agent</text><text class="chart-text chart-text--muted chart-text--end" x="400.0" y="193.0">gpt-6-astra</text><path class="chart-bar" d="M0.0,202.0h300.0a4,4 0 0 1 4,4v12.0a4,4 0 0 1 -4,4h-300.0z"></path><text class="chart-text chart-text--strong" x="310.0" y="217.0">€64,643</text></g><text class="chart-text chart-text--muted" x="0.0" y="238.0">Invoice questions: a different task from the others</text></svg>
+              <p class="slide__source">Source: own measurement, Dr. Kalun Ho (2026); OpenAI API pricing, 8 November 2026; ECB rate 1 € = 1.1165 $</p>
+              <div class="slide__footer"><span>Dr. Kalun Ho | Tokens per task</span><span>4</span></div>
+            </div>
+          </div>
+        </figure>
+      </article>
+
+      <article class="finding" id="speed">
+        <div>
+          <p class="kicker">Finding 5 · Speed</p>
+          <h2>On your own hardware, time is the bill.</h2>
+          <p>One request at a time on one RTX 5090: gpt-oss-20b wrote 287 tokens per second, Qwen3.5-4B 157, Gemma 4 31B 71 and Qwen3.8-27B 20. That is 14 times apart.</p>
+          <p>Thinking multiplies the wait. The small model took 19 seconds per hard problem with thinking off, and 162 seconds with it on.</p>
+          <p class="takeaway"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>On your own hardware, measure the time per task, not only the tokens.</p>
+        </div>
+        <figure class="slide-figure">
+          <div class="slide slide--auto">
+            <div class="slide__inner">
+              <p class="slide__headline" id="c5t">The fastest model writes 14 times as fast as the slowest.</p>
+              <p class="slide__context">Single stream, one RTX 5090, vLLM: output tokens per second (mean of 3 runs)</p>
+              <svg class="slide__chart" viewBox="0 0 400 210" role="img" aria-labelledby="c5t"><g><title>gpt-oss-20b: 287 tokens per second, single stream</title><text class="chart-text chart-text--strong" x="0.0" y="13.0">gpt-oss-20b</text><path class="chart-bar chart-bar--focus" d="M0.0,21.0h266.0a4,4 0 0 1 4,4v10.0a4,4 0 0 1 -4,4h-266.0z"></path><text class="chart-text" x="276.0" y="35.0">287 tokens/s</text></g><g><title>Qwen3.5-4B: 157 tokens per second, single stream</title><text class="chart-text chart-text--strong" x="0.0" y="68.0">Qwen3.5-4B</text><path class="chart-bar chart-bar--focus" d="M0.0,76.0h144.0a4,4 0 0 1 4,4v10.0a4,4 0 0 1 -4,4h-144.0z"></path><text class="chart-text" x="154.0" y="90.0">157 tokens/s</text></g><g><title>Gemma 4 31B: 71 tokens per second, single stream</title><text class="chart-text chart-text--strong" x="0.0" y="123.0">Gemma 4 31B</text><path class="chart-bar chart-bar--focus" d="M0.0,131.0h63.2a4,4 0 0 1 4,4v10.0a4,4 0 0 1 -4,4h-63.2z"></path><text class="chart-text" x="73.2" y="145.0">71 tokens/s</text></g><g><title>Qwen3.8-27B: 20 tokens per second, single stream</title><text class="chart-text chart-text--strong" x="0.0" y="178.0">Qwen3.8-27B</text><path class="chart-bar chart-bar--focus" d="M0.0,186.0h15.1a4,4 0 0 1 4,4v10.0a4,4 0 0 1 -4,4h-15.1z"></path><text class="chart-text" x="25.1" y="200.0">20 tokens/s  (14× slower)</text></g></svg>
+              <p class="slide__source">Source: own measurement, Dr. Kalun Ho (2026)</p>
+              <div class="slide__footer"><span>Dr. Kalun Ho | Tokens per task</span><span>5</span></div>
+            </div>
+          </div>
+        </figure>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="section section--light" aria-labelledby="setup-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="kicker">How it was measured</p>
+        <h2 id="setup-title">Same items for every model, success counted against a key.</h2>
+        <p class="lead">Four tasks with known answers, so nothing is judged by taste. Every token of every call is counted, including the context an agent sends again at each step.</p>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th scope="col">Task</th><th scope="col" class="wrap">Data</th><th scope="col" class="num">Items</th><th scope="col">Stands for</th><th scope="col">Success</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Classify</th><td class="wrap">Banking77 test set (PolyAI, CC BY 4.0), random sample</td><td class="num">100</td><td>routing a support ticket</td><td>exact intent, of 77</td></tr>
+            <tr><th scope="row">Calculate</th><td class="wrap">GSM8K test set (OpenAI, MIT), random sample</td><td class="num">100</td><td>a multi-step business calculation</td><td>final number matches</td></tr>
+            <tr><th scope="row">Hard maths</th><td class="wrap">MATH-500 (HuggingFaceH4, MIT), level 5, integer answers</td><td class="num">50</td><td>a hard reasoning problem</td><td>integer matches</td></tr>
+            <tr><th scope="row">Agent</th><td class="wrap">Synthetic invoice ledger: 500 invoices, 12 suppliers, 4 quarters; tools to list suppliers, fetch invoices and calculate; up to 15 steps</td><td class="num">20</td><td>an analyst question answered by looking things up</td><td>matches the key computed from the ledger</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th scope="col">Model</th><th scope="col">Maker, release</th><th scope="col">Build on the card</th><th scope="col" class="wrap">Settings tested</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Qwen3.5-4B</th><td>Alibaba, March 2026</td><td>BF16</td><td class="wrap">thinking off, thinking on</td></tr>
+            <tr><th scope="row">Qwen3.8-27B</th><td>Alibaba, August 2026</td><td>NVFP4, 4-bit</td><td class="wrap">thinking off; effort low, medium, xhigh (its default); as an agent: thinking off, effort low</td></tr>
+            <tr><th scope="row">Gemma 4 31B</th><td>Google, 2026</td><td>QAT W4A16, 4-bit</td><td class="wrap">thinking off, thinking on</td></tr>
+            <tr><th scope="row">gpt-oss-20b</th><td>OpenAI, August 2025</td><td>MXFP4</td><td class="wrap">effort low, effort high</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul class="bullets" style="margin-top: var(--s4)">
+        <li><strong>Hardware.</strong> One NVIDIA RTX 5090 with 32 GB, my own, at home. No employer hardware and no employer data.</li>
+        <li><strong>Software.</strong> vLLM 0.26.0, one model at a time; Qwen3.8-27B ran on a vLLM development build for its 4-bit kernels. Context up to 32,768 tokens, answers up to 28,000.</li>
+        <li><strong>Sampling.</strong> The model makers’ recommended settings for each mode. Items sampled with seed 42, requests with seed 42, one run per item.</li>
+        <li><strong>Counting.</strong> Tokens per item are prompt plus completion tokens, summed over every call. Reasoning tokens are part of the completion. An answer that hit the limit counts as wrong.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="results-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="kicker">Full results</p>
+        <h2 id="results-title">Every setting, every task.</h2>
+        <p class="lead">Means per item. The same numbers are in the repository as CSV, one row per item and per call.</p>
+      </div>
+      <div class="results">
+        <details open><summary>Hard maths: MATH-500 level 5, 50 problems</summary><div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Model</th><th scope="col">Setting</th><th scope="col" class="num">Correct</th><th scope="col" class="num">Accuracy</th><th scope="col" class="num">Tokens per item</th><th scope="col" class="num">Median</th><th scope="col" class="num">Reasoning tokens</th><th scope="col" class="num">Truncated</th><th scope="col" class="num">Tokens per correct answer</th></tr></thead><tbody><tr><th scope="row">Qwen3.5-4B</th><td>thinking off</td><td class="num">50 of 50</td><td class="num">100%</td><td class="num">2,422</td><td class="num">1,441</td><td class="num">0</td><td class="num">0%</td><td class="num">2,422</td></tr><tr><th scope="row">Qwen3.5-4B</th><td>thinking on</td><td class="num">40 of 50</td><td class="num">80%</td><td class="num">16,400</td><td class="num">18,760</td><td class="num">15,553</td><td class="num">20%</td><td class="num">20,501</td></tr><tr><th scope="row">Qwen3.8-27B</th><td>thinking off</td><td class="num">47 of 50</td><td class="num">94%</td><td class="num">2,318</td><td class="num">1,572</td><td class="num">0</td><td class="num">0%</td><td class="num">2,465</td></tr><tr><th scope="row">Qwen3.8-27B</th><td>effort low</td><td class="num">48 of 50</td><td class="num">96%</td><td class="num">2,374</td><td class="num">1,324</td><td class="num">1,703</td><td class="num">0%</td><td class="num">2,473</td></tr><tr><th scope="row">Qwen3.8-27B</th><td>effort medium (no instruction)</td><td class="num">49 of 50</td><td class="num">98%</td><td class="num">1,969</td><td class="num">1,298</td><td class="num">1,352</td><td class="num">0%</td><td class="num">2,009</td></tr><tr><th scope="row">Qwen3.8-27B</th><td>effort xhigh (default)</td><td class="num">49 of 50</td><td class="num">98%</td><td class="num">3,027</td><td class="num">1,584</td><td class="num">2,551</td><td class="num">0%</td><td class="num">3,089</td></tr><tr><th scope="row">Gemma 4 31B</th><td>thinking off</td><td class="num">49 of 50</td><td class="num">98%</td><td class="num">897</td><td class="num">841</td><td class="num">0</td><td class="num">0%</td><td class="num">916</td></tr><tr><th scope="row">Gemma 4 31B</th><td>thinking on</td><td class="num">50 of 50</td><td class="num">100%</td><td class="num">4,319</td><td class="num">3,948</td><td class="num">3,491</td><td class="num">0%</td><td class="num">4,319</td></tr><tr><th scope="row">gpt-oss-20b</th><td>effort low</td><td class="num">42 of 50</td><td class="num">84%</td><td class="num">1,224</td><td class="num">905</td><td class="num">620</td><td class="num">0%</td><td class="num">1,457</td></tr><tr><th scope="row">gpt-oss-20b</th><td>effort high</td><td class="num">49 of 50</td><td class="num">98%</td><td class="num">7,954</td><td class="num">4,106</td><td class="num">7,362</td><td class="num">2%</td><td class="num">8,117</td></tr></tbody></table></div></details>
+        <details><summary>Classify: Banking77, 100 customer messages, 77 intents</summary><div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Model</th><th scope="col">Setting</th><th scope="col" class="num">Correct</th><th scope="col" class="num">Accuracy</th><th scope="col" class="num">Tokens per item</th><th scope="col" class="num">Median</th><th scope="col" class="num">Reasoning tokens</th><th scope="col" class="num">Truncated</th><th scope="col" class="num">Tokens per correct answer</th></tr></thead><tbody><tr><th scope="row">Qwen3.5-4B</th><td>thinking off</td><td class="num">70 of 100</td><td class="num">70%</td><td class="num">456</td><td class="num">453</td><td class="num">0</td><td class="num">0%</td><td class="num">651</td></tr><tr><th scope="row">Qwen3.5-4B</th><td>thinking on</td><td class="num">75 of 100</td><td class="num">75%</td><td class="num">2,856</td><td class="num">1,828</td><td class="num">2,400</td><td class="num">0%</td><td class="num">3,808</td></tr><tr><th scope="row">Qwen3.8-27B</th><td>thinking off</td><td class="num">71 of 100</td><td class="num">71%</td><td class="num">456</td><td class="num">454</td><td class="num">0</td><td class="num">0%</td><td class="num">642</td></tr><tr><th scope="row">Qwen3.8-27B</th><td>effort low</td><td class="num">79 of 100</td><td class="num">79%</td><td class="num">632</td><td class="num">622</td><td class="num">146</td><td class="num">0%</td><td class="num">800</td></tr><tr><th scope="row">Qwen3.8-27B</th><td>effort medium (no instruction)</td><td class="num">80 of 100</td><td class="num">80%</td><td class="num">664</td><td class="num">648</td><td class="num">209</td><td class="num">0%</td><td class="num">830</td></tr><tr><th scope="row">Qwen3.8-27B</th><td>effort xhigh (default)</td><td class="num">79 of 100</td><td class="num">79%</td><td class="num">676</td><td class="num">579</td><td class="num">178</td><td class="num">0%</td><td class="num">855</td></tr><tr><th scope="row">Gemma 4 31B</th><td>thinking off</td><td class="num">81 of 100</td><td class="num">81%</td><td class="num">603</td><td class="num">601</td><td class="num">0</td><td class="num">0%</td><td class="num">744</td></tr><tr><th scope="row">Gemma 4 31B</th><td>thinking on</td><td class="num">85 of 100</td><td class="num">85%</td><td class="num">987</td><td class="num">876</td><td class="num">377</td><td class="num">0%</td><td class="num">1,161</td></tr><tr><th scope="row">gpt-oss-20b</th><td>effort low</td><td class="num">87 of 100</td><td class="num">87%</td><td class="num">570</td><td class="num">555</td><td class="num">41</td><td class="num">0%</td><td class="num">656</td></tr><tr><th scope="row">gpt-oss-20b</th><td>effort high</td><td class="num">84 of 100</td><td class="num">84%</td><td class="num">979</td><td class="num">782</td><td class="num">450</td><td class="num">0%</td><td class="num">1,165</td></tr></tbody></table></div></details>
+        <details><summary>Calculate: GSM8K, 100 school maths problems</summary><div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Model</th><th scope="col">Setting</th><th scope="col" class="num">Correct</th><th scope="col" class="num">Accuracy</th><th scope="col" class="num">Tokens per item</th><th scope="col" class="num">Median</th><th scope="col" class="num">Reasoning tokens</th><th scope="col" class="num">Truncated</th><th scope="col" class="num">Tokens per correct answer</th></tr></thead><tbody><tr><th scope="row">Qwen3.5-4B</th><td>thinking off</td><td class="num">92 of 100</td><td class="num">92%</td><td class="num">406</td><td class="num">364</td><td class="num">0</td><td class="num">0%</td><td class="num">441</td></tr><tr><th scope="row">Qwen3.5-4B</th><td>thinking on</td><td class="num">93 of 100</td><td class="num">93%</td><td class="num">2,641</td><td class="num">1,326</td><td class="num">2,318</td><td class="num">2%</td><td class="num">2,840</td></tr><tr><th scope="row">Qwen3.8-27B</th><td>thinking off</td><td class="num">96 of 100</td><td class="num">96%</td><td class="num">494</td><td class="num">425</td><td class="num">0</td><td class="num">0%</td><td class="num">515</td></tr><tr><th scope="row">Qwen3.8-27B</th><td>effort low</td><td class="num">96 of 100</td><td class="num">96%</td><td class="num">434</td><td class="num">396</td><td class="num">172</td><td class="num">0%</td><td class="num">452</td></tr><tr><th scope="row">Qwen3.8-27B</th><td>effort medium (no instruction)</td><td class="num">96 of 100</td><td class="num">96%</td><td class="num">449</td><td class="num">387</td><td class="num">203</td><td class="num">0%</td><td class="num">468</td></tr><tr><th scope="row">Qwen3.8-27B</th><td>effort xhigh (default)</td><td class="num">97 of 100</td><td class="num">97%</td><td class="num">627</td><td class="num">319</td><td class="num">419</td><td class="num">0%</td><td class="num">647</td></tr><tr><th scope="row">Gemma 4 31B</th><td>thinking off</td><td class="num">94 of 100</td><td class="num">94%</td><td class="num">341</td><td class="num">320</td><td class="num">0</td><td class="num">0%</td><td class="num">363</td></tr><tr><th scope="row">Gemma 4 31B</th><td>thinking on</td><td class="num">97 of 100</td><td class="num">97%</td><td class="num">1,401</td><td class="num">802</td><td class="num">1,032</td><td class="num">0%</td><td class="num">1,445</td></tr><tr><th scope="row">gpt-oss-20b</th><td>effort low</td><td class="num">96 of 100</td><td class="num">96%</td><td class="num">254</td><td class="num">234</td><td class="num">83</td><td class="num">0%</td><td class="num">265</td></tr><tr><th scope="row">gpt-oss-20b</th><td>effort high</td><td class="num">97 of 100</td><td class="num">97%</td><td class="num">995</td><td class="num">618</td><td class="num">814</td><td class="num">0%</td><td class="num">1,025</td></tr></tbody></table></div></details>
+        <details><summary>Agent: 20 invoice questions, 3 tools, up to 15 steps</summary><div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Model</th><th scope="col">Setting</th><th scope="col" class="num">Correct</th><th scope="col" class="num">Accuracy</th><th scope="col" class="num">Tokens per item</th><th scope="col" class="num">Median</th><th scope="col" class="num">Reasoning tokens</th><th scope="col" class="num">Calls per item</th><th scope="col" class="num">Truncated</th><th scope="col" class="num">Tokens per correct answer</th></tr></thead><tbody><tr><th scope="row">Qwen3.8-27B</th><td>agent, thinking off</td><td class="num">20 of 20</td><td class="num">100%</td><td class="num">5,613</td><td class="num">5,920</td><td class="num">0</td><td class="num">3.8</td><td class="num">0%</td><td class="num">5,613</td></tr><tr><th scope="row">Qwen3.8-27B</th><td>agent, effort low</td><td class="num">20 of 20</td><td class="num">100%</td><td class="num">5,477</td><td class="num">4,826</td><td class="num">380</td><td class="num">3.3</td><td class="num">0%</td><td class="num">5,477</td></tr></tbody></table></div></details>
+        <details><summary>Speed: one request at a time</summary><div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Model</th><th scope="col" class="num">Time to first token</th><th scope="col" class="num">Tokens per second</th><th scope="col" class="num">Output tokens</th><th scope="col" class="num">Runs</th></tr></thead><tbody><tr><th scope="row">gpt-oss-20b, effort low</th><td class="num">0.05 s</td><td class="num">286.6</td><td class="num">649</td><td class="num">3</td></tr><tr><th scope="row">Qwen3.5-4B, thinking off</th><td class="num">0.07 s</td><td class="num">157.1</td><td class="num">607</td><td class="num">3</td></tr><tr><th scope="row">Gemma 4 31B, thinking off</th><td class="num">0.05 s</td><td class="num">71.3</td><td class="num">425</td><td class="num">3</td></tr><tr><th scope="row">Qwen3.8-27B, thinking off</th><td class="num">0.16 s</td><td class="num">20.3</td><td class="num">545</td><td class="num">3</td></tr></tbody></table></div><p class="caption">Decode speed after the first token, mean of 3 runs. Speed depends on the 4-bit format, the vLLM version and how many requests share the card.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="limits-title">
+    <div class="container split">
+      <div class="section-head">
+        <p class="kicker">Limits</p>
+        <h2 id="limits-title">A measurement of this setup, not of AI in general.</h2>
+      </div>
+      <ul class="bullets">
+        <li><strong>Open models only.</strong> Commercial models count and reason differently. The multipliers are the point, not the absolute token counts.</li>
+        <li><strong>Benchmarks stand in for work.</strong> The tasks have answer keys, real business tasks rarely do. The agent task is synthetic.</li>
+        <li><strong>Small samples.</strong> One run per item, 20 agent questions and 50 hard problems. A second seed would show the spread.</li>
+        <li><strong>Effort is an instruction.</strong> For Qwen3.8-27B, “effort” is a line in the system prompt, not a token budget, and “medium” adds nothing.</li>
+        <li><strong>Euros are a projection.</strong> Measured tokens at commercial list prices, which change.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--light" aria-labelledby="cite-title">
+    <div class="container split">
+      <div class="section-head">
+        <p class="kicker">Data and code</p>
+        <h2 id="cite-title">Check it, rerun it, cite it.</h2>
+      </div>
+      <div>
+        <p>The test code, the answer keys and the raw results, one row per item and per call, are on GitHub. The repository is still being filled. Questions and corrections are welcome there as issues.</p>
+        <div class="actions" style="margin-top: var(--s3)">
+          <a class="btn" href="https://github.com/kalunho17/yt-experiment-001">
+            <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#github"></use></svg>
+            kalunho17/yt-experiment-001
+          </a>
+        </div>
+        <p style="margin-top: var(--s4)"><strong>How to cite</strong></p>
+        <p class="cite">Dr. Kalun Ho (2026). Tokens per task by model, reasoning setting and agent mode (RTX 5090, vLLM). Own measurement. https://kalunho.com/experiments/tokens-per-task/</p>
+        <p class="caption" style="margin-top: var(--s3)">Datasets: <a href="https://github.com/PolyAI-LDN/task-specific-datasets">Banking77</a> (PolyAI, CC BY 4.0), <a href="https://github.com/openai/grade-school-math">GSM8K</a> (OpenAI, MIT), <a href="https://huggingface.co/datasets/HuggingFaceH4/MATH-500">MATH-500</a> (HuggingFaceH4, MIT).</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="band-title">
+    <div class="container band__inner">
+      <div class="band__text">
+        <h2 id="band-title">The video explains what it means for your bill.</h2>
+        <p>Subscribe on YouTube to see it. The handout has every chart and source.</p>
+      </div>
+      <div class="actions">
+        <a class="btn btn--inverse" href="https://www.youtube.com/@KalunHo?sub_confirmation=1"><svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#youtube"></use></svg>Subscribe on YouTube</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER START: same on every page -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__inner">
+      <p>Dr. Kalun Ho · © 2026</p>
+      <ul class="social">
+        <li><a href="https://www.youtube.com/@KalunHo"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#youtube"></use></svg><span class="sr-only">YouTube</span></a></li>
+        <li><a href="https://www.instagram.com/kalunhodotcom/"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#instagram"></use></svg><span class="sr-only">Instagram</span></a></li>
+        <li><a href="https://www.tiktok.com/@kalunhodotcom"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#tiktok"></use></svg><span class="sr-only">TikTok</span></a></li>
+        <li><a href="https://www.linkedin.com/in/kalunho"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#linkedin"></use></svg><span class="sr-only">LinkedIn</span></a></li>
+        <li><a href="https://github.com/kalunho17"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#github"></use></svg><span class="sr-only">GitHub</span></a></li>
+        <li><a href="/newsletter/"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#mail"></use></svg><span class="sr-only">Newsletter</span></a></li>
+      </ul>
+      <p><a href="/legal/">Legal notice</a> · <a href="/privacy/">Privacy</a></p>
+    </div>
+  </div>
+</footer>
+<!-- FOOTER END -->
+</body>
+</html>

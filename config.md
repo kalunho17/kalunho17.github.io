@@ -18,7 +18,7 @@ grep -rn "{{" --include='*.html' .
 | `{{INSTAGRAM_URL}}` | **Done.** Replaced by `https://www.instagram.com/kalunhodotcom/`. | | – |
 | `{{TIKTOK_URL}}` | **Done.** Replaced by `https://www.tiktok.com/@kalunhodotcom`. | | – |
 | LinkedIn | Not a token. `https://www.linkedin.com/in/kalunho` is written directly into the footer of every page, the JSON-LD `sameAs`, the `links/` page and the About page. | | – |
-| `{{CONTACT_EMAIL}}` | A public contact address, **not your private one**. Shown as text and used in `mailto:` links. Also serves as the email in the Impressum and the privacy policy. | `hello@kalunho.com` | `privacy/` (4), `about/` (2), `impressum/` (2), `work-with-me/` (1) |
+| `{{CONTACT_EMAIL}}` | **Done.** Replaced by `kalunho17@gmail.com` on 8 November 2026, on the legal notice and in the privacy policy only. The About page has no email. To change it, search for the address in `legal/` and `privacy/`. | | – |
 | `{{CHANNEL_NAME}}` | Not decided yet, so it is **not used as a token**. Where a name is needed, the site uses "Dr. Kalun Ho". See below. | | – |
 
 The YouTube channel URL also appears in the header button and footer of every page. If the handle ever changes, search for `youtube.com/@KalunHo` across all HTML files.
@@ -36,12 +36,12 @@ Optionally, also change the wordmark in the header (`<span>Dr. Kalun Ho</span>` 
 
 ## Legal details: `[TODO: …]` markers
 
-The Impressum and the privacy policy use visible `[TODO: …]` markers instead of tokens. Fill them in, have both pages reviewed, then delete the yellow-bordered "Template" notice at the top of each page.
+The legal notice and the privacy policy use visible `[TODO: …]` markers instead of tokens. Fill them in, have both pages reviewed, then delete the yellow-bordered "Template" notice at the top of each page.
 
 | File | Markers |
 |---|---|
-| `impressum/index.html` | street and house number, postcode and city, phone number (or delete the line), VAT ID (or delete the section). Also check that the name matches your legal name. |
-| `privacy/index.html` | date of the review, street and house number, postcode and city, GitHub's Data Privacy Framework certification (confirm), the newsletter section (Beehiiv processing), the supervisory authority of your federal state |
+| `legal/index.html` | NIF/NIE (or delete the section). Also check that the name matches your legal name. |
+| `privacy/index.html` | date of the review, GitHub's Data Privacy Framework certification (confirm), the newsletter section (Beehiiv processing) |
 
 Check what's left with:
 

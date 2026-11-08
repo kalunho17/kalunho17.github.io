@@ -1,5 +1,4 @@
 <!doctype html>
-<!-- HIDDEN: not linked, noindex. To launch: add to nav + sitemap, remove noindex. -->
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
@@ -21,10 +20,9 @@
   }());
 </script>
 <!-- THEME END -->
-<title>Work with me · Dr. Kalun Ho</title>
-<meta name="description" content="Workshops, talks and hands-on AI implementation, built on the same sourced method as the channel.">
-<meta name="robots" content="noindex">
-<link rel="canonical" href="https://kalunho.com/work-with-me/">
+<title>Experiments · Dr. Kalun Ho</title>
+<meta name="description" content="Own measurements behind the videos, each with its setup, findings, full results and code.">
+<link rel="canonical" href="https://kalunho.com/experiments/">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -35,16 +33,16 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Dr. Kalun Ho">
 <meta property="og:locale" content="en_GB">
-<meta property="og:url" content="https://kalunho.com/work-with-me/">
-<meta property="og:title" content="Work with me">
-<meta property="og:description" content="Workshops, talks and hands-on AI implementation, built on the same sourced method as the channel.">
+<meta property="og:url" content="https://kalunho.com/experiments/">
+<meta property="og:title" content="Experiments: own measurements behind the videos">
+<meta property="og:description" content="Own measurements behind the videos, each with its setup, findings, full results and code.">
 <meta property="og:image" content="https://kalunho.com/assets/img/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Dr. Kalun Ho: Why technology moves the way it does.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Work with me">
-<meta name="twitter:description" content="Workshops, talks and hands-on AI implementation, built on the same sourced method as the channel.">
+<meta name="twitter:title" content="Experiments: own measurements behind the videos">
+<meta name="twitter:description" content="Own measurements behind the videos, each with its setup, findings, full results and code.">
 <meta name="twitter:image" content="https://kalunho.com/assets/img/og-image.png">
 <script type="application/ld+json">
 {
@@ -63,7 +61,7 @@
       "@id": "https://kalunho.com/#person",
       "name": "Dr. Kalun Ho",
       "url": "https://kalunho.com/",
-      "sameAs": ["https://www.youtube.com/@KalunHo", "https://www.instagram.com/kalunhodotcom/", "https://www.tiktok.com/@kalunhodotcom", "https://www.linkedin.com/in/kalunho"]
+      "sameAs": ["https://www.youtube.com/@KalunHo", "https://www.instagram.com/kalunhodotcom/", "https://www.tiktok.com/@kalunhodotcom", "https://www.linkedin.com/in/kalunho", "https://github.com/kalunho17"]
     }
   ]
 }
@@ -87,6 +85,7 @@
       <ul>
         <li><a href="/">Home</a></li>
         <li><a href="/videos/">Videos</a></li>
+        <li><a href="/experiments/" aria-current="page">Experiments</a></li>
         <li><a href="/newsletter/">Newsletter</a></li>
         <li><a href="/about/">About</a></li>
       </ul>
@@ -107,52 +106,37 @@
     <img class="page-head__motif" src="/assets/img/motif.svg" alt="" width="770" height="1080">
     <div class="container page-head__inner">
       <div class="page-head__content">
-        <p class="kicker">Work with me</p>
+        <p class="kicker">Experiments</p>
         <div class="accent-bar"></div>
-        <h1>Bring the channel’s method into your organisation.</h1>
-        <p class="lead">Workshops, talks and hands-on support, built on the same rules as every episode: sourced figures, clear options and a decision at the end.</p>
+        <h1>Where no source has the number, I measure it.</h1>
+        <p class="lead">Each experiment has its own page: the question, the setup, the findings, the full results and the code to rerun it.</p>
       </div>
     </div>
   </section>
 
-  <section class="section" aria-labelledby="formats-title">
+  <section class="section" aria-label="Experiments">
     <div class="container">
-      <div class="section-head">
-        <p class="kicker">Three formats</p>
-        <h2 id="formats-title">Choose the format that fits your question.</h2>
-      </div>
-      <ul class="cards cards--3" data-reveal-group>
-        <li class="panel card" data-reveal>
-          <h3>Workshops</h3>
-          <p>Working sessions for leadership teams on the AI questions on your agenda. We go through the evidence, the options and the trade-offs together.</p>
-          <p class="card__label">What you get</p>
-          <p>A shared view of the options and a short list of decisions, documented in a deck your team can use.</p>
-        </li>
-        <li class="panel card" data-reveal>
-          <h3>Speaking</h3>
-          <p>Talks for executive audiences on what AI means for business. Every figure on stage is cited, as in the videos.</p>
-          <p class="card__label">What you get</p>
-          <p>A talk built for your audience, and a handout with every source.</p>
-        </li>
-        <li class="panel card" data-reveal>
-          <h3>Hands-on implementation</h3>
-          <p>Support for moving from a decision to a working use case: scoping, measurement and delivery with your team.</p>
-          <p class="card__label">What you get</p>
-          <p>A defined use case, a way to measure its value and a plan your team can run.</p>
+      <ul class="cards cards--2">
+        <li class="panel card exp-card">
+          <p class="meta">Experiment 1 · November 2026 · 2,540 answers scored</p>
+          <h3><a href="/experiments/tokens-per-task/">More thinking costs more tokens, not always more accuracy.</a></h3>
+          <p>Four open models on one RTX 5090, thinking off and on, a single answer and an agent. Thinking multiplied tokens per task up to 6.8 times, while accuracy moved by −20 to +14 points.</p>
+          <div class="actions">
+            <a class="link-arrow" href="/experiments/tokens-per-task/">Read the experiment<svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg></a>
+          </div>
         </li>
       </ul>
-      <!-- LATER: a credibility section can go here when the page launches (see LAUNCH-WORK-WITH-ME.md). -->
     </div>
   </section>
 
   <section class="band" aria-labelledby="band-title">
     <div class="container band__inner">
       <div class="band__text">
-        <h2 id="band-title">Start with a short email.</h2>
-        <p>Describe the question you want to work on, the audience and your timing.</p>
+        <h2 id="band-title">Code and data are on GitHub.</h2>
+        <p>Every experiment has a repository with the test code and the raw results.</p>
       </div>
       <div class="actions">
-        <a class="btn btn--inverse" href="mailto:{{CONTACT_EMAIL}}?subject=Work%20with%20me"><svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#mail"></use></svg>Email to discuss your project</a>
+        <a class="btn btn--inverse" href="https://github.com/kalunho17"><svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#github"></use></svg>github.com/kalunho17</a>
       </div>
     </div>
   </section>
@@ -169,9 +153,10 @@
         <li><a href="https://www.instagram.com/kalunhodotcom/"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#instagram"></use></svg><span class="sr-only">Instagram</span></a></li>
         <li><a href="https://www.tiktok.com/@kalunhodotcom"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#tiktok"></use></svg><span class="sr-only">TikTok</span></a></li>
         <li><a href="https://www.linkedin.com/in/kalunho"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#linkedin"></use></svg><span class="sr-only">LinkedIn</span></a></li>
+        <li><a href="https://github.com/kalunho17"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#github"></use></svg><span class="sr-only">GitHub</span></a></li>
         <li><a href="/newsletter/"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#mail"></use></svg><span class="sr-only">Newsletter</span></a></li>
       </ul>
-      <p><a href="/impressum/">Impressum</a> · <a href="/privacy/">Privacy</a></p>
+      <p><a href="/legal/">Legal notice</a> · <a href="/privacy/">Privacy</a></p>
     </div>
   </div>
 </footer>

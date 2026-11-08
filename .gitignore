@@ -13,6 +13,10 @@ Desktop.ini
 # .local/ holds private files such as private-terms.txt (README section 6). Never commit it:
 # everything in this repository is public on GitHub and on kalunho.com.
 .local/
+
+# Work with me: built, but not offered yet. Kept on this computer only (README, section 7).
+work-with-me/
+LAUNCH-WORK-WITH-ME.md
 node_modules/
 *.log
 .env
