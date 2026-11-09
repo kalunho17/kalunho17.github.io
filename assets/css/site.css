@@ -292,7 +292,12 @@ address { font-style: normal; }
 @media (max-width: 479px) {
   .site-header__inner { padding-block: 8px 0; }
   .site-nav { width: 100%; order: 1; }  /* own row, below the wordmark and the theme toggle */
-  .site-nav ul { column-gap: var(--s2); }
+  /* All five links on one row, spread across the full width (iPhone 16 Pro is 402 px wide) */
+  .site-nav ul { flex: 1; justify-content: space-between; column-gap: 12px; }
+  .site-nav ul a { font-size: 0.875rem; }
+}
+@media (max-width: 374px) {
+  .site-nav ul a { font-size: 0.8125rem; }
 }
 
 /* Colour theme toggle: cycles light → dark → system (site.js). Hidden without
