@@ -7,10 +7,9 @@ Source of [kalunho.com](https://kalunho.com), the website of Dr. Kalun Ho: why t
 ```
 index.html                     home page
 home/                          finished home page, moves to index.html at launch
-videos/                        every video with its handout and sources
+videos/                        every video with its handout, deck and sources
 experiments/                   own measurements, one page each
   tokens-per-task/             experiment 1
-newsletter/                    the editable deck for subscribers
 about/                         about Dr. Kalun Ho
 links/                         link page for social media bios
 legal/                         legal notice

@@ -2,7 +2,7 @@
 // Builds the /videos/ entry for one published video, from the YouTube URL and the episode
 // in the channel repo. Prints JSON: the episode it matched, what is missing, and the entry HTML.
 //
-//   node .claude/skills/add-video/entry.mjs <youtube-url> [--episode ep-003] [--pdf <drive-url>] [--youtube-repo <path>]
+//   node .claude/skills/add-video/entry.mjs <youtube-url> [--episode ep-003] [--pdf <drive-url>] [--pptx <drive-url>] [--youtube-repo <path>]
 //
 // The sources are numbered with the channel repo's own code (@yt/layout numberReferences),
 // so the numbers match the video, the handout and the deck. Nothing is written to disk.
@@ -25,6 +25,7 @@ const flag = (name) => {
 };
 const episodeArg = flag("--episode");
 const pdfArg = flag("--pdf");
+const pptxArg = flag("--pptx");
 const ytRepo = resolve(flag("--youtube-repo") ?? resolve(siteRoot, "..", "youtube"));
 const url = args[0];
 
@@ -32,7 +33,7 @@ const fail = (message) => {
   console.log(JSON.stringify({ ok: false, error: message }, null, 2));
   process.exit(1);
 };
-if (!url) fail("usage: entry.mjs <youtube-url> [--episode ep-NNN] [--pdf <drive-url>]");
+if (!url) fail("usage: entry.mjs <youtube-url> [--episode ep-NNN] [--pdf <drive-url>] [--pptx <drive-url>]");
 
 // --- Video id ---------------------------------------------------------------
 function videoId(u) {
@@ -137,6 +138,7 @@ const headline = ytTitle ?? ep.content.meta.title;
 const takeaway = ep.episode.takeaway;
 const date = fmtDate(ep.episode.publish_date) ?? fmtDate(ep.content.meta.date) ?? fmtDate(new Date().toISOString().slice(0, 10));
 const pdfUrl = pdfArg ?? ep.episode.pdf_url ?? null;
+const pptxUrl = pptxArg ?? ep.episode.pptx_url ?? null;
 
 const numbering = numberReferences(ep.content);
 const byId = new Map(ep.content.references.map((r) => [r.id, r]));
@@ -150,12 +152,15 @@ const sourceItems = refs.map((r) => {
 
 const missing = [];
 if (!pdfUrl) missing.push("pdf_url: the Google Drive share link of handout.pdf (episode.yaml → pdf_url, or pass --pdf)");
+if (!pptxUrl) missing.push("pptx_url: the Google Drive share link of deck.pptx (episode.yaml → pptx_url, or pass --pptx)");
 if (!ytTitle) missing.push(`YouTube title (${titleNote}); the headline falls back to content.yaml meta.title`);
 if (!takeaway || /^TODO/i.test(takeaway)) missing.push("takeaway in episode.yaml");
 if (!refs.length) missing.push("references in content.yaml");
 if (pdfUrl && !/^https:\/\/(drive|docs)\.google\.com\//.test(pdfUrl)) missing.push(`pdf_url is not a Google Drive link: ${pdfUrl}`);
+if (pptxUrl && !/^https:\/\/(drive|docs)\.google\.com\//.test(pptxUrl)) missing.push(`pptx_url is not a Google Drive link: ${pptxUrl}`);
 
 const pdfLine = pdfUrl ?? "PDF_URL_MISSING";
+const pptxLine = pptxUrl ?? "PPTX_URL_MISSING";
 const entry = `      <article class="entry" id="video-${number}">
         <p class="meta">Video ${number} · ${esc(date)} · ${esc(typeLabel)}</p>
         <h2>${esc(headline)}</h2>
@@ -168,6 +173,10 @@ const entry = `      <article class="entry" id="video-${number}">
           <a class="link-arrow" href="${esc(pdfLine)}">
             <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#document"></use></svg>
             Handout (PDF, Google Drive)
+          </a>
+          <a class="link-arrow" href="${esc(pptxLine)}">
+            <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#document"></use></svg>
+            Deck (PowerPoint, Google Drive)
           </a>
         </div>
         <details class="entry__sources">

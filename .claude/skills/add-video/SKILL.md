@@ -1,6 +1,6 @@
 ---
 name: add-video
-description: Add a newly published YouTube video to kalunho.com/videos/. Use when the user pastes a YouTube video URL and asks to add it to the website, update the videos page, or says they published a video. Builds the entry from the episode in the channel repo (takeaway, Google Drive handout link, numbered sources), inserts it, runs the site checks, commits and pushes. On the first video it also walks through going live.
+description: Add a newly published YouTube video to kalunho.com/videos/. Use when the user pastes a YouTube video URL and asks to add it to the website, update the videos page, or says they published a video. Builds the entry from the episode in the channel repo (takeaway, Google Drive handout and deck links, numbered sources), inserts it, runs the site checks, commits and pushes. On the first video it also walks through going live.
 ---
 
 # Add a published video to the website
@@ -21,7 +21,7 @@ node .claude/skills/add-video/entry.mjs "<youtube-url>"
 ```
 
 Options: `--episode ep-003` when the user names the episode or the match is wrong,
-`--pdf "<drive-url>"` when the user pastes the handout link in the chat,
+`--pdf "<drive-url>"` / `--pptx "<drive-url>"` when the user pastes the handout or deck link in the chat,
 `--youtube-repo <path>` if the channel repo is not next to this one.
 
 The script prints JSON and writes nothing. Read it before going on:
@@ -33,15 +33,16 @@ The script prints JSON and writes nothing. Read it before going on:
   0.3, or `match.candidates` has more than one plausible episode, ask the user which episode
   it is and rerun with `--episode`. Never guess.
 - **`missing`**: resolve each item before writing.
-  - `pdf_url`: ask the user for the Google Drive share link of `handout.pdf`. When they
-    give it, also write it into the episode's `episode.yaml` as `pdf_url:` (the channel repo
-    reads it for the YouTube description and the newsletter), then rerun.
+  - `pdf_url` / `pptx_url`: ask the user for the Google Drive share link of `handout.pdf`
+    or `deck.pptx`. When they give it, also write it into the episode's `episode.yaml` as
+    `pdf_url:` or `pptx_url:` (the channel repo reads them for the YouTube description), then
+    rerun.
   - The YouTube title could not be read: the video may still be processing or private.
     Ask the user to check that it is public, or to paste the title.
   - Takeaway or references missing: the episode is not finished in the channel repo. Tell
     the user and stop.
 
-Never publish an entry that still contains `PDF_URL_MISSING`.
+Never publish an entry that still contains `PDF_URL_MISSING` or `PPTX_URL_MISSING`.
 
 ### 2. Insert it
 
@@ -70,8 +71,7 @@ The site goes live on the day of the first video (TODO.md, "Go live"). Before pu
    planned questions to keep. Remove the `EXAMPLE QUESTIONS` comment when they are real.
 3. Check the placeholders: `grep -rn "{{" --include='*.html' .`.
    `{{YOUTUBE_UPLOADS_PLAYLIST}}` needs the channel ID (YouTube Studio → Settings → Channel →
-   Advanced settings, `UC…` becomes `UU…`). `{{BEEHIIV_SUBSCRIBE_URL}}` needs the
-   user's value. Ask for any that are left.
+   Advanced settings, `UC…` becomes `UU…`). Ask the user for any value that is left.
 4. Ask the user whether to go live now. If yes, follow TODO.md section 2, "Go live":
    move `home/index.html` to `index.html`, replace `robots.txt`, optionally drop the
    under-construction CSS block. Also check the to-do list in TODO.md (photos, legal pages)
@@ -83,7 +83,7 @@ The site goes live on the day of the first video (TODO.md, "Go live"). Before pu
 This must print nothing:
 
 ```sh
-grep -rn "PDF_URL_MISSING" --include='*.html' .
+grep -rnE "PDF_URL_MISSING|PPTX_URL_MISSING" --include='*.html' .
 ```
 
 Then run the identity, private-terms and banned-words checks from `TODO.md` (local, git-ignored), section 6
@@ -106,7 +106,7 @@ git push origin main
 ```
 
 End the commit message with the attribution line from the current system reminder. Only
-stage what this skill changed. If the episode's `episode.yaml` got a `pdf_url`, that file is
+stage what this skill changed. If the episode's `episode.yaml` got a `pdf_url` or `pptx_url`, that file is
 in the channel repo; the episodes folder is git-ignored there, so there is nothing to commit
 on that side.
 
@@ -119,6 +119,6 @@ whether the site went live.
 ## Rules
 
 - Public word is "video", never "episode".
-- The deck link (`pptx_url`) never goes on the website. Only the free handout is linked.
+- Both files are free: the handout (`pdf_url`) and the deck (`pptx_url`) are linked side by side.
 - Link Google Drive, never embed it.
 - One entry per video. Do not touch older entries unless the user asks.

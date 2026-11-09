@@ -41,7 +41,7 @@
   --positive:     #237A57;  /* only for "good / verified" */
   --risk:         #B54747;  /* only for "adverse / risk" */
   --caution:      #B7791F;  /* only for "caution" */
-  --band-bg:      #10365C;  /* dark band (newsletter / subscribe) */
+  --band-bg:      #10365C;  /* dark band (closing call to action) */
   --band-text:    #D1DDEA;  /* paragraphs in the band */
   --on-band:      #FFFFFF;  /* headings, links and the inverse button in the band */
   --inverse-text:       #174A7E;  /* inverse button (in the band), same in both themes */
@@ -484,7 +484,7 @@ address { font-style: normal; }
 
 .video-note { margin-top: 12px; }
 
-/* --- Slide mock-up (newsletter page, illustrative) ------------------------ */
+/* --- Slide mock-up (experiment pages) ------------------------------------ */
 
 .slide-figure { margin: 0; }
 .slide {
@@ -622,7 +622,7 @@ address { font-style: normal; }
 .sources li { margin-bottom: 6px; overflow-wrap: anywhere; }
 .entries + .caption { margin-top: var(--s4); }
 
-/* --- Dark band (newsletter / subscribe) ---------------------------------- */
+/* --- Dark band (closing call to action) ---------------------------------- */
 
 .band { padding-block: var(--section); background: var(--band-bg); color: var(--on-band); }
 .band h2 { color: var(--on-band); }

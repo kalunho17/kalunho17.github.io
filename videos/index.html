@@ -86,7 +86,6 @@
         <li><a href="/">Home</a></li>
         <li><a href="/videos/" aria-current="page">Videos</a></li>
         <li><a href="/experiments/">Experiments</a></li>
-        <li><a href="/newsletter/">Newsletter</a></li>
         <li><a href="/about/">About</a></li>
       </ul>
       <a class="btn btn--small" href="https://www.youtube.com/@KalunHo?sub_confirmation=1">Subscribe on YouTube</a>
@@ -108,8 +107,8 @@
       <div class="page-head__content">
         <p class="kicker">Videos</p>
         <div class="accent-bar"></div>
-        <h1>Every video, with its handout and sources.</h1>
-        <p class="lead">Newest first. Each entry has the one-sentence takeaway, the free PDF handout and the sources, numbered as in the video.</p>
+        <h1>Every video, with its handout, deck and sources.</h1>
+        <p class="lead">Newest first. Each entry has the one-sentence takeaway, the free PDF handout, the editable PowerPoint deck and the sources, numbered as in the video.</p>
       </div>
     </div>
   </section>
@@ -120,8 +119,8 @@
       <!-- ENTRY TEMPLATE: copy this block to the top of the list for every published video, newest first.
            The add-video skill writes it: paste the YouTube URL into Claude Code and ask to add it.
            The headline is the video's title as published on YouTube.
-           The handout link is the Google Drive share link of the free PDF ("anyone with the link can view").
-           The deck for subscribers is never linked from here. Delete the "first video" notice with the first entry.
+           The handout and deck links are the Google Drive share links of the PDF and the PPTX ("anyone with the link can view").
+           Delete the "first video" notice with the first entry.
 
       <article class="entry" id="video-1">
         <p class="meta">Video 1 · Month 2026 · Explainer</p>
@@ -135,6 +134,10 @@
           <a class="link-arrow" href="https://drive.google.com/file/d/FILE_ID/view">
             <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#document"></use></svg>
             Handout (PDF, Google Drive)
+          </a>
+          <a class="link-arrow" href="https://drive.google.com/file/d/FILE_ID/view">
+            <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#document"></use></svg>
+            Deck (PowerPoint, Google Drive)
           </a>
           (Only when the video has an experiment page:)
           <a class="link-arrow" href="/experiments/SLUG/">
@@ -158,7 +161,7 @@
       <!-- FIRST VIDEO NOTICE: delete with the first entry. -->
       <div class="section-head">
         <h2>The first video is in production.</h2>
-        <p class="lead">Subscribe on YouTube to see it when it is published. Its handout and sources will be listed here.</p>
+        <p class="lead">Subscribe on YouTube to see it when it is published. Its handout, deck and sources will be listed here.</p>
         <div class="actions">
           <a class="btn" href="https://www.youtube.com/@KalunHo?sub_confirmation=1">
             <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#youtube"></use></svg>
@@ -167,22 +170,7 @@
         </div>
       </div>
 
-      <p class="caption">The handouts are stored on Google Drive. The link opens Google Drive in a new page; nothing loads from Google while you only read this page. <a href="/privacy/#links">How linked services handle your data</a></p>
-    </div>
-  </section>
-
-  <section class="band" aria-labelledby="band-title">
-    <div class="container band__inner">
-      <div class="band__text">
-        <h2 id="band-title">Get the editable deck.</h2>
-        <p>Subscribers receive the PowerPoint version of each video, with the charts and sources. One email per video.</p>
-      </div>
-      <div class="actions">
-        <a class="link-arrow" href="/newsletter/">
-          About the newsletter
-          <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>
-        </a>
-      </div>
+      <p class="caption">The handouts and decks are stored on Google Drive. The link opens Google Drive in a new page; nothing loads from Google while you only read this page. <a href="/privacy/#links">How linked services handle your data</a></p>
     </div>
   </section>
 
@@ -199,7 +187,6 @@
         <li><a href="https://www.tiktok.com/@kalunhodotcom"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#tiktok"></use></svg><span class="sr-only">TikTok</span></a></li>
         <li><a href="https://www.linkedin.com/in/kalunho"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#linkedin"></use></svg><span class="sr-only">LinkedIn</span></a></li>
         <li><a href="https://github.com/kalunho17"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#github"></use></svg><span class="sr-only">GitHub</span></a></li>
-        <li><a href="/newsletter/"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#mail"></use></svg><span class="sr-only">Newsletter</span></a></li>
       </ul>
       <p><a href="/legal/">Legal notice</a> · <a href="/privacy/">Privacy</a></p>
     </div>
