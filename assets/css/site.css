@@ -429,7 +429,7 @@ address { font-style: normal; }
 }
 .todo { padding: 0 4px; border-bottom: 2px solid var(--caution); background: var(--bg-panel); color: var(--text); }
 
-/* --- Portraits (placeholders until the photos are in) --------------------- */
+/* --- Portraits ----------------------------------------------------------- */
 
 .portrait img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
 
