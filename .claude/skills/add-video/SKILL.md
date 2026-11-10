@@ -33,7 +33,8 @@ The script prints JSON and writes nothing. Read it before going on:
   0.3, or `match.candidates` has more than one plausible episode, ask the user which episode
   it is and rerun with `--episode`. Never guess.
 - **`missing`**: resolve each item before writing.
-  - `pdf_url` / `pptx_url`: ask the user for the Google Drive share link of `handout.pdf`
+  - `pdf_url` / `pptx_url`: only listed when the episode has no `files_url` (the shared Drive folder
+    with both files, the channel repo's default; the entry then links the folder once). Ask the user for the Google Drive share link of `handout.pdf`
     or `deck.pptx`. When they give it, also write it into the episode's `episode.yaml` as
     `pdf_url:` or `pptx_url:` (the channel repo reads them for the YouTube description), then
     rerun.
