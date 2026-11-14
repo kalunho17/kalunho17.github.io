@@ -36,14 +36,14 @@
 <meta property="og:url" content="https://kalunho.com/experiments/tokens-per-task/">
 <meta property="og:title" content="More thinking costs more tokens, not always more accuracy.">
 <meta property="og:description" content="Own measurement on one RTX 5090: four open AI models, thinking off and on, a single answer and an agent. Thinking multiplied tokens per task up to 6.8 times; accuracy moved by −20 to +14 points.">
-<meta property="og:image" content="https://kalunho.com/assets/img/og-image.png">
+<meta property="og:image" content="https://kalunho.com/assets/img/og-tokens-per-task.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Dr. Kalun Ho: Why technology moves the way it does.">
+<meta property="og:image:alt" content="Chart: tokens per problem with thinking off and on for four open models, up to 6.8 times as many.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="More thinking costs more tokens, not always more accuracy.">
 <meta name="twitter:description" content="Own measurement on one RTX 5090: four open AI models, thinking off and on, a single answer and an agent. Thinking multiplied tokens per task up to 6.8 times; accuracy moved by −20 to +14 points.">
-<meta name="twitter:image" content="https://kalunho.com/assets/img/og-image.png">
+<meta name="twitter:image" content="https://kalunho.com/assets/img/og-tokens-per-task.png">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -139,10 +139,62 @@
         <h2 id="short-title">Tokens per task decide the bill, and they move a lot.</h2>
       </div>
       <ul class="kpis" data-reveal-group>
-        <li class="kpi" data-reveal><span class="kpi__value">×6.8</span><span class="kpi__label">tokens with thinking on</span><span class="kpi__note">Small model, hard maths, and 20 points less accuracy.</span></li>
-        <li class="kpi" data-reveal><span class="kpi__value">×11</span><span class="kpi__label">tokens as an agent</span><span class="kpi__note">But only ×3.5 the cost, because input is cheap.</span></li>
-        <li class="kpi" data-reveal><span class="kpi__value">×128</span><span class="kpi__label">cost, frontier vs small model</span><span class="kpi__note">Same school maths questions, at list prices (projection).</span></li>
-        <li class="kpi" data-reveal><span class="kpi__value">×4</span><span class="kpi__label">speed gap on one GPU</span><span class="kpi__note">287 against 67 tokens per second. Corrected 12 November 2026; the video says ×14.</span></li>
+        <li class="kpi" data-reveal>
+          <button class="kpi__button" type="button" popovertarget="explain-1" aria-haspopup="dialog">
+            <span class="kpi__value">×6.8</span><span class="kpi__label">tokens with thinking on</span><span class="kpi__note">Small model, hard maths, and 20 points less accuracy.</span>
+            <span class="kpi__more">What this means<svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg></span>
+          </button>
+          <div class="explain" id="explain-1" popover role="dialog" aria-labelledby="explain-1-title">
+            <button class="explain__close" type="button" popovertarget="explain-1" popovertargetaction="hide" aria-label="Close">×</button>
+            <p class="kicker">×6.8 · tokens with thinking on</p>
+            <h3 id="explain-1-title">Thinking made the small model use 6.8 times the tokens, and it solved fewer problems.</h3>
+            <p>“Thinking” means the model writes out a hidden chain of reasoning before it answers. Every word of that reasoning is a token, and tokens are what an AI provider bills, or what your own card spends time on.</p><p>I gave the same 50 hard maths problems to the small model Qwen3.5-4B, once with thinking off and once with it on. With thinking off it used 2,422 tokens per problem and solved all 50. With thinking on it used 16,400, that is 6.8 times as many, and solved 40.</p><p>It got worse because it thought until it ran out of room: on 10 of the 50 problems it hit the limit of 28,000 tokens before it reached an answer, and those count as wrong.</p><p>The other three models also used more tokens with thinking on, between 1.3 and 6.5 times as many, and gained between 2 and 14 points of accuracy.</p>
+            <div class="table-wrap"><table class="data-table"><tbody><tr><th scope="row">Tokens per problem, thinking off</th><td class="num">2,422</td></tr><tr><th scope="row">Tokens per problem, thinking on</th><td class="num">16,400</td></tr><tr><th scope="row">Ratio</th><td class="num">×6.8</td></tr><tr><th scope="row">Solved with thinking off</th><td class="num">50 of 50</td></tr><tr><th scope="row">Solved with thinking on</th><td class="num">40 of 50</td></tr><tr><th scope="row">Ran out of room</th><td class="num">10 of 50</td></tr></tbody></table></div>
+            <p class="explain__bottom">More thinking means a bigger bill, not always a better answer. Turn it on only where your own test shows that it raises the success rate.</p>
+          </div>
+        </li>
+        <li class="kpi" data-reveal>
+          <button class="kpi__button" type="button" popovertarget="explain-2" aria-haspopup="dialog">
+            <span class="kpi__value">×11</span><span class="kpi__label">tokens as an agent</span><span class="kpi__note">But only ×3.5 the cost, because input is cheap.</span>
+            <span class="kpi__more">What this means<svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg></span>
+          </button>
+          <div class="explain" id="explain-2" popover role="dialog" aria-labelledby="explain-2-title">
+            <button class="explain__close" type="button" popovertarget="explain-2" popovertargetaction="hide" aria-label="Close">×</button>
+            <p class="kicker">×11 · tokens as an agent</p>
+            <h3 id="explain-2-title">An agent used 11 times the tokens of a single answer, because it sends everything again at every step.</h3>
+            <p>An agent is a model that works in steps: it calls a tool, reads the result, then decides what to do next. Here it answered questions about a set of invoices with three tools.</p><p>Each step sends the whole conversation so far back to the model: the question, every tool result and its own earlier steps. On the questions that took four calls, the first call sent 712 tokens on average, the fourth 2,025. Over 3.8 calls on average, one question used 5,613 tokens. A single worked answer to a school maths problem, on the same model, used 494. That is 11 times fewer.</p><p>93 % of the agent’s tokens are input, the text it sends, and at list prices input costs about a fifth of output. So the bill rises about 3.5 times, not 11.</p><p>The two tasks are different, so the 11 is an order of magnitude, not an exact price difference.</p>
+            <div class="table-wrap"><table class="data-table"><tbody><tr><th scope="row">Tokens per agent question</th><td class="num">5,613</td></tr><tr><th scope="row">Tokens per single answer</th><td class="num">494</td></tr><tr><th scope="row">Ratio</th><td class="num">×11</td></tr><tr><th scope="row">Calls per agent question</th><td class="num">3.8</td></tr><tr><th scope="row">Input sent, call 1 → call 4</th><td class="num">712 → 2,025</td></tr><tr><th scope="row">Share of tokens that is input</th><td class="num">93 %</td></tr><tr><th scope="row">Cost ratio at list prices</th><td class="num">about ×3.5</td></tr></tbody></table></div>
+            <p class="explain__bottom">Agents are worth it when a task needs to look things up. Use one only then, and watch how much context it carries.</p>
+          </div>
+        </li>
+        <li class="kpi" data-reveal>
+          <button class="kpi__button" type="button" popovertarget="explain-3" aria-haspopup="dialog">
+            <span class="kpi__value">×128</span><span class="kpi__label">cost, frontier vs small model</span><span class="kpi__note">Same school maths questions, at list prices (projection).</span>
+            <span class="kpi__more">What this means<svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg></span>
+          </button>
+          <div class="explain" id="explain-3" popover role="dialog" aria-labelledby="explain-3-title">
+            <button class="explain__close" type="button" popovertarget="explain-3" popovertargetaction="hide" aria-label="Close">×</button>
+            <p class="kicker">×128 · cost, frontier vs small model</p>
+            <h3 id="explain-3-title">Which model answers changes the bill far more than thinking or agents do.</h3>
+            <p>I took the tokens my models used on a hundred school maths problems and priced them with OpenAI’s list prices of 8 November 2026, converted at 1 € = 1.1165 $.</p><p>Scaled to a million questions: €144 with the small model, gpt-6-luna, and €18,325 with the frontier model, gpt-6-astra. That is 128 times as much for the same questions.</p><p>Thinking at the highest setting adds about a quarter on top (€22,859). The agent, on its invoice questions, comes to €64,643, but on a different task.</p><p>This is a projection, not a bill: the token counts come from open models, the prices from a commercial list, and commercial models count tokens differently.</p>
+            <div class="table-wrap"><table class="data-table"><tbody><tr><th scope="row">Small model, per million questions</th><td class="num">€144</td></tr><tr><th scope="row">Frontier model</th><td class="num">€18,325</td></tr><tr><th scope="row">Ratio</th><td class="num">×128</td></tr><tr><th scope="row">Frontier model, thinking at xhigh</th><td class="num">€22,859</td></tr><tr><th scope="row">Frontier model as an agent (invoice questions)</th><td class="num">€64,643</td></tr></tbody></table></div>
+            <p class="explain__bottom">Route each task to the smallest model that passes your own test. That is the biggest lever on the bill.</p>
+          </div>
+        </li>
+        <li class="kpi" data-reveal>
+          <button class="kpi__button" type="button" popovertarget="explain-4" aria-haspopup="dialog">
+            <span class="kpi__value">×4</span><span class="kpi__label">speed gap on one GPU</span><span class="kpi__note">287 against 67 tokens per second. Corrected 12 November 2026; the video says ×14.</span>
+            <span class="kpi__more">What this means<svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg></span>
+          </button>
+          <div class="explain" id="explain-4" popover role="dialog" aria-labelledby="explain-4-title">
+            <button class="explain__close" type="button" popovertarget="explain-4" popovertargetaction="hide" aria-label="Close">×</button>
+            <p class="kicker">×4 · speed gap on one GPU</p>
+            <h3 id="explain-4-title">On the same card the fastest model writes about four times as fast as the slowest.</h3>
+            <p>Speed here is how many tokens a model writes per second when it answers one request at a time on my RTX 5090.</p><p>gpt-oss-20b wrote 287 tokens a second, Qwen3.5-4B 157, Gemma 4 31B 71 and Qwen3.8-27B 67. The fastest is about 4 times the slowest.</p><p>Correction: the video says 20 tokens a second for Qwen3.8-27B and a gap of 14 times. That was my mistake. A setting in the serving software made the card wait for the processor on every token. Measured again with the setting fixed: 67. The token counts and accuracy are not affected.</p><p>Thinking multiplies the wait as well as the tokens: the small model took 19 seconds per hard problem with thinking off, and 162 seconds with it on.</p>
+            <div class="table-wrap"><table class="data-table"><tbody><tr><th scope="row">gpt-oss-20b</th><td class="num">287 tokens/s</td></tr><tr><th scope="row">Qwen3.5-4B</th><td class="num">157 tokens/s</td></tr><tr><th scope="row">Gemma 4 31B</th><td class="num">71 tokens/s</td></tr><tr><th scope="row">Qwen3.8-27B</th><td class="num">67 tokens/s</td></tr><tr><th scope="row">Fastest ÷ slowest</th><td class="num">about ×4</td></tr><tr><th scope="row">As published in the video (wrong)</th><td class="num">×14</td></tr></tbody></table></div>
+            <p class="explain__bottom">On your own hardware, time is the bill: measure the time per task, not only the tokens.</p>
+          </div>
+        </li>
       </ul>
       <p class="takeaway">
         <svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>

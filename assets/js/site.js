@@ -4,9 +4,11 @@
 
   // Click-to-load YouTube: nothing is requested from YouTube until the visitor clicks.
   // Without JavaScript (or before the playlist ID is filled in) the poster stays a plain link.
-  document.querySelectorAll('[data-playlist]').forEach(function (poster) {
+  // data-playlist plays a playlist (home page), data-video one video (thumbnails on /videos/).
+  document.querySelectorAll('[data-playlist], [data-video]').forEach(function (poster) {
     var playlist = poster.getAttribute('data-playlist');
-    if (!/^[\w-]+$/.test(playlist)) return;
+    var video = poster.getAttribute('data-video');
+    if (!/^[\w-]+$/.test(playlist || video || '')) return;
 
     poster.setAttribute('role', 'button');
     poster.addEventListener('keydown', function (event) {
@@ -15,7 +17,9 @@
     poster.addEventListener('click', function (event) {
       event.preventDefault();
       var frame = document.createElement('iframe');
-      frame.src = 'https://www.youtube-nocookie.com/embed/videoseries?list=' + playlist + '&autoplay=1&rel=0';
+      frame.src = video
+        ? 'https://www.youtube-nocookie.com/embed/' + video + '?autoplay=1&rel=0'
+        : 'https://www.youtube-nocookie.com/embed/videoseries?list=' + playlist + '&autoplay=1&rel=0';
       frame.title = poster.getAttribute('data-title') || 'YouTube video player';
       frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
       frame.allowFullscreen = true;
@@ -24,6 +28,23 @@
       frame.focus();
     });
   });
+
+  // Explanation panels of the KPI tiles use the popover attribute. Browsers without it get the
+  // same behaviour here: the tile button opens its panel, the close button and Escape close it.
+  if (!HTMLElement.prototype.hasOwnProperty('popover')) {
+    document.querySelectorAll('.explain[popover]').forEach(function (panel) { panel.hidden = true; panel.classList.add('is-fallback'); });
+    document.addEventListener('click', function (event) {
+      var button = event.target.closest('[popovertarget]');
+      if (!button) return;
+      var panel = document.getElementById(button.getAttribute('popovertarget'));
+      if (!panel) return;
+      panel.hidden = button.getAttribute('popovertargetaction') === 'hide' ? true : !panel.hidden;
+      if (!panel.hidden) panel.querySelector('.explain__close').focus();
+    });
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') document.querySelectorAll('.explain.is-fallback').forEach(function (p) { p.hidden = true; });
+    });
+  }
 
   // Colour theme toggle: light → dark → system → light. Light is the default: it removes
   // the stored choice. "dark" and "system" (follow the device) are stored in localStorage
