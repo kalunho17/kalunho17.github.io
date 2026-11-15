@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- THEME START: same on every page. Light by default; applies a stored "dark" or "system" choice before the first paint (toggle: /assets/js/site.js) -->
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: dark)">
+<script>
+  (function () {
+    var root = document.documentElement, theme = null;
+    root.classList.add('js');
+    try { theme = localStorage.getItem('theme'); } catch (error) {}
+    if (theme !== 'dark' && theme !== 'system') return;
+    root.setAttribute('data-theme', theme);
+    document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
+      meta.content = theme === 'dark' || /dark/.test(meta.media) ? '#10365C' : '#FFFFFF';
+    });
+  }());
+</script>
+<!-- THEME END -->
+<title>GPU break-even · Dr. Kalun Ho</title>
+<meta name="description" content="Own measurement on one RTX 5090: 84 load runs, 131,939 answers scored. Owning a GPU beats a per-token API from about 2,850 agent questions a working day, 7,500 once staff time is counted.">
+<link rel="canonical" href="https://kalunho.com/experiments/gpu-break-even/">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/open-sans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/open-sans-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css">
+<script src="/assets/js/site.js" defer></script>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dr. Kalun Ho">
+<meta property="og:locale" content="en_GB">
+<meta property="og:url" content="https://kalunho.com/experiments/gpu-break-even/">
+<meta property="og:title" content="Count your tasks before you buy a GPU.">
+<meta property="og:description" content="Own measurement on one RTX 5090: 84 load runs, 131,939 answers scored. Owning a GPU beats a per-token API from about 2,850 agent questions a working day, 7,500 once staff time is counted.">
+<meta property="og:image" content="https://kalunho.com/assets/img/og-gpu-break-even.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Chart: an API line rising and an owned machine&#x27;s flat line crossing at 2,850 agent questions a day.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Count your tasks before you buy a GPU.">
+<meta name="twitter:description" content="Own measurement on one RTX 5090: 84 load runs, 131,939 answers scored. Owning a GPU beats a per-token API from about 2,850 agent questions a working day, 7,500 once staff time is counted.">
+<meta name="twitter:image" content="https://kalunho.com/assets/img/og-gpu-break-even.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://kalunho.com/#website",
+      "url": "https://kalunho.com/",
+      "name": "Dr. Kalun Ho",
+      "inLanguage": "en-GB",
+      "publisher": { "@id": "https://kalunho.com/#person" }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://kalunho.com/#person",
+      "name": "Dr. Kalun Ho",
+      "url": "https://kalunho.com/",
+      "sameAs": ["https://www.youtube.com/@KalunHo", "https://www.instagram.com/kalunhodotcom/", "https://www.tiktok.com/@kalunhodotcom", "https://www.linkedin.com/in/kalunho", "https://github.com/kalunho17"]
+    }
+  ]
+}
+</script>
+<!-- ANALYTICS SLOT: empty at launch. For cookieless analytics, paste ONE snippet here on every page
+     and update the privacy policy (section "Analytics"). Examples:
+     GoatCounter: <script data-goatcounter="https://YOUR-CODE.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+     Plausible:   <script defer data-domain="kalunho.com" src="https://plausible.io/js/script.js"></script> -->
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- HEADER START: same on every page except aria-current -->
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href="/">
+      <svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#mark"></use></svg>
+      <span>Dr. Kalun Ho</span>
+    </a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/videos/">Videos</a></li>
+        <li><a href="/experiments/" aria-current="page">Experiments</a></li>
+        <li><a href="/about/">About</a></li>
+      </ul>
+      <a class="btn btn--small" href="https://www.youtube.com/@KalunHo?sub_confirmation=1">Subscribe on YouTube</a>
+    </nav>
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Colour theme">
+      <svg class="icon theme-toggle__system" aria-hidden="true"><use href="/assets/img/icons.svg#monitor"></use></svg>
+      <svg class="icon theme-toggle__light" aria-hidden="true"><use href="/assets/img/icons.svg#sun"></use></svg>
+      <svg class="icon theme-toggle__dark" aria-hidden="true"><use href="/assets/img/icons.svg#moon"></use></svg>
+    </button>
+  </div>
+</header>
+<!-- HEADER END -->
+
+<main id="main">
+
+  <section class="page-head">
+    <img class="page-head__motif" src="/assets/img/motif.svg" alt="" width="770" height="1080">
+    <div class="container page-head__inner">
+      <div class="page-head__content">
+        <p class="kicker">Experiment 2 · November 2026</p>
+        <div class="accent-bar"></div>
+        <h1>Count your tasks before you buy a GPU.</h1>
+        <p class="lead">Should a team buy a graphics card for its AI models, or pay a provider per token? I loaded my own card until users would start to wait, scored every answer, and priced the same work at a German cloud. The answer is a number of tasks a day.</p>
+        <ul class="exp-meta">
+          <li><strong>2</strong> open models</li>
+          <li><strong>4</strong> tasks</li>
+          <li><strong>84</strong> runs</li>
+          <li><strong>131,939</strong> answers scored against a key</li>
+          <li><strong>1</strong> RTX 5090</li>
+          <li>Run on <strong>13 November 2026</strong></li>
+        </ul>
+        <div class="actions">
+          <a class="btn" href="https://github.com/kalunho17/yt-experiment-002">
+            <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#github"></use></svg>
+            Code and data on GitHub
+          </a>
+          <!-- VIDEO LINK: rerun analysis/make_webpage.py with --video <YouTube URL> once the episode is published -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="short-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="kicker">The short version</p>
+        <h2 id="short-title">Below a number of tasks a day, the API is cheaper. Above it, owning is.</h2>
+      </div>
+      <ul class="kpis" data-reveal-group>
+        <li class="kpi" data-reveal>
+          <button class="kpi__button" type="button" popovertarget="explain-1" aria-haspopup="dialog">
+            <span class="kpi__value">2,850</span><span class="kpi__label">agent questions a working day</span><span class="kpi__note">From here an owned machine beats the API, with hardware and power only.</span>
+            <span class="kpi__more">What this means<svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg></span>
+          </button>
+          <div class="explain" id="explain-1" popover role="dialog" aria-labelledby="explain-1-title">
+            <button class="explain__close" type="button" popovertarget="explain-1" popovertargetaction="hide" aria-label="Close">×</button>
+            <p class="kicker">2,850 · agent questions a working day</p>
+            <h3 id="explain-1-title">Below 2,850 agent questions a day, paying per token is cheaper than owning a machine.</h3>
+            <p>An agent question is one that the AI answers by looking things up with tools, here in a set of invoices. A German cloud sells the same open model for €0.45 per million tokens of input and €0.65 per million of output. One agent question used 4,678 tokens of input and 382 of output on my card, so the cloud would charge €0.00235 for it: about a quarter of a cent.</p><p>My machine cost €4,423 without VAT. Spread over 3 years that is €1,474 a year. Standing ready all year with the model loaded, it draws 85 watts, which costs €176 a year at €0.2366 per kWh. Together €1,650 a year, or €6.60 on each of 250 working days.</p><p>Divide the machine’s €6.60 a day by the cloud’s quarter of a cent per question, and you get about 2,850. Below that the cloud bill is smaller than the machine; above it, the machine wins. The extra electricity of answering is tiny (€0.00003 a question) and already counted.</p><p>Example: a team of 50 people asking 20 agent questions each sends 1,000 a day. The cloud charges about €2.35 for them; the machine costs €6.60 whether it is used or not.</p>
+            <div class="table-wrap"><table class="data-table"><tbody><tr><th scope="row">Cloud price per agent question</th><td class="num">€0.00235</td></tr><tr><th scope="row">Machine, per year (3 years)</th><td class="num">€1,474</td></tr><tr><th scope="row">Power when idle, per year</th><td class="num">€176</td></tr><tr><th scope="row">Machine and power, per working day</th><td class="num">€6.60</td></tr><tr><th scope="row">Break-even: €6.60 ÷ €0.00235</th><td class="num">2,846 a day</td></tr></tbody></table></div>
+            <p class="explain__bottom">Count your agent questions per working day. Below this line, keep paying per token.</p>
+          </div>
+        </li>
+        <li class="kpi" data-reveal>
+          <button class="kpi__button" type="button" popovertarget="explain-2" aria-haspopup="dialog">
+            <span class="kpi__value">7,500</span><span class="kpi__label">agent questions a day, with staff</span><span class="kpi__note">5 hours of care a month cost €10.80 a working day, more than the machine and its power (€6.60). The break-even rises 2.6 times.</span>
+            <span class="kpi__more">What this means<svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg></span>
+          </button>
+          <div class="explain" id="explain-2" popover role="dialog" aria-labelledby="explain-2-title">
+            <button class="explain__close" type="button" popovertarget="explain-2" popovertargetaction="hide" aria-label="Close">×</button>
+            <p class="kicker">7,500 · agent questions a day, with staff</p>
+            <h3 id="explain-2-title">Count the people, and owning pays only from about 7,500 agent questions a day.</h3>
+            <p>A machine of your own needs someone to install updates, restart it when it hangs and check that it still works. My machine needs between 1 and 5 hours a month, and agents already do most of that work.</p><p>At €45 an hour, the German average labour cost, 5 hours cost €225 a month, or €2,700 a year. Over 250 working days that is €10.80 a day, more than the €6.60 for the machine and its power.</p><p>So owning now costs €17.40 a working day. Divided by the cloud’s €0.00235 per question, the break-even becomes about 7,500, 2.6 times the figure without staff. With only 1 hour a month it is about 3,800.</p><p>The cloud includes this work in its price. That is why staff time moves the line more than electricity or the price of the card.</p>
+            <div class="table-wrap"><table class="data-table"><tbody><tr><th scope="row">Staff, 5 hours a month at €45</th><td class="num">€225 a month</td></tr><tr><th scope="row">Staff, per working day</th><td class="num">€10.80</td></tr><tr><th scope="row">Machine and power, per working day</th><td class="num">€6.60</td></tr><tr><th scope="row">Owning in total, per working day</th><td class="num">€17.40</td></tr><tr><th scope="row">Break-even with 5 staff hours</th><td class="num">7,503 a day</td></tr><tr><th scope="row">Break-even with 1 staff hour</th><td class="num">3,778 a day</td></tr></tbody></table></div>
+            <p class="explain__bottom">Ask who will look after the machine and for how many hours. Put that into the calculation before the electricity price.</p>
+          </div>
+        </li>
+        <li class="kpi" data-reveal>
+          <button class="kpi__button" type="button" popovertarget="explain-3" aria-haspopup="dialog">
+            <span class="kpi__value">4,340</span><span class="kpi__label">agent questions an hour on one card</span><span class="kpi__note">8 times one request at a time, with no user waiting.</span>
+            <span class="kpi__more">What this means<svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg></span>
+          </button>
+          <div class="explain" id="explain-3" popover role="dialog" aria-labelledby="explain-3-title">
+            <button class="explain__close" type="button" popovertarget="explain-3" popovertargetaction="hide" aria-label="Close">×</button>
+            <p class="kicker">4,340 · agent questions an hour on one card</p>
+            <h3 id="explain-3-title">Working on 16 questions at once, one card answers about 4,340 an hour.</h3>
+            <p>A graphics card can work on many requests in the same pass. With one question at a time it answered 540 agent questions an hour. With 16 at once it answered 4,340, 8 times as many.</p><p>The limit is the users’ patience. I counted a request as fast enough when the first word arrived within 2 seconds and the answer then flowed at 10 words a second or more, and I allowed only 1 call in 100 to be slower. At 16 questions at once, 100 % of the calls were fast enough. At 21 it was 92.5 %, and the card did not answer any more questions: they only waited longer.</p><p>In an 8-hour day that is about 34,700 agent questions, 12 times the break-even of 2,850. It assumes the questions arrive evenly; real traffic comes in bursts.</p>
+            <div class="table-wrap"><table class="data-table"><tbody><tr><th scope="row">One question at a time</th><td class="num">540 an hour</td></tr><tr><th scope="row">16 questions at once</th><td class="num">4,342 an hour</td></tr><tr><th scope="row">Gain</th><td class="num">×8.0</td></tr><tr><th scope="row">Calls fast enough, at the limit</th><td class="num">100.0%</td></tr><tr><th scope="row">In an 8-hour day</th><td class="num">34,733</td></tr><tr><th scope="row">Capacity ÷ break-even, 8 hours</th><td class="num">×12.2</td></tr></tbody></table></div>
+            <p class="explain__bottom">One card is rarely too small for a team. The question is whether you have enough work to keep it busy.</p>
+          </div>
+        </li>
+        <li class="kpi" data-reveal>
+          <button class="kpi__button" type="button" popovertarget="explain-4" aria-haspopup="dialog">
+            <span class="kpi__value">99%</span><span class="kpi__label">correct under full load</span><span class="kpi__note">The same as with one request at a time. Load did not cost quality.</span>
+            <span class="kpi__more">What this means<svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg></span>
+          </button>
+          <div class="explain" id="explain-4" popover role="dialog" aria-labelledby="explain-4-title">
+            <button class="explain__close" type="button" popovertarget="explain-4" popovertargetaction="hide" aria-label="Close">×</button>
+            <p class="kicker">99% · correct under full load</p>
+            <h3 id="explain-4-title">A busy card answers as well as an idle one.</h3>
+            <p>Every answer was checked against a fixed answer key, with no AI judging another AI. Under full load, with 16 agent questions at once, the card answered 99.4 % of 673 questions correctly. With one question at a time it was 98.8 % of 84.</p><p>The other three tasks behaved the same way: under load, accuracy stayed within 3.3 points of one request at a time. The largest drop, on long solutions, comes from a tiny sample at one request at a time (18 problems), and its uncertainty range includes zero.</p><p>This is expected: sharing the card between requests changes when the work is done, not what is computed. One limit: my card runs a compressed, 4-bit copy of the model, which I did not compare with the full-precision version a cloud may serve.</p>
+            <div class="table-wrap"><table class="data-table"><tbody><tr><th scope="row">Agent question, one at a time → at the limit</th><td class="num">99% → 99%</td></tr><tr><th scope="row">Long solution, one at a time → at the limit</th><td class="num">100% → 97%</td></tr><tr><th scope="row">Short answer, one at a time → at the limit</th><td class="num">100% → 98%</td></tr><tr><th scope="row">Sorting a message, one at a time → at the limit</th><td class="num">76% → 77%</td></tr></tbody></table></div>
+            <p class="explain__bottom">Load does not cost quality. Test the compressed model on your own tasks before you rely on it.</p>
+          </div>
+        </li>
+      </ul>
+      <p class="takeaway"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>Count your tasks per working day, by type, before you buy. A machine that waits is the expensive one.</p>
+    </div>
+  </section>
+
+  <section class="section section--light" aria-labelledby="overview-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="kicker">The results on one page</p>
+        <h2 id="overview-title">Four kinds of task, three numbers each.</h2>
+        <p class="lead">How many the card finishes in an hour while every user still gets a fast answer, how many of those answers are correct, and the number per working day from which owning is cheaper than the API.</p>
+      </div>
+      <div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Task</th><th scope="col" class="num">Per hour</th><th scope="col" class="num">Correct</th><th scope="col" class="num">API per 1,000</th><th scope="col" class="num">Owning pays from, a day</th><th scope="col" class="num">With staff</th><th scope="col" class="num">Card does in 8 h</th></tr></thead><tbody><tr><th scope="row">Agent question</th><td class="num">4,340</td><td class="num">99%</td><td class="num">€2.35</td><td class="num"><strong>2,850</strong></td><td class="num">7,500</td><td class="num">34,700</td></tr><tr><th scope="row">Long solution</th><td class="num">1,130</td><td class="num">97%</td><td class="num">€1.34</td><td class="num"><strong>5,350</strong></td><td class="num">14,100</td><td class="num">9,050</td></tr><tr><th scope="row">Short answer</th><td class="num">7,600</td><td class="num">98%</td><td class="num">€0.31</td><td class="num"><strong>22,400</strong></td><td class="num">59,100</td><td class="num">60,800</td></tr><tr><th scope="row">Sorting a message</th><td class="num">72,400</td><td class="num">77%</td><td class="num">€0.21</td><td class="num"><strong>32,400</strong></td><td class="num">85,400</td><td class="num">578,900</td></tr></tbody></table></div>
+      <p class="caption" style="margin-top: var(--s3)">Qwen3.8-27B on one RTX 5090, against the list price of the same model at a German cloud [1]. “Per hour” and “correct” are measured at the highest load at which users still get a fast answer; “with staff” counts 5 staff hours a month. The fastest task pays off last: what decides is the price the API charges for one task.</p>
+    </div>
+  </section>
+
+  <section class="section" aria-label="Findings">
+    <div class="container">
+
+      <article class="finding" id="break-even">
+        <div>
+          <p class="kicker">Finding 1 · The break-even</p>
+          <h2>Owning pays from about 2,850 agent questions a working day.</h2>
+          <p>An API bills every question. A machine of your own costs the same every day, whether it works or waits. So the two lines cross at a number of tasks a day, and below that number the API is cheaper.</p><p>For an agent question, one that looks things up with tools, the API charges about a quarter of a cent (€0.24 per 100). My test machine costs €6.60 per working day for the hardware and its power. The lines cross at 2,850 questions a day.</p><p>Then count the people. My machine needs between 1 and 5 hours of care a month. At €45 an hour, 5 hours add €10.80 a working day, more than the hardware itself, and the crossing moves to 7,500.</p>
+          <p class="takeaway"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>Count your tasks per working day before you compare prices per token.</p>
+        </div>
+        <figure class="slide-figure">
+          <div class="slide slide--auto">
+            <div class="slide__inner">
+              <p class="slide__headline" id="c1t">The lines cross at 2,850 agent questions a day, 7,500 with staff.</p>
+              <p class="slide__context">Cost per working day (€), agent questions on Qwen3.8-27B: German cloud at list price against one owned machine</p>
+              <svg class="slide__chart" viewBox="0 0 400 236" role="img" aria-labelledby="c1t"><line class="chart-grid" x1="46" x2="388" y1="196.0" y2="196.0"></line><text class="chart-text chart-text--muted chart-text--end" x="40.0" y="200.0">€0</text><line class="chart-grid" x1="46" x2="388" y1="159.6" y2="159.6"></line><text class="chart-text chart-text--muted chart-text--end" x="40.0" y="163.6">€5</text><line class="chart-grid" x1="46" x2="388" y1="123.2" y2="123.2"></line><text class="chart-text chart-text--muted chart-text--end" x="40.0" y="127.2">€10</text><line class="chart-grid" x1="46" x2="388" y1="86.8" y2="86.8"></line><text class="chart-text chart-text--muted chart-text--end" x="40.0" y="90.8">€15</text><line class="chart-grid" x1="46" x2="388" y1="50.4" y2="50.4"></line><text class="chart-text chart-text--muted chart-text--end" x="40.0" y="54.4">€20</text><line class="chart-grid" x1="46" x2="388" y1="14.0" y2="14.0"></line><text class="chart-text chart-text--muted chart-text--end" x="40.0" y="18.0">€25</text><text class="chart-text chart-text--muted chart-text--mid" x="46.0" y="214.0">0</text><text class="chart-text chart-text--muted chart-text--mid" x="131.5" y="214.0">2,500</text><text class="chart-text chart-text--muted chart-text--mid" x="217.0" y="214.0">5,000</text><text class="chart-text chart-text--muted chart-text--mid" x="302.5" y="214.0">7,500</text><text class="chart-text chart-text--muted chart-text--end" x="388.0" y="214.0">10,000</text><text class="chart-text chart-text--muted chart-text--end" x="388.0" y="232.0">Agent questions per working day</text><polyline class="chart-line chart-line--b" points="46.0,147.9 388.0,145.5"></polyline><polyline class="chart-line chart-line--b chart-line--dash" points="46.0,69.3 388.0,66.8"></polyline><polyline class="chart-line" points="46.0,196.0 388.0,24.7"></polyline><text class="chart-text chart-text--strong chart-text--end" x="384.6" y="17.4">API</text><text class="chart-text chart-text--end" x="386.3" y="163.9">Own machine</text><text class="chart-text" x="51.1" y="62.3">Own machine + 5 staff hours a month</text><g><title>The lines cross at 2,846 agent questions per working day</title><circle class="chart-dot--ring" cx="143.3" cy="147.2" r="5"></circle><text class="chart-text chart-text--strong" x="151.3" y="167.2">2,850</text></g><g><title>The lines cross at 7,503 agent questions per working day</title><circle class="chart-dot--ring" cx="302.6" cy="67.4" r="5"></circle><text class="chart-text chart-text--strong" x="310.6" y="87.4">7,500</text></g></svg>
+              <p class="slide__source">Source: own measurement, Dr. Kalun Ho (2026); STACKIT list prices, 13 November 2026 [1]</p>
+              <div class="slide__footer"><span>Dr. Kalun Ho | Count your tasks first</span><span>1</span></div>
+            </div>
+          </div>
+        </figure>
+      </article>
+      <article class="finding" id="by-task">
+        <div>
+          <p class="kicker">Finding 2 · By task</p>
+          <h2>Agents reach the line first. A team’s chat never does.</h2>
+          <p>The break-even depends on what the API charges for one task. An agent question is expensive at the API, because the agent sends its whole context again at every step: 89 % of its price is input. So owning pays from 2,850 a day.</p><p>A short answer costs the API about an eighth of that. Owning needs 22,400 short answers a day to pay, and 32,400 sorted messages. Long worked solutions sit in between at 5,350.</p><p>As an illustration: a team of 50 people asking 20 short questions each sends 1,000 a day, a twentieth of what owning needs. 250 people with 20 agent questions each send 5,000: above the line with hardware only, below it once staff is counted.</p>
+          <p class="takeaway"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>Compare each kind of task with its own break-even. One number for “AI usage” hides the answer.</p>
+        </div>
+        <figure class="slide-figure">
+          <div class="slide slide--auto">
+            <div class="slide__inner">
+              <p class="slide__headline" id="c2t">Owning needs 2,850 agent questions a day, or 22,400 short answers.</p>
+              <p class="slide__context">Tasks per working day from which the owned machine is cheaper than the API (hardware and power only; with 5 staff hours a month beside it)</p>
+              <svg class="slide__chart" viewBox="0 0 400 232" role="img" aria-labelledby="c2t"><g><title>Agent question: owning pays from 2,846 a working day with hardware only, 7,503 with 5 staff hours a month</title><text class="chart-text chart-text--strong" x="0.0" y="13.0">Agent question</text><text class="chart-text chart-text--muted chart-text--end" x="400.0" y="13.0">€2.35 per 1,000 at the API</text><path class="chart-bar chart-bar--focus" d="M0.0,21.0h13.6a4.0,4.0 0 0 1 4.0,4.0v10.0a4.0,4.0 0 0 1 -4.0,4.0h-13.6z"></path><text class="chart-text" x="25.6" y="35.0">2,850  ·  with staff 7,500</text></g><g><title>Long solution: owning pays from 5,343 a working day with hardware only, 14,083 with 5 staff hours a month</title><text class="chart-text chart-text--strong" x="0.0" y="71.0">Long solution</text><text class="chart-text chart-text--muted chart-text--end" x="400.0" y="71.0">€1.34 per 1,000 at the API</text><path class="chart-bar chart-bar--focus" d="M0.0,79.0h29.0a4.0,4.0 0 0 1 4.0,4.0v10.0a4.0,4.0 0 0 1 -4.0,4.0h-29.0z"></path><text class="chart-text" x="41.0" y="93.0">5,350  ·  with staff 14,100</text></g><g><title>Short answer: owning pays from 22,409 a working day with hardware only, 59,068 with 5 staff hours a month</title><text class="chart-text chart-text--strong" x="0.0" y="129.0">Short answer</text><text class="chart-text chart-text--muted chart-text--end" x="400.0" y="129.0">€0.31 per 1,000 at the API</text><path class="chart-bar chart-bar--focus" d="M0.0,137.0h134.4a4.0,4.0 0 0 1 4.0,4.0v10.0a4.0,4.0 0 0 1 -4.0,4.0h-134.4z"></path><text class="chart-text" x="146.4" y="151.0">22,400  ·  with staff 59,100</text></g><g><title>Sorting a message: owning pays from 32,387 a working day with hardware only, 85,370 with 5 staff hours a month</title><text class="chart-text chart-text--strong" x="0.0" y="187.0">Sorting a message</text><text class="chart-text chart-text--muted chart-text--end" x="400.0" y="187.0">€0.21 per 1,000 at the API</text><path class="chart-bar chart-bar--focus" d="M0.0,195.0h196.0a4.0,4.0 0 0 1 4.0,4.0v10.0a4.0,4.0 0 0 1 -4.0,4.0h-196.0z"></path><text class="chart-text" x="208.0" y="209.0">32,400  ·  with staff 85,400</text></g></svg>
+              <p class="slide__source">Source: own measurement, Dr. Kalun Ho (2026); STACKIT list prices, 13 November 2026 [1]</p>
+              <div class="slide__footer"><span>Dr. Kalun Ho | Count your tasks first</span><span>2</span></div>
+            </div>
+          </div>
+        </figure>
+      </article>
+      <article class="finding" id="capacity">
+        <div>
+          <p class="kicker">Finding 3 · Capacity</p>
+          <h2>One card does up to 11 times the work of one request at a time.</h2>
+          <p>A graphics card can work on many requests in the same pass. I raised the load until users would start to wait: the first word within 2 seconds, then at least 10 words a second, for 99 % of calls.</p><p>Inside that limit the card finished 4,340 agent questions an hour with 16 agents at once, against 540 with one at a time. In an 8-hour day that is about 34,700 questions, 12 times the break-even.</p><p>For long solutions the margin is thin: the card finishes about 9,050 in 8 hours, against a break-even of 5,350. That only pays if the machine also works at night.</p>
+          <p class="takeaway"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>Capacity is rarely the problem. Check it for long answers, and plan work for the quiet hours.</p>
+        </div>
+        <figure class="slide-figure">
+          <div class="slide slide--auto">
+            <div class="slide__inner">
+              <p class="slide__headline" id="c3t">At the waiting limit the card answers 4,340 agent questions an hour.</p>
+              <p class="slide__context">Tasks finished per hour on one card, Qwen3.8-27B. Bars are scaled within each task</p>
+              <ul class="chart-legend"><li><i class="is-b"></i>One request at a time</li><li><i class=""></i>As many at once as the waiting limit allows</li></ul><svg class="slide__chart" viewBox="0 0 400 300" role="img" aria-labelledby="c3t"><text class="chart-text chart-text--strong" x="0.0" y="13.0">Agent question</text><text class="chart-text chart-text--muted chart-text--end" x="400.0" y="13.0">×8 at 16 at once</text><g><title>Agent question, one request at a time: 540 per hour</title><path class="chart-bar--b" d="M0.0,22.0h27.1a4.0,4.0 0 0 1 4.0,4.0v10.0a4.0,4.0 0 0 1 -4.0,4.0h-27.1z"></path><text class="chart-text" x="39.1" y="35.5">540 per hour</text></g><g><title>Agent question, 16 requests at once: 4,342 per hour</title><path class="chart-bar chart-bar--focus" d="M0.0,42.0h246.0a4.0,4.0 0 0 1 4.0,4.0v10.0a4.0,4.0 0 0 1 -4.0,4.0h-246.0z"></path><text class="chart-text" x="258.0" y="55.5">4,340 per hour</text></g><text class="chart-text chart-text--strong" x="0.0" y="89.0">Long solution</text><text class="chart-text chart-text--muted chart-text--end" x="400.0" y="89.0">×9.4 at 12 at once</text><g><title>Long solution, one request at a time: 120 per hour</title><path class="chart-bar--b" d="M0.0,98.0h22.5a4.0,4.0 0 0 1 4.0,4.0v10.0a4.0,4.0 0 0 1 -4.0,4.0h-22.5z"></path><text class="chart-text" x="34.5" y="111.5">120 per hour</text></g><g><title>Long solution, 12 requests at once: 1,132 per hour</title><path class="chart-bar chart-bar--focus" d="M0.0,118.0h246.0a4.0,4.0 0 0 1 4.0,4.0v10.0a4.0,4.0 0 0 1 -4.0,4.0h-246.0z"></path><text class="chart-text" x="258.0" y="131.5">1,130 per hour</text></g><text class="chart-text chart-text--strong" x="0.0" y="165.0">Short answer</text><text class="chart-text chart-text--muted chart-text--end" x="400.0" y="165.0">×11 at 16 at once</text><g><title>Short answer, one request at a time: 690 per hour</title><path class="chart-bar--b" d="M0.0,174.0h18.7a4.0,4.0 0 0 1 4.0,4.0v10.0a4.0,4.0 0 0 1 -4.0,4.0h-18.7z"></path><text class="chart-text" x="30.7" y="187.5">690 per hour</text></g><g><title>Short answer, 16 requests at once: 7,596 per hour</title><path class="chart-bar chart-bar--focus" d="M0.0,194.0h246.0a4.0,4.0 0 0 1 4.0,4.0v10.0a4.0,4.0 0 0 1 -4.0,4.0h-246.0z"></path><text class="chart-text" x="258.0" y="207.5">7,600 per hour</text></g><text class="chart-text chart-text--strong" x="0.0" y="241.0">Sorting a message</text><text class="chart-text chart-text--muted chart-text--end" x="400.0" y="241.0">×2.7 at 8 at once</text><g><title>Sorting a message, one request at a time: 26,688 per hour</title><path class="chart-bar--b" d="M0.0,250.0h88.2a4.0,4.0 0 0 1 4.0,4.0v10.0a4.0,4.0 0 0 1 -4.0,4.0h-88.2z"></path><text class="chart-text" x="100.2" y="263.5">26,700 per hour</text></g><g><title>Sorting a message, 8 requests at once: 72,363 per hour</title><path class="chart-bar chart-bar--focus" d="M0.0,270.0h246.0a4.0,4.0 0 0 1 4.0,4.0v10.0a4.0,4.0 0 0 1 -4.0,4.0h-246.0z"></path><text class="chart-text" x="258.0" y="283.5">72,400 per hour</text></g></svg>
+              <p class="slide__source">Source: own measurement, Dr. Kalun Ho (2026)</p>
+              <div class="slide__footer"><span>Dr. Kalun Ho | Count your tasks first</span><span>3</span></div>
+            </div>
+          </div>
+        </figure>
+      </article>
+      <article class="finding" id="quality">
+        <div>
+          <p class="kicker">Finding 4 · Quality</p>
+          <h2>A busy card answers as well as an idle one.</h2>
+          <p>The worry is obvious: if the card shares its work across many requests, answers could get worse. Every answer was scored against a fixed key, 131,939 in total, with no AI judging another AI.</p><p>Under load the card answered 99 % of the agent questions correctly, against 99 % with one at a time. On all four tasks the difference stayed within 3.3 points, and the two small drops come from tiny samples at one request at a time (18 long solutions).</p><p>One limit: my card runs a compressed, 4-bit copy of the model. I did not compare it with the full-precision version a cloud may serve.</p>
+          <p class="takeaway"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>Load does not cost quality. Test the compressed model on your own tasks before you rely on it.</p>
+        </div>
+        <figure class="slide-figure">
+          <div class="slide slide--auto">
+            <div class="slide__inner">
+              <p class="slide__headline" id="c4t">Under load the answers are as good as with one request at a time.</p>
+              <p class="slide__context">Share answered correctly against a fixed answer key, Qwen3.8-27B (4-bit)</p>
+              <ul class="chart-legend"><li><i class="is-b"></i>One request at a time</li><li><i class=""></i>At the waiting limit</li></ul><svg class="slide__chart" viewBox="0 0 400 300" role="img" aria-labelledby="c4t"><text class="chart-text chart-text--strong" x="0.0" y="13.0">Agent question</text><text class="chart-text chart-text--muted chart-text--end" x="400.0" y="13.0">673 answers under load</text><g><title>Agent question, one request at a time: 98.8% correct of 84</title><path class="chart-bar--b" d="M0.0,22.0h292.4a4.0,4.0 0 0 1 4.0,4.0v10.0a4.0,4.0 0 0 1 -4.0,4.0h-292.4z"></path><text class="chart-text" x="304.4" y="35.5">99%</text></g><g><title>Agent question, at the limit: 99.4% correct of 673</title><path class="chart-bar chart-bar--focus" d="M0.0,42.0h294.2a4.0,4.0 0 0 1 4.0,4.0v10.0a4.0,4.0 0 0 1 -4.0,4.0h-294.2z"></path><text class="chart-text" x="306.2" y="55.5">99%</text></g><text class="chart-text chart-text--strong" x="0.0" y="89.0">Long solution</text><text class="chart-text chart-text--muted chart-text--end" x="400.0" y="89.0">181 answers under load</text><g><title>Long solution, one request at a time: 100.0% correct of 18</title><path class="chart-bar--b" d="M0.0,98.0h296.0a4.0,4.0 0 0 1 4.0,4.0v10.0a4.0,4.0 0 0 1 -4.0,4.0h-296.0z"></path><text class="chart-text" x="308.0" y="111.5">100%</text></g><g><title>Long solution, at the limit: 96.7% correct of 181</title><path class="chart-bar chart-bar--focus" d="M0.0,118.0h286.1a4.0,4.0 0 0 1 4.0,4.0v10.0a4.0,4.0 0 0 1 -4.0,4.0h-286.1z"></path><text class="chart-text" x="298.1" y="131.5">97%</text></g><text class="chart-text chart-text--strong" x="0.0" y="165.0">Short answer</text><text class="chart-text chart-text--muted chart-text--end" x="400.0" y="165.0">1,196 answers under load</text><g><title>Short answer, one request at a time: 100.0% correct of 102</title><path class="chart-bar--b" d="M0.0,174.0h296.0a4.0,4.0 0 0 1 4.0,4.0v10.0a4.0,4.0 0 0 1 -4.0,4.0h-296.0z"></path><text class="chart-text" x="308.0" y="187.5">100%</text></g><g><title>Short answer, at the limit: 97.7% correct of 1,196</title><path class="chart-bar chart-bar--focus" d="M0.0,194.0h289.0a4.0,4.0 0 0 1 4.0,4.0v10.0a4.0,4.0 0 0 1 -4.0,4.0h-289.0z"></path><text class="chart-text" x="301.0" y="207.5">98%</text></g><text class="chart-text chart-text--strong" x="0.0" y="241.0">Sorting a message</text><text class="chart-text chart-text--muted chart-text--end" x="400.0" y="241.0">11,449 answers under load</text><g><title>Sorting a message, one request at a time: 75.8% correct of 4,228</title><path class="chart-bar--b" d="M0.0,250.0h223.5a4.0,4.0 0 0 1 4.0,4.0v10.0a4.0,4.0 0 0 1 -4.0,4.0h-223.5z"></path><text class="chart-text" x="235.5" y="263.5">76%</text></g><g><title>Sorting a message, at the limit: 76.8% correct of 11,449</title><path class="chart-bar chart-bar--focus" d="M0.0,270.0h226.4a4.0,4.0 0 0 1 4.0,4.0v10.0a4.0,4.0 0 0 1 -4.0,4.0h-226.4z"></path><text class="chart-text" x="238.4" y="283.5">77%</text></g></svg>
+              <p class="slide__source">Source: own measurement, Dr. Kalun Ho (2026)</p>
+              <div class="slide__footer"><span>Dr. Kalun Ho | Count your tasks first</span><span>4</span></div>
+            </div>
+          </div>
+        </figure>
+      </article>
+      <article class="finding" id="memory">
+        <div>
+          <p class="kicker">Finding 5 · Memory</p>
+          <h2>Memory, not speed, set the limit. My hypothesis did not hold.</h2>
+          <p>On your own card no token is billed, so an agent’s re-sent context is free. I expected more: that the card keeps earlier context in a cache and barely has to work on it again. My hypothesis before the runs: “at least 80 % from cache”.</p><p>I measured 29 % with one agent and 0.6 % with 16. The model’s weights take most of the card’s 32 GB. What is left holds about 95,000 tokens of context, it was full from 16 agents on, and the server never ran more than 19 requests at once.</p><p>A smaller model shows the trade. gpt-oss-20b left five times the memory, served 64 agents at once without reaching a limit, and took 84 % of its input from cache. It answered 86 % of the agent questions correctly, against 99 %.</p>
+          <p class="takeaway"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>If you own, check the memory left after the model before you look at speed.</p>
+        </div>
+        <figure class="slide-figure">
+          <div class="slide slide--auto">
+            <div class="slide__inner">
+              <p class="slide__headline" id="c5t">The larger model took 0.6% of an agent’s input from cache, the smaller one 84%.</p>
+              <p class="slide__context">Share of the agent’s input tokens served from the card’s cache, at low load and at each model’s limit</p>
+              <svg class="slide__chart" viewBox="0 0 400 190" role="img" aria-labelledby="c5t"><text class="chart-text chart-text--strong" x="0.0" y="13.0">Qwen3.8-27B</text><text class="chart-text chart-text--muted chart-text--end" x="400.0" y="13.0">room for 95,000 tokens of context</text><g><title>Qwen3.8-27B, 1 agents at once: 29.4% of the input came from cache</title><path class="chart-bar--b" d="M0.0,22.0h54.8a4.0,4.0 0 0 1 4.0,4.0v10.0a4.0,4.0 0 0 1 -4.0,4.0h-54.8z"></path><text class="chart-text" x="66.8" y="35.5">29% with 1 agent at once</text></g><g><title>Qwen3.8-27B, 16 agents at once: 0.6% of the input came from cache</title><path class="chart-bar chart-bar--focus" d="M0.0,42.0h0.6a0.6,0.6 0 0 1 0.6,0.6v16.9a0.6,0.6 0 0 1 -0.6,0.6h-0.6z"></path><text class="chart-text" x="9.2" y="55.5">0.6% with 16 agents at once</text></g><text class="chart-text chart-text--strong" x="0.0" y="97.0">gpt-oss-20b</text><text class="chart-text chart-text--muted chart-text--end" x="400.0" y="97.0">room for 500,000 tokens of context</text><g><title>gpt-oss-20b, 1 agents at once: 82.7% of the input came from cache</title><path class="chart-bar--b" d="M0.0,106.0h161.3a4.0,4.0 0 0 1 4.0,4.0v10.0a4.0,4.0 0 0 1 -4.0,4.0h-161.3z"></path><text class="chart-text" x="173.3" y="119.5">83% with 1 agent at once</text></g><g><title>gpt-oss-20b, 64 agents at once: 83.5% of the input came from cache</title><path class="chart-bar chart-bar--focus" d="M0.0,126.0h163.1a4.0,4.0 0 0 1 4.0,4.0v10.0a4.0,4.0 0 0 1 -4.0,4.0h-163.1z"></path><text class="chart-text" x="175.1" y="139.5">84% with 64 agents at once</text></g><text class="chart-text chart-risk" x="0.0" y="170.0">Hypothesis before the runs: at least 80%</text></svg>
+              <p class="slide__source">Source: own measurement, Dr. Kalun Ho (2026)</p>
+              <div class="slide__footer"><span>Dr. Kalun Ho | Count your tasks first</span><span>5</span></div>
+            </div>
+          </div>
+        </figure>
+      </article>
+      <article class="finding" id="sensitivity">
+        <div>
+          <p class="kicker">Finding 6 · What changes the answer</p>
+          <h2>The answer depends on people, not on the electricity price.</h2>
+          <p>The 2,850 counts only the machine and its electricity. Each bar shows that number with one thing changed. A longer bar means you need more work before owning pays off.</p><p><strong>People</strong> matter most: 5 hours of care a month cost €10.80 a day, more than the machine, and raise the number to 7,500. <strong>A spare machine</strong> raises it to 5,700. <strong>A cloud that bills repeated text at a quarter</strong> raises it to 8,900, because an agent sends the same text again at every step.</p><p><strong>Electricity</strong> barely matters: between €0.15 and €0.35 per kWh, the number stays between 2,700 and 3,000.</p>
+          <p class="takeaway"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>Before you buy, count the people and the spare machine. The electricity price can wait.</p>
+        </div>
+        <figure class="slide-figure">
+          <div class="slide slide--auto">
+            <div class="slide__inner">
+              <p class="slide__headline" id="c6t">Care and a spare move the line. Electricity barely does.</p>
+              <p class="slide__context">Agent questions a working day you need before owning pays off, with one thing changed at a time</p>
+              <svg class="slide__chart" viewBox="0 0 400 426" role="img" aria-labelledby="c6t"><g><title>My machine: hardware and electricity only: owning pays from 2,846 agent questions a working day</title><text class="chart-text chart-text--strong" x="0.0" y="13.0">My machine: hardware and electricity only</text><path class="chart-bar chart-bar--focus" d="M0.0,19.0h69.4a4.0,4.0 0 0 1 4.0,4.0v4.0a4.0,4.0 0 0 1 -4.0,4.0h-69.4z"></path><text class="chart-text" x="81.4" y="30.0">2,850</text></g><text class="chart-text chart-text--muted" x="0.0" y="64.0">You need more questions before owning pays</text><text class="chart-text chart-text--muted chart-text--end" x="400.0" y="64.0">vs. start</text><g><title>Cloud bills repeated text at a quarter: owning pays from 8,916 agent questions a working day, ×3.1 the starting point of 2,846</title><text class="chart-text" x="0.0" y="89.0">Cloud bills repeated text at a quarter</text><path class="chart-bar" d="M0.0,95.0h226.0a4.0,4.0 0 0 1 4.0,4.0v4.0a4.0,4.0 0 0 1 -4.0,4.0h-226.0z"></path><text class="chart-text" x="238.0" y="106.0">8,900</text><text class="chart-text chart-text--strong chart-text--end" x="400.0" y="106.0">×3.1</text></g><g><title>Plus 5 hours of care a month: owning pays from 7,503 agent questions a working day, ×2.6 the starting point of 2,846</title><text class="chart-text" x="0.0" y="131.0">Plus 5 hours of care a month</text><path class="chart-bar" d="M0.0,137.0h189.5a4.0,4.0 0 0 1 4.0,4.0v4.0a4.0,4.0 0 0 1 -4.0,4.0h-189.5z"></path><text class="chart-text" x="201.5" y="148.0">7,500</text><text class="chart-text chart-text--strong chart-text--end" x="400.0" y="148.0">×2.6</text></g><g><title>Cloud price halved: owning pays from 5,778 agent questions a working day, ×2.0 the starting point of 2,846</title><text class="chart-text" x="0.0" y="173.0">Cloud price halved</text><path class="chart-bar" d="M0.0,179.0h145.0a4.0,4.0 0 0 1 4.0,4.0v4.0a4.0,4.0 0 0 1 -4.0,4.0h-145.0z"></path><text class="chart-text" x="157.0" y="190.0">5,800</text><text class="chart-text chart-text--strong chart-text--end" x="400.0" y="190.0">×2.0</text></g><g><title>Plus a spare machine: owning pays from 5,693 agent questions a working day, ×2.0 the starting point of 2,846</title><text class="chart-text" x="0.0" y="215.0">Plus a spare machine</text><path class="chart-bar" d="M0.0,221.0h142.9a4.0,4.0 0 0 1 4.0,4.0v4.0a4.0,4.0 0 0 1 -4.0,4.0h-142.9z"></path><text class="chart-text" x="154.9" y="232.0">5,700</text><text class="chart-text chart-text--strong chart-text--end" x="400.0" y="232.0">×2.0</text></g><g><title>Electricity at €0.35 instead of €0.24 per kWh: owning pays from 3,013 agent questions a working day, ×1.06 the starting point of 2,846</title><text class="chart-text" x="0.0" y="257.0">Electricity at €0.35 instead of €0.24 per kWh</text><path class="chart-bar" d="M0.0,263.0h73.7a4.0,4.0 0 0 1 4.0,4.0v4.0a4.0,4.0 0 0 1 -4.0,4.0h-73.7z"></path><text class="chart-text" x="85.7" y="274.0">3,000</text><text class="chart-text chart-text--strong chart-text--end" x="400.0" y="274.0">×1.06</text></g><text class="chart-text chart-text--muted" x="0.0" y="308.0">You need fewer</text><g><title>Machine kept 5 years instead of 3: owning pays from 1,829 agent questions a working day, ×0.6 the starting point of 2,846</title><text class="chart-text" x="0.0" y="333.0">Machine kept 5 years instead of 3</text><path class="chart-bar--b" d="M0.0,339.0h43.2a4.0,4.0 0 0 1 4.0,4.0v4.0a4.0,4.0 0 0 1 -4.0,4.0h-43.2z"></path><text class="chart-text" x="55.2" y="350.0">1,850</text><text class="chart-text chart-text--strong chart-text--end" x="400.0" y="350.0">×0.6</text></g><g><title>Work on every day, not only working days: owning pays from 1,950 agent questions a working day, ×0.7 the starting point of 2,846</title><text class="chart-text" x="0.0" y="375.0">Work on every day, not only working days</text><path class="chart-bar--b" d="M0.0,381.0h46.3a4.0,4.0 0 0 1 4.0,4.0v4.0a4.0,4.0 0 0 1 -4.0,4.0h-46.3z"></path><text class="chart-text" x="58.3" y="392.0">1,950</text><text class="chart-text chart-text--strong chart-text--end" x="400.0" y="392.0">×0.7</text></g></svg>
+              <p class="slide__source">Source: own measurement, Dr. Kalun Ho (2026); STACKIT list prices, 13 November 2026 [1]; Eurostat [2]; Destatis [3]; DeepInfra [5]</p>
+              <div class="slide__footer"><span>Dr. Kalun Ho | Count your tasks first</span><span>6</span></div>
+            </div>
+          </div>
+        </figure>
+      </article>
+    </div>
+  </section>
+
+  <section class="section section--light" aria-labelledby="count-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="kicker">Your own numbers</p>
+        <h2 id="count-title">How to count for your team.</h2>
+        <p class="lead">The formula has one line. Everything in it is a number you can look up.</p>
+      </div>
+      <p class="cite">Break-even tasks per working day = cost of owning per working day ÷ (API price per task − electricity per task)</p>
+      <div style="margin-top: var(--s4)"><div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Input</th><th scope="col" class="wrap">Test machine</th><th scope="col" class="wrap">Where to find yours</th></tr></thead><tbody><tr><th scope="row">Price of the machine</th><td class="wrap">€4,423 without VAT, written off over 3 years: €1,474 a year</td><td class="wrap">the quote for the machine, your write-off period</td></tr><tr><th scope="row">Power when idle</th><td class="wrap">85 W at the wall, at €0.2366 per kWh: €176 a year [2]</td><td class="wrap">a plug with a meter, your electricity contract</td></tr><tr><th scope="row">People</th><td class="wrap">0, 1 or 5 hours a month at €45 an hour [3]</td><td class="wrap">who installs, updates and watches it, and for how long</td></tr><tr><th scope="row">Working days</th><td class="wrap">250 a year</td><td class="wrap">the days on which the tasks arrive</td></tr><tr><th scope="row">API price</th><td class="wrap">€0.45 per million tokens in, €0.65 out, for the same model in a German cloud [1]</td><td class="wrap">your provider’s price list</td></tr><tr><th scope="row">Tokens per task</th><td class="wrap">agent question: 4,678 in, 382 out</td><td class="wrap">your API bill or your logs, by kind of task</td></tr></tbody></table></div></div>
+      <div style="margin-top: var(--s4)"><div class="table-wrap"><table class="data-table"><thead><tr><th scope="col" class="wrap">Example (illustrative)</th><th scope="col" class="num">Tasks a day</th><th scope="col" class="num">Break-even, hardware only</th><th scope="col" class="num">Break-even, with staff</th><th scope="col">Cheaper</th></tr></thead><tbody><tr><th scope="row">50 people, 20 short questions each</th><td class="num">1,000</td><td class="num">22,400</td><td class="num">59,100</td><td>API, by far</td></tr><tr><th scope="row">50 people, 20 agent questions each</th><td class="num">1,000</td><td class="num">2,850</td><td class="num">7,500</td><td>API</td></tr><tr><th scope="row">250 people, 20 agent questions each</th><td class="num">5,000</td><td class="num">2,850</td><td class="num">7,500</td><td>Own machine, if nobody has to look after it</td></tr><tr><th scope="row">1,000 people, 20 agent questions each</th><td class="num">20,000</td><td class="num">2,850</td><td class="num">7,500</td><td>Own machine</td></tr></tbody></table></div></div>
+      <ul class="bullets" style="margin-top: var(--s4)">
+        <li><strong>Below the break-even:</strong> use the API. It costs nothing when nobody asks.</li>
+        <li><strong>Above it:</strong> own, and fill the quiet hours with batch work, such as long documents at night.</li>
+        <li><strong>Watch your agents.</strong> They multiply tokens per task and an API bills every one, so they are what moves a team towards the line.</li>
+        <li><strong>If your data may not leave the building,</strong> owning is the only option, and the question becomes whether you can keep the card busy. The cloud in this comparison is already German.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="setup-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="kicker">How it was measured</p>
+        <h2 id="setup-title">One card, loaded step by step, every answer scored.</h2>
+        <p class="lead">A program plays the users. It keeps a fixed number of requests in flight, from 1 to 64, for 4 minutes per run, and every answer is checked against a key.</p>
+      </div>
+      <div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Task</th><th scope="col" class="wrap">Data</th><th scope="col" class="num">Items scored</th><th scope="col">Stands for</th><th scope="col">Counts as correct</th></tr></thead><tbody><tr><th scope="row">Sorting a message</th><td class="wrap">Banking77 test set (PolyAI, CC BY 4.0), 3,080 customer messages, 77 intents</td><td class="num">104,178</td><td>routing a support ticket</td><td>exact intent, of 77</td></tr><tr><th scope="row">Short answer</th><td class="wrap">GSM8K test set (OpenAI, MIT), 1,319 school maths problems</td><td class="num">6,847</td><td>a multi-step business calculation</td><td>final number matches</td></tr><tr><th scope="row">Agent question</th><td class="wrap">Synthetic invoice ledgers: 500 invoices, 12 suppliers, 4 quarters; tools to list suppliers, fetch invoices and calculate; a new ledger every 20 questions</td><td class="num">19,883</td><td>an analyst question answered by looking things up</td><td>matches the key computed from the ledger</td></tr><tr><th scope="row">Long solution</th><td class="wrap">MATH-500 (HuggingFaceH4, MIT), level 5 with integer answers, 74 problems</td><td class="num">1,031</td><td>a long worked answer</td><td>integer matches</td></tr></tbody></table></div>
+      <div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Model</th><th scope="col">Maker, release</th><th scope="col">Build on the card</th><th scope="col" class="wrap">Tasks</th><th scope="col" class="num">Room for context</th></tr></thead><tbody><tr><th scope="row">Qwen3.8-27B</th><td>Alibaba, August 2026</td><td>NVFP4, 4-bit, thinking off</td><td class="wrap">all four</td><td class="num">95,000 tokens</td></tr><tr><th scope="row">gpt-oss-20b</th><td>OpenAI, August 2025</td><td>MXFP4, effort low</td><td class="wrap">agent questions</td><td class="num">500,000 tokens</td></tr></tbody></table></div>
+      <ul class="bullets" style="margin-top: var(--s4)">
+        <li><strong>Hardware.</strong> One NVIDIA RTX 5090 with 32 GB in my own PC, bought privately. No sponsor, no employer hardware, no employer data. This is not a recommendation to buy this card: the method works for any card.</li>
+        <li><strong>Load.</strong> 1, 4, 16, 32 and 64 requests at once, then two levels in between where the limit lies, two runs per level, 45 seconds warm-up and 240 seconds measured.</li>
+        <li><strong>The waiting limit.</strong> A call counts as good when its first word arrives within 2 seconds and the answer then flows at 10 words a second or more [4]. A load level counts only if 99 % of its calls are good.</li>
+        <li><strong>Quality.</strong> Every answer is compared with a fixed key. No AI judges another AI. An answer cut off at the length limit counts as wrong.</li>
+        <li><strong>Prices.</strong> The API side is the public price list of STACKIT, a German cloud, for the same open models, without VAT [1]. I did not run anything against that API. Electricity is the German business price [2], labour the German average cost per hour worked [3].</li>
+        <li><strong>Power.</strong> Read at the wall by a smart plug, for the whole machine: 85 W when idle with the model loaded, 500 to 740 W under load.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--light" aria-labelledby="hyp-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="kicker">Hypotheses</p>
+        <h2 id="hyp-title">Five hypotheses, set before the runs. Two did not hold.</h2>
+        <p class="lead">I fixed the method and the hypotheses before the card ran, so that I could not choose the story afterwards. Both hypotheses that did not hold overrated the owned card.</p>
+      </div>
+      <div class="table-wrap"><table class="data-table"><thead><tr><th scope="col"></th><th scope="col" class="wrap">Hypothesis, set before the runs</th><th scope="col" class="wrap">Measured</th><th scope="col">Result</th></tr></thead><tbody><tr><th scope="row">1.</th><td class="wrap">Under load, one card does at least 10 times the work of one request at a time.</td><td class="wrap">11 times for short answers, 8 times for agent questions.</td><td><strong>Partly confirmed</strong></td></tr><tr><th scope="row">2.</th><td class="wrap">At least 80 % of an agent’s input comes from the card’s cache, and that doubles its throughput.</td><td class="wrap">0.6 % at the limit, and the cache made no measurable difference.</td><td><strong>Not confirmed</strong></td></tr><tr><th scope="row">3.</th><td class="wrap">Answers under load are within 5 points of answers at one request at a time.</td><td class="wrap">Within 3.3 points on all four tasks.</td><td><strong>Confirmed</strong></td></tr><tr><th scope="row">4.</th><td class="wrap">Owning pays from 1,500 to 4,000 agent questions a day, and from more than 10,000 short answers.</td><td class="wrap">2,846 agent questions and 22,409 short answers.</td><td><strong>Confirmed</strong></td></tr><tr><th scope="row">5.</th><td class="wrap">One card can do at least 50 times the break-even for agent questions.</td><td class="wrap">37 times over 24 hours, 12 times in an 8-hour day.</td><td><strong>Not confirmed</strong></td></tr></tbody></table></div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="results-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="kicker">Full results</p>
+        <h2 id="results-title">Every task, every load level.</h2>
+        <p class="lead">Exact figures. The same numbers are in the repository as CSV, one row per run, per answer and per call.</p>
+      </div>
+      <div class="results">
+        <details open><summary>Cost and break-even: every task, both models</summary><div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Model, task</th><th scope="col" class="num">Tokens in</th><th scope="col" class="num">Tokens out</th><th scope="col" class="num">API price per task</th><th scope="col" class="num">Input share of the price</th><th scope="col" class="num">Fixed cost per working day</th><th scope="col" class="num">Electricity per task</th><th scope="col" class="num">Break-even, hardware only</th><th scope="col" class="num">1 staff hour a month</th><th scope="col" class="num">5 staff hours a month</th><th scope="col" class="num">Capacity in 8 hours</th><th scope="col" class="num">Capacity in 24 hours</th></tr></thead><tbody><tr><th scope="row">Qwen3.8-27B, sorting a message</th><td class="num">451</td><td class="num">5</td><td class="num">€0.00021</td><td class="num">98%</td><td class="num">€6.60</td><td class="num">€0.000002</td><td class="num">32,387</td><td class="num">42,983</td><td class="num">85,370</td><td class="num">578,904</td><td class="num">1,736,712</td></tr><tr><th scope="row">Qwen3.8-27B, short answer</th><td class="num">105</td><td class="num">403</td><td class="num">€0.00031</td><td class="num">15%</td><td class="num">€6.60</td><td class="num">€0.000015</td><td class="num">22,409</td><td class="num">29,741</td><td class="num">59,068</td><td class="num">60,766</td><td class="num">182,299</td></tr><tr><th scope="row">Qwen3.8-27B, agent question</th><td class="num">4,678</td><td class="num">382</td><td class="num">€0.00235</td><td class="num">89%</td><td class="num">€6.60</td><td class="num">€0.000034</td><td class="num">2,846</td><td class="num">3,778</td><td class="num">7,503</td><td class="num">34,733</td><td class="num">104,198</td></tr><tr><th scope="row">Qwen3.8-27B, long solution</th><td class="num">144</td><td class="num">1,957</td><td class="num">€0.00134</td><td class="num">5%</td><td class="num">€6.60</td><td class="num">€0.000102</td><td class="num">5,343</td><td class="num">7,091</td><td class="num">14,083</td><td class="num">9,058</td><td class="num">27,173</td></tr><tr><th scope="row">gpt-oss-20b, agent question</th><td class="num">5,126</td><td class="num">319</td><td class="num">€0.00085</td><td class="num">91%</td><td class="num">€6.64</td><td class="num">€0.000004</td><td class="num">7,860</td><td class="num">10,417</td><td class="num">20,645</td><td class="num">318,403</td><td class="num">955,208</td></tr></tbody></table></div><p class="caption">Break-even = fixed cost per working day ÷ (API price per task − electricity per task). API prices: Qwen3.8-27B €0.45 in and €0.65 out per million tokens, gpt-oss-20b €0.15 and €0.25 [1]. Capacity assumes the card runs at its limit for the whole period.</p></details><details><summary>What moves the agent break-even: 17 changes</summary><div class="table-wrap"><table class="data-table"><thead><tr><th scope="col" class="wrap">Change, one at a time</th><th scope="col" class="num">Break-even, agent questions per working day</th><th scope="col" class="num">Against the base case</th></tr></thead><tbody><tr><th scope="row">Base case: hardware and idle power only</th><td class="num">2,846</td><td class="num">×1.00</td></tr><tr><th scope="row">Staff, 1 hour a month</th><td class="num">3,778</td><td class="num">×1.33</td></tr><tr><th scope="row">Staff, 5 hours a month</th><td class="num">7,503</td><td class="num">×2.64</td></tr><tr><th scope="row">Staff, 10 hours a month</th><td class="num">12,160</td><td class="num">×4.27</td></tr><tr><th scope="row">Write-off over 2 years instead of 3</th><td class="num">4,118</td><td class="num">×1.45</td></tr><tr><th scope="row">Write-off over 5 years instead of 3</th><td class="num">1,829</td><td class="num">×0.64</td></tr><tr><th scope="row">Resale at 30% of the price after 3 years</th><td class="num">2,084</td><td class="num">×0.73</td></tr><tr><th scope="row">Cost of capital, 5% a year on the purchase price</th><td class="num">3,228</td><td class="num">×1.13</td></tr><tr><th scope="row">A second machine for redundancy</th><td class="num">5,693</td><td class="num">×2.00</td></tr><tr><th scope="row">Machine price incl. 19% VAT (a private buyer)</th><td class="num">3,330</td><td class="num">×1.17</td></tr><tr><th scope="row">Electricity at 0.15 EUR per kWh</th><td class="num">2,721</td><td class="num">×0.96</td></tr><tr><th scope="row">Electricity at 0.35 EUR per kWh</th><td class="num">3,013</td><td class="num">×1.06</td></tr><tr><th scope="row">Tasks arrive on 365 days a year, not 250</th><td class="num">1,950</td><td class="num">×0.68</td></tr><tr><th scope="row">API price halved</th><td class="num">5,778</td><td class="num">×2.03</td></tr><tr><th scope="row">API price doubled</th><td class="num">1,413</td><td class="num">×0.50</td></tr><tr><th scope="row">Cached input billed at a quarter (some providers)</th><td class="num">8,916</td><td class="num">×3.13</td></tr><tr><th scope="row">Token count of yt-experiment-001 (5,613 per question)</th><td class="num">2,567</td><td class="num">×0.90</td></tr><tr><th scope="row">All of: 5 staff hours, second machine, 2-year write-off</th><td class="num">12,892</td><td class="num">×4.53</td></tr></tbody></table></div></details><details><summary>Quality under load, with ranges</summary><div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Task</th><th scope="col" class="num">One request at a time</th><th scope="col" class="num">Answers</th><th scope="col" class="num">At the limit</th><th scope="col" class="num">Answers</th><th scope="col" class="num">Difference in points, with its 95 % range</th></tr></thead><tbody><tr><th scope="row">Agent question</th><td class="num">98.8%</td><td class="num">84</td><td class="num">99.4%</td><td class="num">673</td><td class="num">+0.6 (-0.8 to +5.9)</td></tr><tr><th scope="row">Long solution</th><td class="num">100.0%</td><td class="num">18</td><td class="num">96.7%</td><td class="num">181</td><td class="num">-3.3 (-7.0 to +14.4)</td></tr><tr><th scope="row">Short answer</th><td class="num">100.0%</td><td class="num">102</td><td class="num">97.7%</td><td class="num">1,196</td><td class="num">-2.3 (-3.4 to +1.4)</td></tr><tr><th scope="row">Sorting a message</th><td class="num">75.8%</td><td class="num">4,228</td><td class="num">76.8%</td><td class="num">11,449</td><td class="num">+1.0 (-0.5 to +2.5)</td></tr></tbody></table></div><p class="caption">The range is a 95 % interval for the difference of two independent shares. Every range includes zero.</p></details><details><summary>Load levels: agent question, Qwen3.8-27B</summary><div class="table-wrap"><table class="data-table"><thead><tr><th scope="col" class="num">At once</th><th scope="col" class="num">Tasks per hour</th><th scope="col" class="num">Calls inside the waiting limit</th><th scope="col" class="num">First word, slowest 1%</th><th scope="col" class="num">Time per word, slowest 1%</th><th scope="col" class="num">Correct</th><th scope="col" class="num">Input from cache</th><th scope="col" class="num">Context memory in use</th><th scope="col" class="num">Running at once, peak</th><th scope="col" class="num">Power at the wall</th><th scope="col">Usable</th></tr></thead><tbody><tr><th scope="row">1</th><td class="num">540</td><td class="num">100.0%</td><td class="num">0.33 s</td><td class="num">15 ms</td><td class="num">98.8%</td><td class="num">29.4%</td><td class="num">8%</td><td class="num">1</td><td class="num">522 W</td><td>yes</td></tr><tr><th scope="row">4</th><td class="num">1,815</td><td class="num">100.0%</td><td class="num">0.46 s</td><td class="num">22 ms</td><td class="num">98.9%</td><td class="num">26.6%</td><td class="num">27%</td><td class="num">4</td><td class="num">556 W</td><td>yes</td></tr><tr><th scope="row">16</th><td class="num">4,342</td><td class="num">100.0%</td><td class="num">0.90 s</td><td class="num">40 ms</td><td class="num">99.4%</td><td class="num">0.6%</td><td class="num">100%</td><td class="num">16</td><td class="num">712 W</td><td>yes</td></tr><tr><th scope="row">21</th><td class="num">4,349</td><td class="num">92.5%</td><td class="num">2.42 s</td><td class="num">42 ms</td><td class="num">98.8%</td><td class="num">0.0%</td><td class="num">100%</td><td class="num">19</td><td class="num">717 W</td><td>no</td></tr><tr><th scope="row">27</th><td class="num">4,334</td><td class="num">3.5%</td><td class="num">4.21 s</td><td class="num">43 ms</td><td class="num">99.5%</td><td class="num">0.0%</td><td class="num">100%</td><td class="num">19</td><td class="num">691 W</td><td>no</td></tr><tr><th scope="row">32</th><td class="num">4,349</td><td class="num">0.0%</td><td class="num">5.33 s</td><td class="num">43 ms</td><td class="num">99.4%</td><td class="num">0.0%</td><td class="num">100%</td><td class="num">19</td><td class="num">706 W</td><td>no</td></tr><tr><th scope="row">64</th><td class="num">4,477</td><td class="num">0.0%</td><td class="num">14.87 s</td><td class="num">44 ms</td><td class="num">98.6%</td><td class="num">0.0%</td><td class="num">100%</td><td class="num">19</td><td class="num">718 W</td><td>no</td></tr></tbody></table></div></details><details><summary>Load levels: long solution, Qwen3.8-27B</summary><div class="table-wrap"><table class="data-table"><thead><tr><th scope="col" class="num">At once</th><th scope="col" class="num">Tasks per hour</th><th scope="col" class="num">Calls inside the waiting limit</th><th scope="col" class="num">First word, slowest 1%</th><th scope="col" class="num">Time per word, slowest 1%</th><th scope="col" class="num">Correct</th><th scope="col" class="num">Input from cache</th><th scope="col" class="num">Context memory in use</th><th scope="col" class="num">Running at once, peak</th><th scope="col" class="num">Power at the wall</th><th scope="col">Usable</th></tr></thead><tbody><tr><th scope="row">1</th><td class="num">120</td><td class="num">100.0%</td><td class="num">0.09 s</td><td class="num">15 ms</td><td class="num">100.0%</td><td class="num">0.0%</td><td class="num">9%</td><td class="num">1</td><td class="num">528 W</td><td>yes</td></tr><tr><th scope="row">4</th><td class="num">337</td><td class="num">100.0%</td><td class="num">0.13 s</td><td class="num">17 ms</td><td class="num">94.5%</td><td class="num">0.0%</td><td class="num">32%</td><td class="num">4</td><td class="num">514 W</td><td>yes</td></tr><tr><th scope="row">8</th><td class="num">945</td><td class="num">100.0%</td><td class="num">0.18 s</td><td class="num">17 ms</td><td class="num">96.5%</td><td class="num">0.0%</td><td class="num">54%</td><td class="num">8</td><td class="num">558 W</td><td>yes</td></tr><tr><th scope="row">12</th><td class="num">1,132</td><td class="num">100.0%</td><td class="num">0.29 s</td><td class="num">18 ms</td><td class="num">96.7%</td><td class="num">0.0%</td><td class="num">82%</td><td class="num">12</td><td class="num">571 W</td><td>yes</td></tr><tr><th scope="row">16</th><td class="num">1,282</td><td class="num">72.5%</td><td class="num">9.96 s</td><td class="num">23 ms</td><td class="num">97.0%</td><td class="num">0.0%</td><td class="num">100%</td><td class="num">16</td><td class="num">584 W</td><td>no</td></tr><tr><th scope="row">32</th><td class="num">1,342</td><td class="num">4.5%</td><td class="num">70.61 s</td><td class="num">26 ms</td><td class="num">98.2%</td><td class="num">0.0%</td><td class="num">100%</td><td class="num">19</td><td class="num">585 W</td><td>no</td></tr><tr><th scope="row">64</th><td class="num">1,282</td><td class="num">5.3%</td><td class="num">146.39 s</td><td class="num">28 ms</td><td class="num">97.6%</td><td class="num">0.0%</td><td class="num">100%</td><td class="num">19</td><td class="num">588 W</td><td>no</td></tr></tbody></table></div></details><details><summary>Load levels: short answer, Qwen3.8-27B</summary><div class="table-wrap"><table class="data-table"><thead><tr><th scope="col" class="num">At once</th><th scope="col" class="num">Tasks per hour</th><th scope="col" class="num">Calls inside the waiting limit</th><th scope="col" class="num">First word, slowest 1%</th><th scope="col" class="num">Time per word, slowest 1%</th><th scope="col" class="num">Correct</th><th scope="col" class="num">Input from cache</th><th scope="col" class="num">Context memory in use</th><th scope="col" class="num">Running at once, peak</th><th scope="col" class="num">Power at the wall</th><th scope="col">Usable</th></tr></thead><tbody><tr><th scope="row">1</th><td class="num">690</td><td class="num">100.0%</td><td class="num">0.09 s</td><td class="num">15 ms</td><td class="num">100.0%</td><td class="num">0.0%</td><td class="num">5%</td><td class="num">1</td><td class="num">517 W</td><td>yes</td></tr><tr><th scope="row">4</th><td class="num">1,980</td><td class="num">100.0%</td><td class="num">0.13 s</td><td class="num">17 ms</td><td class="num">96.2%</td><td class="num">0.0%</td><td class="num">23%</td><td class="num">4</td><td class="num">504 W</td><td>yes</td></tr><tr><th scope="row">16</th><td class="num">7,596</td><td class="num">100.0%</td><td class="num">0.16 s</td><td class="num">19 ms</td><td class="num">97.7%</td><td class="num">0.0%</td><td class="num">87%</td><td class="num">16</td><td class="num">566 W</td><td>yes</td></tr><tr><th scope="row">21</th><td class="num">8,248</td><td class="num">91.1%</td><td class="num">2.95 s</td><td class="num">20 ms</td><td class="num">97.3%</td><td class="num">0.0%</td><td class="num">100%</td><td class="num">19</td><td class="num">577 W</td><td>no</td></tr><tr><th scope="row">27</th><td class="num">8,278</td><td class="num">3.4%</td><td class="num">6.20 s</td><td class="num">20 ms</td><td class="num">97.8%</td><td class="num">0.0%</td><td class="num">100%</td><td class="num">19</td><td class="num">586 W</td><td>no</td></tr><tr><th scope="row">32</th><td class="num">8,406</td><td class="num">0.0%</td><td class="num">8.74 s</td><td class="num">20 ms</td><td class="num">97.4%</td><td class="num">0.0%</td><td class="num">100%</td><td class="num">19</td><td class="num">583 W</td><td>no</td></tr><tr><th scope="row">64</th><td class="num">8,174</td><td class="num">0.0%</td><td class="num">26.68 s</td><td class="num">20 ms</td><td class="num">97.7%</td><td class="num">0.0%</td><td class="num">100%</td><td class="num">19</td><td class="num">580 W</td><td>no</td></tr></tbody></table></div></details><details><summary>Load levels: sorting a message, Qwen3.8-27B</summary><div class="table-wrap"><table class="data-table"><thead><tr><th scope="col" class="num">At once</th><th scope="col" class="num">Tasks per hour</th><th scope="col" class="num">Calls inside the waiting limit</th><th scope="col" class="num">First word, slowest 1%</th><th scope="col" class="num">Time per word, slowest 1%</th><th scope="col" class="num">Correct</th><th scope="col" class="num">Input from cache</th><th scope="col" class="num">Context memory in use</th><th scope="col" class="num">Running at once, peak</th><th scope="col" class="num">Power at the wall</th><th scope="col">Usable</th></tr></thead><tbody><tr><th scope="row">1</th><td class="num">26,688</td><td class="num">100.0%</td><td class="num">0.09 s</td><td class="num">16 ms</td><td class="num">75.8%</td><td class="num">0.0%</td><td class="num">5%</td><td class="num">1</td><td class="num">600 W</td><td>yes</td></tr><tr><th scope="row">4</th><td class="num">56,782</td><td class="num">100.0%</td><td class="num">0.20 s</td><td class="num">51 ms</td><td class="num">76.7%</td><td class="num">0.0%</td><td class="num">21%</td><td class="num">4</td><td class="num">719 W</td><td>yes</td></tr><tr><th scope="row">8</th><td class="num">72,363</td><td class="num">99.9%</td><td class="num">0.32 s</td><td class="num">84 ms</td><td class="num">76.8%</td><td class="num">0.0%</td><td class="num">42%</td><td class="num">8</td><td class="num">739 W</td><td>yes</td></tr><tr><th scope="row">12</th><td class="num">78,638</td><td class="num">94.6%</td><td class="num">0.42 s</td><td class="num">115 ms</td><td class="num">76.7%</td><td class="num">0.0%</td><td class="num">60%</td><td class="num">12</td><td class="num">742 W</td><td>no</td></tr><tr><th scope="row">16</th><td class="num">81,541</td><td class="num">54.5%</td><td class="num">0.53 s</td><td class="num">146 ms</td><td class="num">76.5%</td><td class="num">0.0%</td><td class="num">75%</td><td class="num">16</td><td class="num">742 W</td><td>no</td></tr><tr><th scope="row">32</th><td class="num">83,622</td><td class="num">3.1%</td><td class="num">1.09 s</td><td class="num">169 ms</td><td class="num">76.5%</td><td class="num">0.0%</td><td class="num">99%</td><td class="num">19</td><td class="num">738 W</td><td>no</td></tr><tr><th scope="row">64</th><td class="num">83,638</td><td class="num">0.0%</td><td class="num">2.46 s</td><td class="num">169 ms</td><td class="num">76.6%</td><td class="num">0.0%</td><td class="num">91%</td><td class="num">19</td><td class="num">738 W</td><td>no</td></tr></tbody></table></div></details><details><summary>Load levels: agent question, gpt-oss-20b</summary><div class="table-wrap"><table class="data-table"><thead><tr><th scope="col" class="num">At once</th><th scope="col" class="num">Tasks per hour</th><th scope="col" class="num">Calls inside the waiting limit</th><th scope="col" class="num">First word, slowest 1%</th><th scope="col" class="num">Time per word, slowest 1%</th><th scope="col" class="num">Correct</th><th scope="col" class="num">Input from cache</th><th scope="col" class="num">Context memory in use</th><th scope="col" class="num">Running at once, peak</th><th scope="col" class="num">Power at the wall</th><th scope="col">Usable</th></tr></thead><tbody><tr><th scope="row">1</th><td class="num">2,850</td><td class="num">100.0%</td><td class="num">0.09 s</td><td class="num">4 ms</td><td class="num">85.0%</td><td class="num">82.7%</td><td class="num">0%</td><td class="num">1</td><td class="num">586 W</td><td>yes</td></tr><tr><th scope="row">4</th><td class="num">6,689</td><td class="num">100.0%</td><td class="num">0.13 s</td><td class="num">6 ms</td><td class="num">88.8%</td><td class="num">83.7%</td><td class="num">1%</td><td class="num">4</td><td class="num">594 W</td><td>yes</td></tr><tr><th scope="row">16</th><td class="num">17,502</td><td class="num">100.0%</td><td class="num">0.19 s</td><td class="num">10 ms</td><td class="num">86.2%</td><td class="num">83.7%</td><td class="num">3%</td><td class="num">16</td><td class="num">680 W</td><td>yes</td></tr><tr><th scope="row">32</th><td class="num">27,670</td><td class="num">100.0%</td><td class="num">0.23 s</td><td class="num">13 ms</td><td class="num">87.2%</td><td class="num">83.7%</td><td class="num">7%</td><td class="num">32</td><td class="num">724 W</td><td>yes</td></tr><tr><th scope="row">64</th><td class="num">39,800</td><td class="num">100.0%</td><td class="num">0.32 s</td><td class="num">18 ms</td><td class="num">85.9%</td><td class="num">83.5%</td><td class="num">12%</td><td class="num">64</td><td class="num">727 W</td><td>yes</td></tr></tbody></table></div><p class="caption">Every level stayed inside the waiting limit, so the true limit of this model is above 64 agents at once. The two models ran on different versions of the serving software.</p></details><details><summary>The cache switched off</summary><div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Task, at once</th><th scope="col" class="num">Per hour with the cache</th><th scope="col" class="num">Per hour with the cache defeated</th><th scope="col" class="num">With ÷ without</th></tr></thead><tbody><tr><th scope="row">Agent question, 1</th><td class="num">540</td><td class="num">600</td><td class="num">×0.90</td></tr><tr><th scope="row">Agent question, 16</th><td class="num">4,342</td><td class="num">4,491</td><td class="num">×0.97</td></tr><tr><th scope="row">Sorting a message, 1</th><td class="num">26,688</td><td class="num">26,590</td><td class="num">×1.00</td></tr><tr><th scope="row">Sorting a message, 8</th><td class="num">72,363</td><td class="num">70,337</td><td class="num">×1.03</td></tr><tr><th scope="row">Sorting a message, 16</th><td class="num">81,541</td><td class="num">78,439</td><td class="num">×1.04</td></tr></tbody></table></div><p class="caption">Every request got a unique first line, so nothing could be reused. Throughput barely changed: on this setup the cache did not help.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--light" aria-labelledby="limits-title">
+    <div class="container split">
+      <div class="section-head">
+        <p class="kicker">Limits</p>
+        <h2 id="limits-title">A measurement of this setup, not of GPUs in general.</h2>
+      </div>
+      <ul class="bullets">
+        <li><strong>One machine, one night.</strong> One consumer card, two runs per load level. Another card, driver or software version will give other capacities.</li>
+        <li><strong>The limit of 19 requests is specific.</strong> It comes from how this version of the serving software divides the card’s memory for this model. Another version may fit more.</li>
+        <li><strong>A compressed model.</strong> The 27B model ran as a 4-bit copy and was not compared with full precision.</li>
+        <li><strong>List prices, no API run.</strong> The API side is a price list applied to the tokens my card counted. Its speed and its answers were not measured.</li>
+        <li><strong>Even load.</strong> The test keeps a constant number of requests in flight. Real traffic comes in bursts, which lowers what a card can take.</li>
+        <li><strong>Benchmarks stand in for work.</strong> The tasks have answer keys, real business tasks rarely do. The agent task is synthetic.</li>
+        <li><strong>A simple cost model.</strong> No cost of capital, no resale value, no spare machine, no room or cooling in the base case. The table under “Full results” shows what each would change.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="refs-title">
+    <div class="container split">
+      <div class="section-head">
+        <p class="kicker">Sources</p>
+        <h2 id="refs-title">Where the other numbers come from.</h2>
+      </div>
+      <ol class="sources"><li>STACKIT (Schwarz Digits) (2026). STACKIT AI Model Serving, price table; price list v1.0.45. <a href="https://stackit.com/en/products/data-ai/stackit-ai-model-serving">stackit.com/en/products/data-ai/stackit-ai-model-serving</a>. Accessed 13 November 2026.</li><li>Eurostat (2026). Electricity prices for non-household consumers, bi-annual data (nrg_pc_205), Germany, 20–499 MWh, first half of 2026. <a href="https://ec.europa.eu/eurostat/databrowser/view/nrg_pc_205/default/table">ec.europa.eu/eurostat/databrowser/view/nrg_pc_205/default/table</a>. Accessed 11 November 2026.</li><li>Statistisches Bundesamt (Destatis) (2026). Eine Arbeitsstunde kostete im Jahr 2025 durchschnittlich 45,00 Euro. Press release no. 148. <a href="https://www.destatis.de/DE/Presse/Pressemitteilungen/2026/04/PD26_148_624.html">destatis.de/DE/Presse/Pressemitteilungen/2026/04/PD26_148_624.html</a>. Accessed 14 November 2026.</li><li>MLCommons (2026). MLPerf Inference Rules: the waiting limits for conversational use. <a href="https://github.com/mlcommons/inference_policies/blob/master/inference_rules.adoc">github.com/mlcommons/inference_policies/blob/master/inference_rules.adoc</a>. Accessed 13 November 2026.</li><li>DeepInfra (2026). Pricing: cached input at a quarter of the input price. <a href="https://deepinfra.com/pricing">deepinfra.com/pricing</a>. Accessed 13 November 2026.</li><li>Kalun Ho (2026). Cheaper Tokens, Costlier Tasks: Measuring Tokens per Task. Experiment 1. <a href="https://kalunho.com/experiments/tokens-per-task/">kalunho.com/experiments/tokens-per-task</a>. Accessed 13 November 2026.</li><li>Kwon, W. et al. (2023). Efficient Memory Management for Large Language Model Serving with PagedAttention (vLLM). SOSP 2023. <a href="https://arxiv.org/abs/2309.06180">arxiv.org/abs/2309.06180</a>. Accessed 11 November 2026.</li><li>Patil, C. (2026). Beyond Per-Token Pricing: A Concurrency-Aware Methodology for LLM Infrastructure Cost Estimation. <a href="https://arxiv.org/abs/2606.11690">arxiv.org/abs/2606.11690</a>. Accessed 13 November 2026.</li><li>Pan, G. et al. (2025). A Cost-Benefit Analysis of On-Premise Large Language Model Deployment. <a href="https://arxiv.org/abs/2509.18101">arxiv.org/abs/2509.18101</a>. Accessed 13 November 2026.</li><li>Microsoft Azure (2024). Azure LLM inference trace 2024. <a href="https://github.com/Azure/AzurePublicDataset/blob/master/AzureLLMInferenceDataset2024.md">github.com/Azure/AzurePublicDataset/blob/master/AzureLLMInferenceDataset2024.md</a>. Accessed 13 November 2026.</li><li>Qwen Team, Alibaba (2026). Qwen3.8-27B model card. <a href="https://huggingface.co/Qwen/Qwen3.8-27B">huggingface.co/Qwen/Qwen3.8-27B</a>. Accessed 13 November 2026.</li><li>OpenAI (2025). gpt-oss-20b model card. <a href="https://huggingface.co/openai/gpt-oss-20b">huggingface.co/openai/gpt-oss-20b</a>. Accessed 13 November 2026.</li><li>NVIDIA (2025). License for Customer Use of GeForce Software. <a href="https://www.nvidia.com/en-us/drivers/geforce-license/">nvidia.com/en-us/drivers/geforce-license</a>. Accessed 13 November 2026.</li></ol>
+    </div>
+  </section>
+
+  <section class="section section--light" aria-labelledby="cite-title">
+    <div class="container split">
+      <div class="section-head">
+        <p class="kicker">Data and code</p>
+        <h2 id="cite-title">Check it, rerun it, cite it.</h2>
+      </div>
+      <div>
+        <p>The test code, the answer keys and the raw results, one row per run, per answer and per call, are on GitHub, together with a technical report that adds the full method, confidence intervals, the hypotheses as written before the runs and every deviation from the plan. One command prices the same measurements with your machine and your provider. Questions and corrections are welcome there as issues.</p>
+        <div class="actions" style="margin-top: var(--s3)">
+          <a class="btn" href="https://github.com/kalunho17/yt-experiment-002">
+            <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#github"></use></svg>
+            kalunho17/yt-experiment-002
+          </a>
+          <a class="link-arrow" href="https://github.com/kalunho17/yt-experiment-002/blob/main/paper/technical_report.md">
+            Technical report
+            <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>
+          </a>
+        </div>
+        <p style="margin-top: var(--s4)"><strong>How to cite</strong></p>
+        <p class="cite">Kalun Ho (2026). Count Your Tasks First: The Break-Even Between an Owned GPU and a Per-Token API, per Task Type, Under a Latency Constraint. Technical report. https://github.com/kalunho17/yt-experiment-002</p>
+        <p class="caption" style="margin-top: var(--s3)">Licences: code MIT; results, figures, report and the invoice ledgers CC BY 4.0. The benchmarks keep their own licences: <a href="https://github.com/PolyAI-LDN/task-specific-datasets">Banking77</a> (PolyAI, CC BY 4.0), <a href="https://github.com/openai/grade-school-math">GSM8K</a> (OpenAI, MIT), <a href="https://huggingface.co/datasets/HuggingFaceH4/MATH-500">MATH-500</a> (HuggingFaceH4, MIT).</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="band-title">
+    <div class="container band__inner">
+      <div class="band__text">
+        <h2 id="band-title">The video explains what it means for your budget.</h2>
+        <p>Subscribe on YouTube to see it. The handout has every chart and source.</p>
+      </div>
+      <div class="actions">
+        <a class="btn btn--inverse" href="https://www.youtube.com/@KalunHo?sub_confirmation=1"><svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#youtube"></use></svg>Subscribe on YouTube</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER START: same on every page -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__inner">
+      <p>Dr. Kalun Ho · © 2026</p>
+      <ul class="social">
+        <li><a href="https://www.youtube.com/@KalunHo"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#youtube"></use></svg><span class="sr-only">YouTube</span></a></li>
+        <li><a href="https://www.instagram.com/kalunhodotcom/"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#instagram"></use></svg><span class="sr-only">Instagram</span></a></li>
+        <li><a href="https://www.tiktok.com/@kalunhodotcom"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#tiktok"></use></svg><span class="sr-only">TikTok</span></a></li>
+        <li><a href="https://www.linkedin.com/in/kalunho"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#linkedin"></use></svg><span class="sr-only">LinkedIn</span></a></li>
+        <li><a href="https://github.com/kalunho17"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#github"></use></svg><span class="sr-only">GitHub</span></a></li>
+      </ul>
+      <p><a href="/legal/">Legal notice</a> · <a href="/privacy/">Privacy</a></p>
+    </div>
+  </div>
+</footer>
+<!-- FOOTER END -->
+</body>
+</html>
