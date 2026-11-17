@@ -653,6 +653,14 @@ address { font-style: normal; }
 .calc__big { color: var(--heading); font-size: clamp(2.25rem, 1.8rem + 1.6vw, 3rem); font-weight: 700; line-height: 1; letter-spacing: -0.01em; }
 .calc__verdict { font-weight: 600; }
 .calc__result .btn { margin-top: var(--s3); }
+/* Two settings side by side (Experiment 1) */
+.calc__pair { display: grid; gap: var(--s3); margin-top: var(--s3); }
+@media (min-width: 720px) { .calc__pair { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.calc__side { display: grid; gap: var(--s2); align-content: start; min-width: 0; padding-top: var(--s2); border-top: 1px solid var(--rule); }
+.calc__legend { margin: 0; color: var(--heading); font-weight: 600; }
+.calc > .calc__verdict { margin: var(--s3) 0 0; }
+.calc > .caption { max-width: var(--measure); margin: var(--s1) 0 0; }
+.calc > .btn { margin-top: var(--s3); }
 
 /* Experiment list (/experiments/) */
 .exp-card h3 a { color: var(--heading); text-decoration: none; }

@@ -108,8 +108,8 @@
         <p class="kicker">Experiment 1 · November 2026</p>
         <div class="accent-bar"></div>
         <h1>More thinking costs more tokens, not always more accuracy.</h1>
-        <p class="lead">I ran four open AI models on my own graphics card and counted the tokens each task used: thinking off and on, a single answer and an agent. The price per token stayed fixed. Only the tokens per task and the success rate changed.</p>
-        <p class="notice"><strong>Correction, 12 November 2026.</strong> Qwen3.8-27B writes 67 tokens per second on this card, not 20, and the gap between the fastest and the slowest model is about 4 times, not 14. The cause was a vLLM flag of mine, not the model. Token counts and accuracy are unaffected. <a href="#speed">Finding 5</a> has the details and keeps the published numbers next to the corrected ones.</p>
+        <p class="lead">Four open AI models on my own graphics card, thinking off and on, as a single answer and as an agent. I counted the tokens each task used and how often the answer was right.</p>
+        <p class="notice"><strong>Correction, 12 November 2026.</strong> Qwen3.8-27B writes 67 tokens per second, not 20, so the speed gap is about 4 times, not 14. Token counts and accuracy are unaffected. Details in <a href="#speed">Finding 5</a>.</p>
         <ul class="exp-meta">
           <li><strong>4</strong> open models</li>
           <li><strong>12</strong> settings</li>
@@ -148,9 +148,8 @@
             <button class="explain__close" type="button" popovertarget="explain-1" popovertargetaction="hide" aria-label="Close">×</button>
             <p class="kicker">×6.8 · tokens with thinking on</p>
             <h3 id="explain-1-title">Thinking made the small model use 6.8 times the tokens, and it solved fewer problems.</h3>
-            <p>“Thinking” means the model writes out a hidden chain of reasoning before it answers. Every word of that reasoning is a token, and tokens are what an AI provider bills, or what your own card spends time on.</p><p>I gave the same 50 hard maths problems to the small model Qwen3.5-4B, once with thinking off and once with it on. With thinking off it used 2,422 tokens per problem and solved all 50. With thinking on it used 16,400, that is 6.8 times as many, and solved 40.</p><p>It got worse because it thought until it ran out of room: on 10 of the 50 problems it hit the limit of 28,000 tokens before it reached an answer, and those count as wrong.</p><p>The other three models also used more tokens with thinking on, between 1.3 and 6.5 times as many, and gained between 2 and 14 points of accuracy.</p>
+            <p>With thinking off, Qwen3.5-4B used 2,422 tokens per hard maths problem and solved all 50. With thinking on it used 16,400 and solved 40: on 10 problems it ran out of room before it answered.</p>
             <div class="table-wrap"><table class="data-table"><tbody><tr><th scope="row">Tokens per problem, thinking off</th><td class="num">2,422</td></tr><tr><th scope="row">Tokens per problem, thinking on</th><td class="num">16,400</td></tr><tr><th scope="row">Ratio</th><td class="num">×6.8</td></tr><tr><th scope="row">Solved with thinking off</th><td class="num">50 of 50</td></tr><tr><th scope="row">Solved with thinking on</th><td class="num">40 of 50</td></tr><tr><th scope="row">Ran out of room</th><td class="num">10 of 50</td></tr></tbody></table></div>
-            <p class="explain__bottom">More thinking means a bigger bill, not always a better answer. Turn it on only where your own test shows that it raises the success rate.</p>
           </div>
         </li>
         <li class="kpi" data-reveal>
@@ -162,9 +161,8 @@
             <button class="explain__close" type="button" popovertarget="explain-2" popovertargetaction="hide" aria-label="Close">×</button>
             <p class="kicker">×11 · tokens as an agent</p>
             <h3 id="explain-2-title">An agent used 11 times the tokens of a single answer, because it sends everything again at every step.</h3>
-            <p>An agent is a model that works in steps: it calls a tool, reads the result, then decides what to do next. Here it answered questions about a set of invoices with three tools.</p><p>Each step sends the whole conversation so far back to the model: the question, every tool result and its own earlier steps. On the questions that took four calls, the first call sent 712 tokens on average, the fourth 2,025. Over 3.8 calls on average, one question used 5,613 tokens. A single worked answer to a school maths problem, on the same model, used 494. That is 11 times fewer.</p><p>93 % of the agent’s tokens are input, the text it sends, and at list prices input costs about a fifth of output. So the bill rises about 3.5 times, not 11.</p><p>The two tasks are different, so the 11 is an order of magnitude, not an exact price difference.</p>
+            <p>An agent sends the whole conversation again at every step: 5,613 tokens over 3.8 calls per invoice question, against 494 for a single answer. 93 % of it is input, which costs a fifth of output, so the bill rises about 3.5 times.</p>
             <div class="table-wrap"><table class="data-table"><tbody><tr><th scope="row">Tokens per agent question</th><td class="num">5,613</td></tr><tr><th scope="row">Tokens per single answer</th><td class="num">494</td></tr><tr><th scope="row">Ratio</th><td class="num">×11</td></tr><tr><th scope="row">Calls per agent question</th><td class="num">3.8</td></tr><tr><th scope="row">Input sent, call 1 → call 4</th><td class="num">712 → 2,025</td></tr><tr><th scope="row">Share of tokens that is input</th><td class="num">93 %</td></tr><tr><th scope="row">Cost ratio at list prices</th><td class="num">about ×3.5</td></tr></tbody></table></div>
-            <p class="explain__bottom">Agents are worth it when a task needs to look things up. Use one only then, and watch how much context it carries.</p>
           </div>
         </li>
         <li class="kpi" data-reveal>
@@ -176,9 +174,8 @@
             <button class="explain__close" type="button" popovertarget="explain-3" popovertargetaction="hide" aria-label="Close">×</button>
             <p class="kicker">×128 · cost, frontier vs small model</p>
             <h3 id="explain-3-title">Which model answers changes the bill far more than thinking or agents do.</h3>
-            <p>I took the tokens my models used on a hundred school maths problems and priced them with OpenAI’s list prices of 8 November 2026, converted at 1 € = 1.1165 $.</p><p>Scaled to a million questions: €144 with the small model, gpt-6-luna, and €18,325 with the frontier model, gpt-6-astra. That is 128 times as much for the same questions.</p><p>Thinking at the highest setting adds about a quarter on top (€22,859). The agent, on its invoice questions, comes to €64,643, but on a different task.</p><p>This is a projection, not a bill: the token counts come from open models, the prices from a commercial list, and commercial models count tokens differently.</p>
+            <p>The tokens of a hundred school maths problems at OpenAI’s list prices of 8 November 2026 (1 € = 1.1165 $), scaled to a million questions. A projection: commercial models count tokens differently.</p>
             <div class="table-wrap"><table class="data-table"><tbody><tr><th scope="row">Small model, per million questions</th><td class="num">€144</td></tr><tr><th scope="row">Frontier model</th><td class="num">€18,325</td></tr><tr><th scope="row">Ratio</th><td class="num">×128</td></tr><tr><th scope="row">Frontier model, thinking at xhigh</th><td class="num">€22,859</td></tr><tr><th scope="row">Frontier model as an agent (invoice questions)</th><td class="num">€64,643</td></tr></tbody></table></div>
-            <p class="explain__bottom">Route each task to the smallest model that passes your own test. That is the biggest lever on the bill.</p>
           </div>
         </li>
         <li class="kpi" data-reveal>
@@ -190,9 +187,8 @@
             <button class="explain__close" type="button" popovertarget="explain-4" popovertargetaction="hide" aria-label="Close">×</button>
             <p class="kicker">×4 · speed gap on one GPU</p>
             <h3 id="explain-4-title">On the same card the fastest model writes about four times as fast as the slowest.</h3>
-            <p>Speed here is how many tokens a model writes per second when it answers one request at a time on my RTX 5090.</p><p>gpt-oss-20b wrote 287 tokens a second, Qwen3.5-4B 157, Gemma 4 31B 71 and Qwen3.8-27B 67. The fastest is about 4 times the slowest.</p><p>Correction: the video says 20 tokens a second for Qwen3.8-27B and a gap of 14 times. That was my mistake. A setting in the serving software made the card wait for the processor on every token. Measured again with the setting fixed: 67. The token counts and accuracy are not affected.</p><p>Thinking multiplies the wait as well as the tokens: the small model took 19 seconds per hard problem with thinking off, and 162 seconds with it on.</p>
+            <p>One request at a time on my RTX 5090. The video says 20 tokens a second for Qwen3.8-27B and a gap of 14 times: a serving setting of mine was wrong. Token counts and accuracy are not affected.</p>
             <div class="table-wrap"><table class="data-table"><tbody><tr><th scope="row">gpt-oss-20b</th><td class="num">287 tokens/s</td></tr><tr><th scope="row">Qwen3.5-4B</th><td class="num">157 tokens/s</td></tr><tr><th scope="row">Gemma 4 31B</th><td class="num">71 tokens/s</td></tr><tr><th scope="row">Qwen3.8-27B</th><td class="num">67 tokens/s</td></tr><tr><th scope="row">Fastest ÷ slowest</th><td class="num">about ×4</td></tr><tr><th scope="row">As published in the video (wrong)</th><td class="num">×14</td></tr></tbody></table></div>
-            <p class="explain__bottom">On your own hardware, time is the bill: measure the time per task, not only the tokens.</p>
           </div>
         </li>
       </ul>
@@ -253,7 +249,7 @@
         <div>
           <p class="kicker">Finding 3 · Agents</p>
           <h2>An agent sends its whole context again at every step.</h2>
-          <p>As an agent with three tools, Qwen3.8-27B answered all twenty invoice questions correctly, with 3.8 calls and 5,613 tokens per question. A single answer to a school maths problem took 494 tokens: the agent used 11 times as many, on a different task.</p>
+          <p>As an agent with three tools, Qwen3.8-27B answered all 20 invoice questions correctly, with 3.8 calls and 5,613 tokens each: 11 times a single school maths answer (494), on a different task.</p>
           <p>Each call sends everything seen so far. 93 % of the tokens are input, which costs a fifth of output at list prices. So the cost rises about 3.5 times, not 11.</p>
           <p class="takeaway"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>Use an agent only when the task needs to look something up.</p>
         </div>
@@ -275,7 +271,7 @@
           <p class="kicker">Finding 4 · Cost</p>
           <h2>Which model answers moves the bill more than thinking or agents.</h2>
           <p>Priced at OpenAI’s list prices, a million school maths questions cost €144 with the small model and €18,325 with the frontier model: 128 times more. Thinking at xhigh adds a quarter (€22,859). The agent, on its invoice questions, comes to €64,643.</p>
-          <p>The token counts come from the open models and the prices from a commercial price list, so this is a projection, not a bill.</p>
+          <p>Open-model tokens at a commercial price list: a projection, not a bill.</p>
           <p class="takeaway"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>Route each task to the smallest model that passes your test.</p>
         </div>
         <figure class="slide-figure">
@@ -296,7 +292,7 @@
           <p class="kicker">Finding 5 · Speed</p>
           <h2>On your own hardware, time is the bill.</h2>
           <p>One request at a time on one RTX 5090: gpt-oss-20b wrote 287 tokens per second, Qwen3.5-4B 157, Gemma 4 31B 71 and Qwen3.8-27B 67. That is about 4 times apart.</p>
-          <p class="notice"><strong>Correction, 12 November 2026.</strong> The video (at <a href="https://www.youtube.com/watch?v=CBaPjd0Jsx0&t=325">5:25</a>) and the first version of this page say 20 tokens per second for Qwen3.8-27B and a gap of 14 times. That was my mistake, not the model’s: I had started vLLM with the flag --enforce-eager, which turns off CUDA graphs, so the GPU waited for the CPU on every token and sat idle more than half the time. Measured again with the flag fixed, same build and same checkpoint: 67 tokens per second. The video cannot be changed; its description and pinned comment carry the correction. Token counts and accuracy are not affected, because the flag changes when the kernels run, not what they compute: a 100-message spot check gave 73% correct against the published 71%, at the same token count. The published rows are kept next to the new ones in the <a href="https://github.com/kalunho17/yt-experiment-001/blob/main/CORRECTIONS.md">correction note on GitHub</a>.</p>
+          <p class="notice"><strong>Correction, 12 November 2026.</strong> The video (at <a href="https://www.youtube.com/watch?v=CBaPjd0Jsx0&t=325">5:25</a>) and the first version of this page say 20 tokens per second for Qwen3.8-27B and a gap of 14 times. My mistake, not the model’s: I had started vLLM with the flag --enforce-eager, so the GPU waited for the CPU on every token. Measured again with the flag fixed: 67. Token counts and accuracy are not affected: a 100-message spot check gave 73 % correct against the published 71 %. The video’s description and pinned comment carry the correction, and the published rows are kept in the <a href="https://github.com/kalunho17/yt-experiment-001/blob/main/CORRECTIONS.md">correction note on GitHub</a>.</p>
           <p>Thinking multiplies the wait. The small model took 19 seconds per hard problem with thinking off, and 162 seconds with it on.</p>
           <p class="takeaway"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>On your own hardware, measure the time per task, not only the tokens.</p>
         </div>
@@ -316,12 +312,141 @@
     </div>
   </section>
 
-  <section class="section section--light" aria-labelledby="setup-title">
+  <!-- CALCULATOR START: written by yt-experiment-001/analysis/make_calculator.py; edit there, not here -->
+  <section class="section section--light" aria-labelledby="calc-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="kicker">Your own numbers</p>
+        <h2 id="calc-title">Your bill is price × tokens per task × tasks.</h2>
+        <p class="lead">Tokens per task and the success rate decide what one answer that works costs you.</p>
+      </div>
+      <p class="cite">Cost per task = (input tokens × input price + output tokens × output price) ÷ 1 million. Cost per successful task = cost per task ÷ share correct.</p>
+      <div class="calc" id="calculator" hidden>
+        <h3>Compare two settings with your prices.</h3>
+        <p class="calc__intro">Pick a task and two settings from the test. Each fills in its measured tokens and success rate. Then put in your provider’s prices.</p>
+        <form novalidate>
+          <div class="calc__row">
+            <label>Task<select name="task"><option value="T1">Classify a customer message</option><option value="T2" selected>Calculate (school maths)</option><option value="T4">Hard maths</option><option value="T3">Agent (invoice questions)</option></select></label>
+            <label>Tasks a month<input name="n" type="number" inputmode="decimal" min="0" step="1" value="1000000"></label>
+          </div>
+          <div class="calc__pair">
+            <div class="calc__side">
+              <p class="calc__legend">Setting A</p>
+              <label>Model and setting<select name="a"></select></label>
+              <div class="calc__row"><label>Input tokens<input name="a_tin" type="number" inputmode="decimal" min="0" step="any" value="106.06"></label><label>Output tokens<input name="a_tout" type="number" inputmode="decimal" min="0" step="any" value="299.69"></label><label>Correct, %<input name="a_acc" type="number" inputmode="decimal" min="0" step="any" value="92"></label></div>
+              <div class="calc__row"><label>€ per million input<input name="a_pin" type="number" inputmode="decimal" min="0" step="any" value="0.089566"></label><label>€ per million output<input name="a_pout" type="number" inputmode="decimal" min="0" step="any" value="0.447828"></label></div>
+              <div class="calc__result">
+                <p class="kicker">Your bill</p>
+                <p class="calc__big" data-out="a_bill"></p>
+                <p data-out="a_rest"></p>
+              </div>
+            </div>
+            <div class="calc__side">
+              <p class="calc__legend">Setting B</p>
+              <label>Model and setting<select name="b"></select></label>
+              <div class="calc__row"><label>Input tokens<input name="b_tin" type="number" inputmode="decimal" min="0" step="any" value="106.06"></label><label>Output tokens<input name="b_tout" type="number" inputmode="decimal" min="0" step="any" value="387.99"></label><label>Correct, %<input name="b_acc" type="number" inputmode="decimal" min="0" step="any" value="96"></label></div>
+              <div class="calc__row"><label>€ per million input<input name="b_pin" type="number" inputmode="decimal" min="0" step="any" value="8.95656"></label><label>€ per million output<input name="b_pout" type="number" inputmode="decimal" min="0" step="any" value="44.7828"></label></div>
+              <div class="calc__result">
+                <p class="kicker">Your bill</p>
+                <p class="calc__big" data-out="b_bill"></p>
+                <p data-out="b_rest"></p>
+              </div>
+            </div>
+          </div>
+        </form>
+        <p class="calc__verdict" data-out="verdict" aria-live="polite"></p>
+        <p class="caption">Starting prices: OpenAI’s list prices of 8 November 2026 for gpt-6-luna (A) and gpt-6-astra (B), at 1 € = 1.1165 $, as in Finding 4. Tokens and success rates are those of the open models in this test, so pricing a commercial model with them is a projection.</p>
+        <button class="btn btn--outline btn--small" type="button" data-copy>Copy a link to these numbers</button>
+      </div>
+    </div>
+  </section>
+  <script>
+(function () {
+  var root = document.getElementById('calculator');
+  if (!root) return;
+  var P = {"T1":{"S":{"label":"Qwen3.5-4B, thinking off","tin":451.02,"tout":4.66,"acc":70},"S-on":{"label":"Qwen3.5-4B, thinking on","tin":449.02,"tout":2406.63,"acc":75},"Q-off":{"label":"Qwen3.8-27B, thinking off","tin":451.02,"tout":4.69,"acc":71},"Q-low":{"label":"Qwen3.8-27B, effort low","tin":479.02,"tout":153.14,"acc":79},"Q-med":{"label":"Qwen3.8-27B, effort medium","tin":449.02,"tout":215.34,"acc":80},"Q-xhigh":{"label":"Qwen3.8-27B, effort xhigh (default)","tin":491.02,"tout":184.57,"acc":79},"G-off":{"label":"Gemma 4 31B, thinking off","tin":596.3,"tout":6.64,"acc":81},"G-on":{"label":"Gemma 4 31B, thinking on","tin":599.3,"tout":387.46,"acc":85},"O-low":{"label":"gpt-oss-20b, effort low","tin":514.76,"tout":55.53,"acc":87},"O-high":{"label":"gpt-oss-20b, effort high","tin":514.76,"tout":464.12,"acc":84}},"T2":{"S":{"label":"Qwen3.5-4B, thinking off","tin":106.06,"tout":299.69,"acc":92},"S-on":{"label":"Qwen3.5-4B, thinking on","tin":104.06,"tout":2537.33,"acc":93},"Q-off":{"label":"Qwen3.8-27B, thinking off","tin":106.06,"tout":387.99,"acc":96},"Q-low":{"label":"Qwen3.8-27B, effort low","tin":134.06,"tout":299.49,"acc":96},"Q-med":{"label":"Qwen3.8-27B, effort medium","tin":104.06,"tout":344.8,"acc":96},"Q-xhigh":{"label":"Qwen3.8-27B, effort xhigh (default)","tin":146.06,"tout":481.23,"acc":97},"G-off":{"label":"Gemma 4 31B, thinking off","tin":105.52,"tout":235.5,"acc":94},"G-on":{"label":"Gemma 4 31B, thinking on","tin":108.52,"tout":1292.77,"acc":97},"O-low":{"label":"gpt-oss-20b, effort low","tin":156.41,"tout":97.66,"acc":96},"O-high":{"label":"gpt-oss-20b, effort high","tin":156.41,"tout":838.29,"acc":97}},"T4":{"S":{"label":"Qwen3.5-4B, thinking off","tin":149.62,"tout":2272.44,"acc":100},"S-on":{"label":"Qwen3.5-4B, thinking on","tin":147.62,"tout":16252.84,"acc":80},"Q-off":{"label":"Qwen3.8-27B, thinking off","tin":149.62,"tout":2167.88,"acc":94},"Q-low":{"label":"Qwen3.8-27B, effort low","tin":177.62,"tout":2196.54,"acc":96},"Q-med":{"label":"Qwen3.8-27B, effort medium","tin":147.62,"tout":1820.94,"acc":98},"Q-xhigh":{"label":"Qwen3.8-27B, effort xhigh (default)","tin":189.62,"tout":2837.78,"acc":98},"G-off":{"label":"Gemma 4 31B, thinking off","tin":149.1,"tout":748.28,"acc":98},"G-on":{"label":"Gemma 4 31B, thinking on","tin":152.1,"tout":4166.64,"acc":100},"O-low":{"label":"gpt-oss-20b, effort low","tin":198.42,"tout":1025.26,"acc":84},"O-high":{"label":"gpt-oss-20b, effort high","tin":198.42,"tout":7756.02,"acc":98}},"T3":{"Q-A":{"label":"Qwen3.8-27B, agent, thinking off","tin":5211.85,"tout":401.1,"acc":100},"Q-A-low":{"label":"Qwen3.8-27B, agent, effort low","tin":4690.25,"tout":786.35,"acc":100}}}, D = {"task": "T2", "a": "S", "b": "Q-off", "n": 1000000}, PRICE = {"a": [0.089566, 0.447828], "b": [8.956561, 44.782803]};
+  var form = root.querySelector('form'), el = form.elements, nf = new Intl.NumberFormat('en-GB');
+  var FIELDS = ['tin', 'tout', 'acc', 'pin', 'pout'];
+  function out(name) { return root.querySelector('[data-out="' + name + '"]'); }
+  function eur(v) {
+    if (v >= 100) return '€' + nf.format(Math.round(v));
+    if (v >= 0.1) return '€' + v.toFixed(2);
+    return '€' + Number(v.toPrecision(3));
+  }
+  function options(side, keep) {
+    var sel = el[side], list = P[el.task.value];
+    sel.innerHTML = '';
+    Object.keys(list).forEach(function (c) { sel.add(new Option(list[c].label, c)); });
+    sel.value = list[keep] ? keep : Object.keys(list)[side === 'a' ? 0 : 1];
+  }
+  function fill(side) {
+    var p = P[el.task.value][el[side].value];
+    el[side + '_tin'].value = p.tin; el[side + '_tout'].value = p.tout; el[side + '_acc'].value = p.acc;
+  }
+  function read(side) {
+    var v = {}, ok = true;
+    FIELDS.forEach(function (k) { v[k] = parseFloat(el[side + '_' + k].value); if (!(v[k] >= 0)) ok = false; });
+    if (!(v.acc <= 100)) ok = false;
+    if (!ok) return null;
+    v.task = (v.tin * v.pin + v.tout * v.pout) / 1e6;
+    v.ok = v.acc > 0 ? v.task / (v.acc / 100) : Infinity;
+    return v;
+  }
+  function render(share) {
+    var n = parseFloat(el.n.value), r = {};
+    ['a', 'b'].forEach(function (s) {
+      r[s] = n >= 0 ? read(s) : null;
+      out(s + '_bill').textContent = r[s] ? eur(n * r[s].task) : '–';
+      out(s + '_rest').textContent = !r[s] ? 'Check the inputs: every field needs a number, and correct at most 100.'
+        : eur(r[s].task) + ' a task, ' + (isFinite(r[s].ok) ? eur(r[s].ok) + ' a successful task.' : 'and no task succeeded.');
+    });
+    var a = r.a, b = r.b, v = out('verdict');
+    if (!a || !b || !isFinite(a.ok) || !isFinite(b.ok) || !a.ok || !b.ok) v.textContent = '';
+    else {
+      var hi = b.ok >= a.ok ? 'B' : 'A', lo = hi === 'B' ? 'A' : 'B', x = Math.max(a.ok, b.ok) / Math.min(a.ok, b.ok);
+      var d = Math.round((hi === 'B' ? b.acc - a.acc : a.acc - b.acc) * 10) / 10;
+      v.textContent = hi + ' costs ' + (x < 10 ? x.toFixed(1) : nf.format(Math.round(x))) + ' times as much as ' + lo + ' per successful task, and gets '
+        + (d > 0 ? d + ' points more right.' : d < 0 ? -d + ' points fewer right.' : 'as many right.');
+    }
+    if (!share) return;  // the address bar changes only once the visitor changes a number
+    var q = new URLSearchParams({ task: el.task.value, n: el.n.value, a: el.a.value, b: el.b.value });
+    ['a', 'b'].forEach(function (s) {
+      var p = P[el.task.value][el[s].value];
+      FIELDS.forEach(function (k) {
+        var dflt = k === 'pin' ? PRICE[s][0] : k === 'pout' ? PRICE[s][1] : p[k];
+        if (parseFloat(el[s + '_' + k].value) !== dflt) q.set(s + '_' + k, el[s + '_' + k].value);
+      });
+    });
+    try { history.replaceState(null, '', '?' + q + '#calculator'); } catch (e) {}
+  }
+  var q = new URLSearchParams(location.search);
+  if (P[q.get('task')]) el.task.value = q.get('task');
+  options('a', q.get('a') || D.a); options('b', q.get('b') || D.b); fill('a'); fill('b');
+  ['a', 'b'].forEach(function (s) { el[s + '_pin'].value = PRICE[s][0]; el[s + '_pout'].value = PRICE[s][1]; });
+  if (q.has('n')) el.n.value = q.get('n');
+  ['a', 'b'].forEach(function (s) { FIELDS.forEach(function (k) { if (q.has(s + '_' + k)) el[s + '_' + k].value = q.get(s + '_' + k); }); });
+  el.task.addEventListener('change', function () { options('a', el.a.value); options('b', el.b.value); fill('a'); fill('b'); render(true); });
+  ['a', 'b'].forEach(function (s) { el[s].addEventListener('change', function () { fill(s); render(true); }); });
+  form.addEventListener('input', function (e) { if (e.target.tagName !== 'SELECT') render(true); });
+  form.addEventListener('submit', function (e) { e.preventDefault(); });
+  root.querySelector('[data-copy]').addEventListener('click', function () {
+    var btn = this;
+    navigator.clipboard.writeText(location.href).then(function () { btn.textContent = 'Link copied'; },
+      function () { btn.textContent = 'Copy the address bar instead'; });
+    setTimeout(function () { btn.textContent = 'Copy a link to these numbers'; }, 2500);
+  });
+  root.hidden = false;
+  render();
+}());
+  </script>
+  <!-- CALCULATOR END -->
+
+  <section class="section" aria-labelledby="setup-title">
     <div class="container">
       <div class="section-head">
         <p class="kicker">How it was measured</p>
         <h2 id="setup-title">Same items for every model, success counted against a key.</h2>
-        <p class="lead">Four tasks with known answers, so nothing is judged by taste. Every token of every call is counted, including the context an agent sends again at each step.</p>
+        <p class="lead">Four tasks with known answers. Every token of every call is counted, including the context an agent sends again.</p>
       </div>
       <div class="table-wrap">
         <table class="data-table">
@@ -346,15 +471,15 @@
         </table>
       </div>
       <ul class="bullets" style="margin-top: var(--s4)">
-        <li><strong>Hardware.</strong> One NVIDIA RTX 5090 with 32 GB, my own, at home. No employer hardware and no employer data.</li>
-        <li><strong>Software.</strong> vLLM 0.26.0, one model at a time; Qwen3.8-27B ran on a vLLM development build for its 4-bit kernels and, by my mistake, with CUDA graphs off (--enforce-eager), which cost it two thirds of its speed and nothing else; its speed was measured again on 12 November 2026. Context up to 32,768 tokens, answers up to 28,000.</li>
-        <li><strong>Sampling.</strong> The model makers’ recommended settings for each mode. Items sampled with seed 42, requests with seed 42, one run per item.</li>
-        <li><strong>Counting.</strong> Tokens per item are prompt plus completion tokens, summed over every call. Reasoning tokens are part of the completion. An answer that hit the limit counts as wrong.</li>
+        <li><strong>Hardware.</strong> One NVIDIA RTX 5090 with 32 GB, my own: no employer hardware or data.</li>
+        <li><strong>Software.</strong> vLLM 0.26.0, one model at a time, context up to 32,768 tokens, answers up to 28,000. Qwen3.8-27B ran on a development build and, by my mistake, with CUDA graphs off (see the correction).</li>
+        <li><strong>Sampling.</strong> The makers’ recommended settings for each mode, seed 42, one run per item.</li>
+        <li><strong>Counting.</strong> Prompt plus completion tokens over every call, reasoning included. An answer that hit the limit counts as wrong.</li>
       </ul>
     </div>
   </section>
 
-  <section class="section" aria-labelledby="results-title">
+  <section class="section section--light" aria-labelledby="results-title">
     <div class="container">
       <div class="section-head">
         <p class="kicker">Full results</p>
@@ -378,11 +503,11 @@
         <h2 id="limits-title">A measurement of this setup, not of AI in general.</h2>
       </div>
       <ul class="bullets">
-        <li><strong>Open models only.</strong> Commercial models count and reason differently. The multipliers are the point, not the absolute token counts.</li>
-        <li><strong>Benchmarks stand in for work.</strong> The tasks have answer keys, real business tasks rarely do. The agent task is synthetic.</li>
-        <li><strong>Small samples.</strong> One run per item, 20 agent questions and 50 hard problems. A second seed would show the spread.</li>
-        <li><strong>Effort is an instruction.</strong> For Qwen3.8-27B, “effort” is a line in the system prompt, not a token budget, and “medium” adds nothing.</li>
-        <li><strong>Euros are a projection.</strong> Measured tokens at commercial list prices, which change.</li>
+        <li><strong>Open models only.</strong> Commercial models count and reason differently: the multipliers are the point.</li>
+        <li><strong>Benchmarks stand in for work.</strong> Real tasks rarely have answer keys, and the agent task is synthetic.</li>
+        <li><strong>Small samples.</strong> One run per item, 20 agent questions, 50 hard problems.</li>
+        <li><strong>Effort is an instruction.</strong> For Qwen3.8-27B it is a line in the prompt, not a token budget.</li>
+        <li><strong>Euros are a projection.</strong> List prices change.</li>
       </ul>
     </div>
   </section>
@@ -394,7 +519,7 @@
         <h2 id="cite-title">Check it, rerun it, cite it.</h2>
       </div>
       <div>
-        <p>The test code, the answer keys and the raw results, one row per item and per call, are on GitHub, together with a technical report that adds confidence intervals and the full method. Questions and corrections are welcome there as issues.</p>
+        <p>The test code, answer keys and raw results are on GitHub, with a technical report: the full method and confidence intervals. Questions and corrections are welcome there as issues.</p>
         <div class="actions" style="margin-top: var(--s3)">
           <a class="btn" href="https://github.com/kalunho17/yt-experiment-001">
             <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#github"></use></svg>
