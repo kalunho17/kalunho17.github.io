@@ -9,7 +9,7 @@ index.html                     home page
 videos/                        every video with its handout, deck and sources
 experiments/                   own measurements, one page each
   tokens-per-task/             experiment 1
-  gpu-break-even/              experiment 2 (generated: yt-experiment-002/analysis/make_webpage.py)
+  gpu-break-even/              experiment 2
 about/                         about Dr. Kalun Ho
 links/                         link page for social media bios
 legal/                         legal notice
