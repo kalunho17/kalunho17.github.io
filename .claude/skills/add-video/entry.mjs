@@ -164,36 +164,52 @@ if (!refs.length) missing.push("references in content.yaml");
 if (pdfUrl && !/^https:\/\/(drive|docs)\.google\.com\//.test(pdfUrl)) missing.push(`pdf_url is not a Google Drive link: ${pdfUrl}`);
 if (pptxUrl && !/^https:\/\/(drive|docs)\.google\.com\//.test(pptxUrl)) missing.push(`pptx_url is not a Google Drive link: ${pptxUrl}`);
 
+// The thumbnail is a local copy of the video's own artwork (thumb.mjs), never YouTube's image server.
+const thumbSrc = `/assets/img/videos/video-${number}.webp`;
+const thumbExists = existsSync(resolve(siteRoot, "assets", "img", "videos", `video-${number}.webp`));
+if (!thumbExists) missing.push(`thumbnail: run node .claude/skills/add-video/thumb.mjs --episode ${ep.id.match(/^ep-\d{3}/)?.[0] ?? "ep-NNN"} --number ${number}`);
+
 const pdfLine = pdfUrl ?? "PDF_URL_MISSING";
 const pptxLine = pptxUrl ?? "PPTX_URL_MISSING";
-const entry = `      <article class="entry" id="video-${number}">
-        <p class="meta">Video ${number} · ${esc(date)} · ${esc(typeLabel)}</p>
-        <h2>${esc(headline)}</h2>
-        <p>${esc(takeaway)}</p>
-        <div class="actions">
-          <a class="btn btn--small" href="${watchUrl}">
-            <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#youtube"></use></svg>
-            Watch on YouTube
-          </a>
-${filesUrl ? `          <a class="link-arrow" href="${esc(filesUrl)}">
-            <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#document"></use></svg>
-            Handout and deck (PDF and PowerPoint, Google Drive)
-          </a>
-` : `          <a class="link-arrow" href="${esc(pdfLine)}">
-            <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#document"></use></svg>
-            Handout (PDF, Google Drive)
-          </a>
-          <a class="link-arrow" href="${esc(pptxLine)}">
-            <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#document"></use></svg>
-            Deck (PowerPoint, Google Drive)
-          </a>
-`}        </div>
-        <details class="entry__sources">
-          <summary>Sources</summary>
-          <ol class="sources">
+const entry = `      <article class="entry entry--thumb" id="video-${number}">
+        <div class="entry__media">
+          <div class="video">
+            <a class="video__poster video__poster--image" href="${watchUrl}" data-video="${id}" data-title="${esc(headline)}">
+              <img src="${thumbSrc}" alt="" width="960" height="540" loading="lazy">
+              <span class="video__button"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#play"></use></svg></span>
+              <span class="sr-only">Play the video: ${esc(headline)} (loads the YouTube player)</span>
+            </a>
+          </div>
+        </div>
+        <div class="entry__body">
+          <p class="meta">Video ${number} · ${esc(date)} · ${esc(typeLabel)}</p>
+          <h2>${esc(headline)}</h2>
+          <p>${esc(takeaway)}</p>
+          <div class="actions">
+            <a class="btn btn--small" href="${watchUrl}">
+              <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#youtube"></use></svg>
+              Watch on YouTube
+            </a>
+${filesUrl ? `            <a class="link-arrow" href="${esc(filesUrl)}">
+              <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#document"></use></svg>
+              Handout and deck (PDF and PowerPoint, Google Drive)
+            </a>
+` : `            <a class="link-arrow" href="${esc(pdfLine)}">
+              <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#document"></use></svg>
+              Handout (PDF, Google Drive)
+            </a>
+            <a class="link-arrow" href="${esc(pptxLine)}">
+              <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#document"></use></svg>
+              Deck (PowerPoint, Google Drive)
+            </a>
+`}          </div>
+          <details class="entry__sources">
+            <summary>Sources</summary>
+            <ol class="sources">
 ${sourceItems.join("\n")}
-          </ol>
-        </details>
+            </ol>
+          </details>
+        </div>
       </article>`;
 
 console.log(JSON.stringify({
@@ -206,5 +222,6 @@ console.log(JSON.stringify({
   first_video: existing === 0,
   already_listed: alreadyListed,
   missing,
+  thumbnail: { src: thumbSrc, exists: thumbExists },
   entry_html: entry,
 }, null, 2));

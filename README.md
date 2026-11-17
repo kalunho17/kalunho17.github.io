@@ -9,6 +9,7 @@ index.html                     home page
 videos/                        every video with its handout, deck and sources
 experiments/                   own measurements, one page each
   tokens-per-task/             experiment 1
+  gpu-break-even/              experiment 2 (generated: yt-experiment-002/analysis/make_webpage.py)
 about/                         about Dr. Kalun Ho
 links/                         link page for social media bios
 legal/                         legal notice
@@ -18,10 +19,11 @@ assets/
   css/site.css                 all styles; colour tokens at the top
   js/site.js                   click-to-load video, colour theme toggle, fade-in
   fonts/                       Open Sans, self-hosted (OFL licence)
-  img/                         motif, icon sprite, portraits, share image
+  img/                         motif, icon sprite, portraits, share image; og-<experiment>.svg/.png: share image per experiment
+    videos/                    video-<n>.webp: local copy of each video's YouTube thumbnail (add-video skill, thumb.mjs)
 favicon.svg, favicon-32.png, favicon.ico, apple-touch-icon.png
 sitemap.xml, robots.txt        for search engines
 CNAME                          the custom domain, kalunho.com
 .nojekyll                      serve the files as they are
-.claude/skills/add-video/      adds a published video to the videos page
+.claude/skills/add-video/      adds a published video to the videos page, with its thumbnail
 ```
