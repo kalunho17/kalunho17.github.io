@@ -131,7 +131,7 @@ const typeLabel = { explainer: "Explainer", "case-study": "Case study", news: "N
 
 const videosHtml = readFileSync(resolve(siteRoot, "videos", "index.html"), "utf8");
 const live = videosHtml.replace(/<!--[\s\S]*?-->/g, "");
-const existing = (live.match(/<article class="entry"/g) ?? []).length;
+const existing = (live.match(/<article class="entry[\s"]/g) ?? []).length;  // "entry" or "entry entry--thumb"
 const alreadyListed = live.includes(`watch?v=${id}`);
 const number = existing + 1;
 
