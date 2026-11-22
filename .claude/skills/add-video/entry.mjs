@@ -133,7 +133,11 @@ const videosHtml = readFileSync(resolve(siteRoot, "videos", "index.html"), "utf8
 const live = videosHtml.replace(/<!--[\s\S]*?-->/g, "");
 const existing = (live.match(/<article class="entry[\s"]/g) ?? []).length;  // "entry" or "entry entry--thumb"
 const alreadyListed = live.includes(`watch?v=${id}`);
-const number = existing + 1;
+// A listed video keeps its number, so home_html can be rebuilt for it; a new one is the next number.
+const listedNumber = alreadyListed
+  ? Number(live.match(new RegExp(`id="video-(\\d+)"[\\s\\S]*?watch\\?v=${id}`))?.[1] ?? NaN)
+  : NaN;
+const number = Number.isFinite(listedNumber) ? listedNumber : existing + 1;
 
 const headline = ytTitle ?? ep.content.meta.title;
 const takeaway = ep.episode.takeaway;
@@ -212,6 +216,37 @@ ${sourceItems.join("\n")}
         </div>
       </article>`;
 
+// The home page's "Latest video" block: replaces everything between the LATEST VIDEO markers in index.html.
+const arrow = `<svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>`;
+const home = `<!-- LATEST VIDEO START: written by the add-video skill (entry.mjs → home_html), one block per new video. -->
+      <div class="section-head">
+        <p class="kicker">Latest video</p>
+        <h2 id="latest-title">${esc(headline)}</h2>
+        <p class="lead">${esc(takeaway)}</p>
+        <div class="actions">
+          <a class="link-arrow" href="/videos/#video-${number}">
+            Handout, deck and sources
+            ${arrow}
+          </a>
+          <a class="link-arrow" href="/videos/">
+            All videos
+            ${arrow}
+          </a>
+        </div>
+      </div>
+      <div>
+        <!-- Click-to-load: nothing loads from YouTube until the click (see /assets/js/site.js). -->
+        <div class="video">
+          <a class="video__poster video__poster--image" href="${watchUrl}" data-video="${id}" data-title="${esc(headline)}">
+            <img src="${thumbSrc}" alt="" width="960" height="540" loading="lazy">
+            <span class="video__button"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#play"></use></svg></span>
+            <span class="sr-only">Play the video: ${esc(headline)} (loads the YouTube player)</span>
+          </a>
+        </div>
+        <p class="caption video-note">The video loads from YouTube (youtube-nocookie.com) only when you click play. <a href="/privacy/#youtube">How YouTube handles your data</a></p>
+      </div>
+<!-- LATEST VIDEO END -->`;
+
 console.log(JSON.stringify({
   ok: missing.length === 0 && !alreadyListed,
   video: { id, url: watchUrl, title: ytTitle },
@@ -224,4 +259,5 @@ console.log(JSON.stringify({
   missing,
   thumbnail: { src: thumbSrc, exists: thumbExists },
   entry_html: entry,
+  home_html: home,
 }, null, 2));

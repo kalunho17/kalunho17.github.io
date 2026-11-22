@@ -439,9 +439,9 @@ address { font-style: normal; }
 
 .portrait img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
 
-/* --- Latest video: click-to-load ------------------------------------------ */
+/* --- Video player: click-to-load (home page and /videos/) ----------------- */
 
-/* Sizes inside the poster use cqi (1% of the player width), so it scales like an image */
+/* Sizes inside the poster use cqi (1% of the player width), so the play button scales with it */
 .video {
   position: relative; aspect-ratio: 16 / 9; overflow: hidden;
   border: 1px solid var(--rule); background: var(--bg); color: var(--text);
@@ -451,17 +451,7 @@ address { font-style: normal; }
 
 .video__poster {
   position: absolute; inset: 0;
-  display: flex; flex-direction: column; justify-content: center;
-  padding: 0 7cqi 4cqi;
   color: var(--accent); text-decoration: none;
-}
-.video__motif { position: absolute; top: 0; right: 0; height: 100%; width: auto; max-width: none; }
-.video__kicker { position: relative; font-size: max(10px, 1.6cqi); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
-.video__bar { position: relative; display: block; width: 9cqi; height: max(3px, 0.5cqi); margin: 2.4cqi 0 3cqi; background: var(--accent); }
-.video__title { position: relative; max-width: 58cqi; font-size: max(17px, 5.2cqi); font-weight: 700; line-height: 1.1; }
-.video__play {
-  position: relative; display: inline-flex; align-items: center; gap: 2.4cqi;
-  margin-top: 4.5cqi; color: var(--text); font-size: max(13px, 1.9cqi); font-weight: 600;
 }
 .video__button {
   display: grid; place-items: center;
@@ -471,17 +461,7 @@ address { font-style: normal; }
 }
 .video__button .icon { width: 42%; height: 42%; margin-left: 6%; }
 .video__poster:hover .video__button { background: var(--accent-hover); }
-.video__poster:hover .video__play { color: var(--accent); }
-.video__footer {
-  position: absolute; left: 7cqi; right: 7cqi; bottom: 3.2cqi;
-  padding-top: 1.4cqi; border-top: 1px solid var(--rule);
-  color: var(--text-muted); font-size: max(11px, 1.5cqi);
-}
 .video__poster:focus-visible { outline-offset: -4px; }
-@container (max-width: 480px) {
-  .video__footer { display: none; }
-  .video__poster { padding-bottom: 0; }
-}
 
 .video-note { margin-top: 12px; }
 

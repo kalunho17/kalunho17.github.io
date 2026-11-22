@@ -1,12 +1,13 @@
 ---
 name: add-video
-description: Add a newly published YouTube video to kalunho.com/videos/. Use when the user pastes a YouTube video URL and asks to add it to the website, update the videos page, or says they published a video. Builds the entry from the episode in the channel repo (takeaway, Google Drive handout and deck links, numbered sources), inserts it, runs the site checks, commits and pushes. On the first video it also walks through going live.
+description: Add a newly published YouTube video to kalunho.com/videos/ and the home page. Use when the user pastes a YouTube video URL and asks to add it to the website, update the videos page, or says they published a video. Builds the entry from the episode in the channel repo (takeaway, Google Drive handout and deck links, numbered sources), inserts it, runs the site checks, commits and pushes. On the first video it also walks through going live.
 ---
 
 # Add a published video to the website
 
 The user publishes a video on YouTube, pastes its URL and asks for it to be added. One entry
-goes at the top of `videos/index.html`. Everything else on the site updates itself.
+goes at the top of `videos/index.html`, and the home page (`index.html`) gets the new video in
+its "Latest video" block and its question at the top of "The questions".
 
 The content comes from the channel repo (`../youtube`, the episode folder), not from YouTube.
 YouTube only supplies the published title. The helper script uses the channel repo's own
@@ -66,6 +67,16 @@ replacing the `<!-- Newest video goes here -->` comment line on the first video,
 previous newest entry afterwards. Newest is always first. Leave the `<!-- ENTRY TEMPLATE -->`
 comment in place.
 
+On the home page (`index.html`):
+
+- Replace everything from `<!-- LATEST VIDEO START` to `<!-- LATEST VIDEO END -->`, both
+  markers included, with `home_html`. It shows the new video's thumbnail, title and takeaway.
+- Add the video's question as the first item of the list under `<!-- QUESTIONS -->`, linked
+  to its entry: `<li><a href="/videos/#video-<n>">…?</a></li>`. Phrase it as the question the
+  video answers, in sentence case, from the published title (for example "Should You Buy a
+  GPU? Count Your Tasks First." became "Should you buy a GPU, or keep paying for the API?").
+  Keep every earlier question; one per published video, newest first.
+
 If the episode has an experiment page (`experiments/<slug>/` whose "The video" link still points
 at the channel, `<!-- VIDEO LINK -->`), add the third link "The experiment" to the entry (the
 template shows it), and link the video from the experiment page. Experiment pages are built,
@@ -123,7 +134,7 @@ Pasting the URL and asking for the update is the request to publish, so commit a
 `main` unless the user said to hold. GitHub Pages is live about a minute later.
 
 ```sh
-git add videos/index.html assets/img/videos/video-<n>.webp   # plus experiments/<slug>/index.html,
+git add videos/index.html index.html assets/img/videos/video-<n>.webp   # plus experiments/<slug>/index.html,
                                      # experiments/index.html and assets/img/og-<slug>.* when the experiment
                                      # page was regenerated, plus home/index.html, index.html, robots.txt … on the first video
 git commit -m "Add video <n>: <title>"

@@ -21,7 +21,7 @@
 </script>
 <!-- THEME END -->
 <title>Why technology moves the way it does · Dr. Kalun Ho</title>
-<meta name="description" content="Why technology moves the way it does. What is happening in technology, and why. Videos with the numbers, a plain explanation and a free PDF handout.">
+<meta name="description" content="Why technology moves the way it does. Videos with the numbers, the mechanism behind them, a free PDF handout and the editable deck.">
 <link rel="canonical" href="https://kalunho.com/">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -35,14 +35,14 @@
 <meta property="og:locale" content="en_GB">
 <meta property="og:url" content="https://kalunho.com/">
 <meta property="og:title" content="Why technology moves the way it does">
-<meta property="og:description" content="What is happening in technology, and why. Videos with the numbers, a plain explanation and a free PDF handout.">
+<meta property="og:description" content="Videos with the numbers, the mechanism behind them, a free PDF handout and the editable deck.">
 <meta property="og:image" content="https://kalunho.com/assets/img/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Dr. Kalun Ho: Why technology moves the way it does.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Why technology moves the way it does">
-<meta name="twitter:description" content="What is happening in technology, and why. Videos with the numbers, a plain explanation and a free PDF handout.">
+<meta name="twitter:description" content="Videos with the numbers, the mechanism behind them, a free PDF handout and the editable deck.">
 <meta name="twitter:image" content="https://kalunho.com/assets/img/og-image.png">
 <script type="application/ld+json">
 {
@@ -108,7 +108,7 @@
         <p class="kicker">Dr. Kalun Ho</p>
         <div class="accent-bar"></div>
         <h1 class="display">Why technology moves the way it does.</h1>
-        <p class="lead">What is happening in technology, and why. Videos with the numbers, a plain explanation and a free PDF handout.</p>
+        <p class="lead">Videos with the numbers, the mechanism behind them, a free PDF handout and the editable deck.</p>
         <p class="hero__audience">For people who have to explain technology to others at work.</p>
         <div class="actions">
           <a class="btn" href="https://www.youtube.com/@KalunHo/videos">
@@ -126,33 +126,34 @@
 
   <section class="section section--light" aria-labelledby="latest-title">
     <div class="container split">
+<!-- LATEST VIDEO START: written by the add-video skill (entry.mjs → home_html), one block per new video. -->
       <div class="section-head">
         <p class="kicker">Latest video</p>
-        <h2 id="latest-title">The newest video.</h2>
-        <p class="lead">The free PDF handout is linked in the video description and on the videos page.</p>
-        <a class="link-arrow" href="/videos/">
-          All videos, handouts and sources
-          <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>
-        </a>
+        <h2 id="latest-title">Should You Buy a GPU? Count Your Tasks First.</h2>
+        <p class="lead">Count your tasks per day before you buy a GPU: below the break-even the API is cheaper; a team's chat rarely reaches it, agents and company-wide use can.</p>
+        <div class="actions">
+          <a class="link-arrow" href="/videos/#video-2">
+            Handout, deck and sources
+            <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>
+          </a>
+          <a class="link-arrow" href="/videos/">
+            All videos
+            <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>
+          </a>
+        </div>
       </div>
       <div>
-        <!-- VIDEO: click-to-load. Nothing loads from YouTube until the click (see /assets/js/site.js).
-             The playlist is the channel's uploads playlist, so it always plays the newest video. -->
+        <!-- Click-to-load: nothing loads from YouTube until the click (see /assets/js/site.js). -->
         <div class="video">
-          <a class="video__poster" href="https://www.youtube.com/@KalunHo/videos" data-playlist="UUA60auH-GNxv7sX8Aa9M2mQ" data-title="Latest videos on YouTube">
-            <img class="video__motif" src="/assets/img/motif.svg" alt="" width="770" height="1080" loading="lazy">
-            <span class="video__kicker" aria-hidden="true">Latest video</span>
-            <span class="video__bar"></span>
-            <span class="video__title" aria-hidden="true">Why technology moves the way it does.</span>
-            <span class="video__play">
-              <span class="video__button"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#play"></use></svg></span>
-              Play the latest video<span class="sr-only"> (loads the YouTube player)</span>
-            </span>
-            <span class="video__footer" aria-hidden="true">Dr. Kalun Ho</span>
+          <a class="video__poster video__poster--image" href="https://www.youtube.com/watch?v=vUJJsOOrEnE" data-video="vUJJsOOrEnE" data-title="Should You Buy a GPU? Count Your Tasks First.">
+            <img src="/assets/img/videos/video-2.webp" alt="" width="960" height="540" loading="lazy">
+            <span class="video__button"><svg class="icon" aria-hidden="true"><use href="/assets/img/icons.svg#play"></use></svg></span>
+            <span class="sr-only">Play the video: Should You Buy a GPU? Count Your Tasks First. (loads the YouTube player)</span>
           </a>
         </div>
         <p class="caption video-note">The video loads from YouTube (youtube-nocookie.com) only when you click play. <a href="/privacy/#youtube">How YouTube handles your data</a></p>
       </div>
+<!-- LATEST VIDEO END -->
     </div>
   </section>
 
@@ -163,9 +164,10 @@
         <h2 id="questions-title">Why, not only what.</h2>
         <p class="lead">The videos explain the forces behind what is happening: cost curves, compute, chips, energy, capital, supply chains. Right now mostly AI, because that is where the movement is.</p>
       </div>
+      <!-- QUESTIONS: one per published video, newest first, each linking to its entry (add-video skill). -->
       <ul class="bullets">
-        <li>Why does your AI bill go up when AI gets cheaper?</li>
-        <li>Why has electricity become a technology question?</li>
+        <li><a href="/videos/#video-2">Should you buy a GPU, or keep paying for the API?</a></li>
+        <li><a href="/videos/#video-1">Why does your AI bill go up when AI gets cheaper?</a></li>
       </ul>
     </div>
   </section>
@@ -174,7 +176,7 @@
     <div class="container">
       <div class="section-head">
         <h2 id="get-title">What comes with each video.</h2>
-        <p class="lead">Made for people who have to understand a technology shift well enough to explain it to others at work: managers, engineers outside the specialty, and anyone who presents.</p>
+        <p class="lead">All of it is free. Use the slides in your own meetings.</p>
       </div>
       <ul class="cards cards--3" data-reveal-group>
         <li class="panel card" data-reveal>
@@ -184,8 +186,8 @@
         </li>
         <li class="panel card" data-reveal>
           <svg class="icon icon--lg" aria-hidden="true"><use href="/assets/img/icons.svg#decision"></use></svg>
-          <h3>The explanation</h3>
-          <p>The technical part, in plain terms.</p>
+          <h3>The mechanism</h3>
+          <p>Why it moves, and what it changes for you.</p>
         </li>
         <li class="panel card" data-reveal>
           <svg class="icon icon--lg" aria-hidden="true"><use href="/assets/img/icons.svg#document"></use></svg>
@@ -204,7 +206,7 @@
           <h2 id="method-title">How the videos are made.</h2>
           <p class="lead">Each video starts with the research. Figures are cited, charts are redrawn from the source data, and illustrative examples are labelled as such. Where no source has the number, I measure it myself and publish the <a href="/experiments/">experiment</a>.</p>
         </div>
-        <p>I lead the AI Lab of a large German company and hold a doctorate in computer vision. The videos are a personal project: my way of explaining, outside work, what I see happening in technology.</p>
+        <p>I lead the AI Lab of a large German company and hold a doctorate in computer science, with a focus on computer vision. The videos are a personal project: my way of explaining, outside work, what I see happening in technology.</p>
         <a class="link-arrow" href="/about/">
           More about me
           <svg class="icon icon--sm" aria-hidden="true"><use href="/assets/img/icons.svg#arrow-right"></use></svg>

@@ -4,7 +4,7 @@
 
   // Click-to-load YouTube: nothing is requested from YouTube until the visitor clicks.
   // Without JavaScript (or before the playlist ID is filled in) the poster stays a plain link.
-  // data-playlist plays a playlist (home page), data-video one video (thumbnails on /videos/).
+  // data-video plays one video (home page and /videos/), data-playlist a playlist.
   document.querySelectorAll('[data-playlist], [data-video]').forEach(function (poster) {
     var playlist = poster.getAttribute('data-playlist');
     var video = poster.getAttribute('data-video');
