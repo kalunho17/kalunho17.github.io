@@ -87,6 +87,16 @@ the word check `python .claude/skills/experiment-writeup/page/wordcheck.py
 That also regenerates the experiment's card thumbnail on `experiments/index.html` and its share image.
 The experiment card keeps its chart thumbnail; only the video entry shows the YouTube thumbnail.
 
+**World episodes** (from ep-003 on; the channel repo's `docs/world-redesign.md`) have their own
+page: the animated version of the episode, scrolled with the script, with links to the video,
+the handout and the deck. In the channel repository, with `youtube_url`, `pdf_url` and `pptx_url`
+set in `episode.yaml`, run `pnpm yt render web episodes/<episode>`; copy
+`MEDIA_ROOT/<ep>/render/web/index.html` to `videos/<slug>/index.html` here (`<slug>`: the
+episode folder's slug, e.g. `why-infrastructure-markets-end-with-thre`) and add the link
+"Animated version" (`/videos/<slug>/`) to the entry, next to the handout and the deck. The page
+is generated, never edited here; it inlines its fonts and loads nothing from another host (the
+check below proves it). This page is also the link the user sends to management.
+
 Do not change the headline: it is the title as published on YouTube, so a visitor recognises
 it. Do not rewrite the takeaway or the sources: they come from the channel repo, where they
 were approved.
@@ -118,6 +128,7 @@ This must print nothing:
 grep -rnE "PDF_URL_MISSING|PPTX_URL_MISSING" --include='*.html' .
 grep -rnE "i\.ytimg\.com|img\.youtube\.com" --include='*.html' .        # thumbnails only as local copies
 grep -o 'src="/assets/img/videos/[^"]*"' videos/index.html | cut -d'"' -f2 | while read f; do [ -f ".$f" ] || echo "missing $f"; done
+grep -lE '(src|href)="https?://[^"]*\.(js|css|woff2?|ttf)"' videos/*/index.html      # world pages load nothing from elsewhere
 ```
 
 Then run the identity, private-terms and banned-words checks from `TODO.md` (local, git-ignored), section 6
